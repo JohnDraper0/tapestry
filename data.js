@@ -498,6 +498,18 @@ const LAWS = [
     history: `Von Neumann proved the minimax theorem in 1928. His 1944 book with Morgenstern founded the field. John Nash's 1950 PhD thesis introduced Nash equilibrium. Axelrod's 1980s tournaments made cooperation a central topic. Nash, Schelling, Aumann, Maskin, Myerson, Roth and Shapley all won Nobels for game-theoretic work.`,
   },
 
+  {
+    id: 'lotka_volterra', name: 'Lotka–Volterra Equations', domain: 'emergence', symbol: '↺',
+    tagline: 'Predators and prey, forever cycling.',
+    equation: '\\dot{x} = \\alpha x - \\beta xy,\\quad \\dot{y} = \\delta xy - \\gamma y',
+    deps: ['ecosystems', 'calculus'], sim: null,
+    eli5: `Imagine a meadow with rabbits and foxes. When rabbits are plentiful, foxes feast and have lots of cubs. But too many foxes eat most of the rabbits. With fewer rabbits to hunt, foxes starve and their numbers fall. With fewer foxes hunting them, the rabbits bounce back. With more rabbits, the foxes recover — and round it goes again, like a slow carousel, forever. Nobody planned it. It's just what happens when two things eat each other across time.`,
+    intermediate: `In 1926 Vito Volterra wrote two simple rules: prey reproduce unless eaten; predators starve unless they eat. Written as differential equations those rules produce populations that cycle — prey peaks first, then predator peaks, then prey crashes, then predator crashes, then both recover. Ecologists see exactly this in real data: lynx and snowshoe hare in Hudson Bay Company records spanning 90 years, fish stocks in the Adriatic, insect outbreaks in forests. The model has a counterintuitive prediction: reducing harvesting pressure on both predator and prey actually raises the relative share of predators — a result that surprised Volterra's fisheries-biologist son-in-law and prompted the equations in the first place.`,
+    expert: `The system ẋ = αx − βxy, ẏ = δxy − γy (x = prey, y = predator) has two fixed points: the trivial saddle at the origin and the coexistence point (x*, y*) = (γ/δ, α/β). Linearisation at the coexistence point yields eigenvalues ±i√(αγ) — pure imaginary — so orbits are closed (neutral stability, not asymptotic). A conserved quantity is V = δx − γ ln x + βy − α ln y, constant on each orbit and analogous to energy in a Hamiltonian system. Real populations depart from neutral cycles because Holling type II/III functional responses (predator saturation), logistic prey growth, and demographic stochasticity break the conservation law, replacing closed orbits with damped spirals or limit cycles. Robert May (1972) generalised to random ecosystem matrices and showed that large random ecosystems are generically unstable — ecological stability requires biologically structured modularity. Crucially, the replicator dynamics of evolutionary game theory are formally equivalent to Lotka–Volterra, connecting population ecology to Nash equilibria and making the equations central to complex-systems science far beyond biology.`,
+    surprise: `During World War I, fishing in the Adriatic nearly stopped. When wartime records were tallied afterwards, the proportion of predatory fish — sharks, rays — had gone up, not down. More prey available should mean fewer predators relative to prey, right? Volterra's equations explained the paradox: reducing all harvesting benefits predators proportionally more than prey, because predators had been held furthest below their natural equilibrium. A wartime accident became a mathematical theorem about why you can fish too carefully.`,
+    history: `Alfred Lotka derived the equations in 1910 for autocatalytic chemical reactions, then re-applied them to predator-prey ecology in a 1920 paper. Vito Volterra independently reached the same equations in 1926, driven by his son-in-law Umberto D'Ancona's puzzle about Adriatic fish ratios during WWI. Their overlapping priority was settled amicably; both names stuck. The equations are now a cornerstone of theoretical ecology, extended by Holling, May, and MacArthur into the modern theory of food-web dynamics.`,
+  },
+
   // ───────────────────────────── COSMOLOGY ──────────────────────────────────
 
   {
@@ -756,6 +768,8 @@ const IMAGES = {
                    caption: 'The Mandelbrot set — a single rule, endless detail' },
   gametheory:    { image: WM('John_Forbes_Nash%2C_Jr._by_Peter_Badge.jpg'),
                    caption: 'John Nash — equilibria where nobody gains by deviating' },
+  lotka_volterra:{ image: WM('Lotka-Volterra.svg'),
+                   caption: 'Lotka–Volterra phase portrait — closed orbits of predator and prey' },
   bigbang:       { image: WM('Ilc_9yr_moll4096.png'),
                    caption: 'Cosmic microwave background — afterglow of the Big Bang' },
   darkmatter:    { image: WM('Dark_matter_halo.png'),
