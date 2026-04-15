@@ -197,6 +197,27 @@
   }
   animateParticles();
 
+  // ── analogous (cross-link) arrows ────────────────────
+  // Dashed, fainter than dependencies. Each analogy rendered once.
+  const seenPairs = new Set();
+  LAWS.forEach(l => {
+    (l.analogous || []).forEach(({ id: otherId }) => {
+      const pair = [l.id, otherId].sort().join('|');
+      if (seenPairs.has(pair)) return;
+      seenPairs.add(pair);
+      const other = byId.get(otherId);
+      if (!other) return;
+      edgeLayer.appendChild(svgEl('line', {
+        x1: l.pos.x, y1: l.pos.y,
+        x2: other.pos.x, y2: other.pos.y,
+        'stroke-width': 1,
+        'stroke-dasharray': '3 6',
+        class: 'edge-analog',
+        style: 'stroke: var(--accent); opacity: 0.32',
+      }));
+    });
+  });
+
   // Nodes
   const nodeLayer = svgEl('g', { class: 'nodes' });
   viewport.appendChild(nodeLayer);
@@ -208,11 +229,15 @@
       'data-id': l.id,
     });
 
+    const isFrontier = l.known === false;
+    if (isFrontier) g.setAttribute('class', 'node frontier');
+    else g.setAttribute('class', 'node');
+
     // outer glow halo (breathing)
     const halo = svgEl('circle', {
       cx: 0, cy: 0, r: 44,
       fill: DOMAINS[l.domain].color,
-      opacity: 0.06,
+      opacity: isFrontier ? 0.04 : 0.06,
       filter: 'url(#glow)',
     });
     g.appendChild(halo);
@@ -220,7 +245,7 @@
     const glow = svgEl('circle', {
       cx: 0, cy: 0, r: 30,
       fill: DOMAINS[l.domain].color,
-      opacity: 0.14,
+      opacity: isFrontier ? 0.08 : 0.14,
       class: 'node-glow',
       style: `animation-delay: ${(l.layer * 0.3).toFixed(2)}s`,
     });
@@ -232,6 +257,8 @@
       'stroke-width': 2.5,
       filter: 'url(#softglow)',
       style: 'fill: var(--node-bg)',
+      class: 'node-disc',
+      'stroke-dasharray': isFrontier ? '4 3' : '0',
     });
     g.appendChild(disc);
 
@@ -473,10 +500,18 @@
     requestAnimationFrame(tick);
   }
 
+  // expose LAWS/DOMAINS + openPanel for the optional 3D module
+  window.LAWS = LAWS;
+  window.DOMAINS = DOMAINS;
+
   // ── 8. detail panel ─────────────────────────────────────────────
   let activeSim = null;
+  let currentPanelLaw = null;
   function openPanel(l) {
+    currentPanelLaw = l;
     if (activeSim) { activeSim.stop(); activeSim = null; }
+    // stop narration from previous node
+    if (window.speechSynthesis && speechSynthesis.speaking) speechSynthesis.cancel();
 
     const depsList = l.deps.length
       ? l.deps.map(id => {
@@ -525,7 +560,7 @@
         <div class="panel-tagline">${l.tagline}</div>
       </div>
 
-      ${l.equation ? `<div class="panel-eq">${l.equation}</div>` : ''}
+      ${l.equation ? `<div class="panel-eq">$$${l.equation}$$</div>` : ''}
 
       ${l.sim ? `<canvas id="simCanvas" class="panel-sim"></canvas>` : ''}
 
@@ -572,6 +607,9 @@
     panel.classList.add('open');
     if (typeof Sound !== 'undefined') Sound.openPanel();
 
+    // render LaTeX (if KaTeX loaded)
+    renderMath(panelBody);
+
     if (l.sim) {
       const canvas = document.getElementById('simCanvas');
       setTimeout(() => { activeSim = startSim(l.sim, canvas); }, 50);
@@ -598,6 +636,30 @@
     item.innerHTML = `<span class="dot" style="background:${DOMAINS[d].color}"></span>${DOMAINS[d].label}`;
     legend.appendChild(item);
   });
+
+  // expose openPanel for 3D module
+  window.__openPanel = openPanel;
+
+  // ── 3D mode toggle ───────────────────────────────────────────────
+  const view3dBtn = document.getElementById('view3dBtn');
+  if (view3dBtn) {
+    view3dBtn.addEventListener('click', async () => {
+      if (!window.Tapestry3D) {
+        const s = document.createElement('script');
+        s.src = 'three3d.js';
+        s.type = 'module';
+        document.body.appendChild(s);
+        await new Promise(r => s.onload = r);
+      }
+      if (Tapestry3D.isActive()) {
+        Tapestry3D.exit();
+        view3dBtn.classList.remove('active');
+      } else {
+        await Tapestry3D.enter();
+        view3dBtn.classList.add('active');
+      }
+    });
+  }
 
   // ── theme switcher ───────────────────────────────────────────────
   const THEMES = ['cosmos', 'paper', 'blueprint'];
@@ -641,10 +703,159 @@
   window.addEventListener('resize', applyCam);
   applyCam();
 
-  // keyboard: escape closes panel, r resets camera, m mutes
+  // ── KaTeX auto-render ────────────────────────────────────────────
+  function renderMath(root) {
+    if (window.renderMathInElement) {
+      try {
+        window.renderMathInElement(root, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$',  right: '$',  display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+          ],
+          throwOnError: false,
+        });
+      } catch (err) { /* ignore */ }
+    }
+  }
+
+  // ── SEARCH ───────────────────────────────────────────────────────
+  const searchInput = document.getElementById('search');
+  function applySearch(q) {
+    q = (q || '').trim().toLowerCase();
+    if (!q) {
+      nodeEls.forEach(({ g }) => g.classList.remove('dim'));
+      edges.forEach(e => e.line.classList.remove('dim'));
+      return;
+    }
+    const match = new Set();
+    LAWS.forEach(l => {
+      const hay = [
+        l.name, l.tagline, l.symbol, l.equation || '',
+        l.eli5 || '', l.intermediate || l.deeper || '',
+        l.expert || '', l.surprise || '', l.history || '',
+      ].join(' ').toLowerCase();
+      if (hay.includes(q)) match.add(l.id);
+    });
+    nodeEls.forEach(({ g }, id) => {
+      g.classList.toggle('dim', !match.has(id));
+    });
+  }
+  searchInput.addEventListener('input', (e) => applySearch(e.target.value));
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { searchInput.value = ''; applySearch(''); searchInput.blur(); }
+    if (e.key === 'Enter') {
+      // focus on first match
+      const q = searchInput.value.trim().toLowerCase();
+      if (!q) return;
+      const first = LAWS.find(l => l.name.toLowerCase().includes(q)
+                                || (l.eli5 || '').toLowerCase().includes(q));
+      if (first) { openPanel(first); focusNode(first); }
+    }
+  });
+
+  // ── TOUR MODE ────────────────────────────────────────────────────
+  // Auto-climb the tower: opens each known law in sequence, bottom to top.
+  const tourBtn = document.getElementById('tourBtn');
+  let tourState = null;
+  function startTour() {
+    if (tourState) { stopTour(); return; }
+    const sequence = LAWS
+      .filter(l => l.known !== false)
+      .sort((a, b) => a.layer - b.layer || 0);
+    tourState = { i: 0, seq: sequence, timer: null };
+    tourBtn.classList.add('active');
+    const prog = document.getElementById('tourProgress');
+    if (prog) prog.classList.add('visible');
+    advanceTour();
+  }
+  function advanceTour() {
+    if (!tourState) return;
+    if (tourState.i >= tourState.seq.length) { stopTour(); return; }
+    const l = tourState.seq[tourState.i++];
+    openPanel(l);
+    focusNode(l);
+    updateTourProgress();
+    tourState.timer = setTimeout(advanceTour, 16000);
+  }
+  function stopTour() {
+    if (!tourState) return;
+    clearTimeout(tourState.timer);
+    tourState = null;
+    tourBtn.classList.remove('active');
+    const prog = document.getElementById('tourProgress');
+    if (prog) prog.classList.remove('visible');
+  }
+  function updateTourProgress() {
+    const prog = document.getElementById('tourProgress');
+    if (!prog || !tourState) return;
+    const pct = ((tourState.i) / tourState.seq.length) * 100;
+    prog.querySelector('.fill').style.width = pct + '%';
+    prog.querySelector('.label').textContent =
+      `tour ${tourState.i} / ${tourState.seq.length}`;
+  }
+  // inject tour progress bar
+  (function () {
+    const el = document.createElement('div');
+    el.id = 'tourProgress';
+    el.className = 'tour-progress';
+    el.innerHTML = `
+      <span class="label">tour 0 / 0</span>
+      <div class="bar"><div class="fill"></div></div>
+      <button id="tourStopBtn">Stop</button>
+    `;
+    document.body.appendChild(el);
+    el.querySelector('#tourStopBtn').addEventListener('click', stopTour);
+  })();
+  tourBtn.addEventListener('click', startTour);
+
+  // ── ICEBERG MODAL ────────────────────────────────────────────────
+  const icebergBtn = document.getElementById('icebergBtn');
+  const icebergModal = document.getElementById('iceberg-modal');
+  icebergBtn.addEventListener('click', () => icebergModal.classList.add('open'));
+  icebergModal.addEventListener('click', (e) => {
+    if (e.target === icebergModal || e.target.dataset.close === 'iceberg') {
+      icebergModal.classList.remove('open');
+    }
+  });
+
+  // ── PRINT VIEW ───────────────────────────────────────────────────
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  // ── NARRATE (Web Speech API) ─────────────────────────────────────
+  const narrateBtn = document.getElementById('narrateBtn');
+  let speaking = false;
+  function narrate(l) {
+    if (!('speechSynthesis' in window)) { alert('Text-to-speech not available in this browser.'); return; }
+    if (speaking) { speechSynthesis.cancel(); speaking = false; narrateBtn.classList.remove('active'); return; }
+    const text = [l.name, '.', l.tagline, '.', l.eli5, l.intermediate || l.deeper, l.surprise].join(' ');
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95; u.pitch = 1; u.volume = 0.9;
+    const voices = speechSynthesis.getVoices();
+    const pref = voices.find(v => /en.*(Natural|Premium|Samantha|Daniel|Karen|Moira)/i.test(v.name)) || voices[0];
+    if (pref) u.voice = pref;
+    u.onend = () => { speaking = false; narrateBtn.classList.remove('active'); };
+    speechSynthesis.speak(u);
+    speaking = true;
+    narrateBtn.classList.add('active');
+  }
+  narrateBtn.addEventListener('click', () => {
+    const l = currentPanelLaw;
+    if (l) narrate(l);
+  });
+
+  // keyboard: escape closes panel, r resets camera, m mutes, / search, t tour, p print
   window.addEventListener('keydown', (e) => {
+    // let the search input own its own keys when focused
+    if (document.activeElement === searchInput) return;
+
     if (e.key === 'Escape') {
       panel.classList.remove('open');
+      icebergModal.classList.remove('open');
+      stopTour();
       if (typeof Sound !== 'undefined') Sound.closePanel();
       if (activeSim) { activeSim.stop(); activeSim = null; }
     }
@@ -655,5 +866,8 @@
         muteBtn.textContent = m ? '♪ off' : '♪ on';
       }
     }
+    if (e.key === '/') { e.preventDefault(); searchInput.focus(); }
+    if (e.key === 't' || e.key === 'T') startTour();
+    if (e.key === 'p' || e.key === 'P') window.print();
   });
 })();

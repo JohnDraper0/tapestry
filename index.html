@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>The Tapestry · Natural Laws from First Principles</title>
   <link rel="stylesheet" href="styles.css">
+
+  <!-- KaTeX for beautiful equation rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
-<body>
+<body data-theme="cosmos">
 
   <!-- ── animated cosmic background ────────────────── -->
   <canvas id="bg"></canvas>
@@ -16,19 +21,19 @@
     <div class="intro-box">
       <div class="intro-eyebrow">An Interactive Cosmology of Knowledge</div>
       <h1 class="intro-title">The&nbsp;<strong>Tapestry</strong></h1>
-      <div class="intro-sub">Natural laws, from first principles</div>
+      <div class="intro-sub">Every natural law — and every frontier — from first principles</div>
       <div class="intro-body">
-        <p>Every law of nature rests on a simpler one beneath it. <span class="h1">Logic</span> lets us think. <span class="h2">Numbers</span> let us count. <span class="h3">Calculus</span> lets us describe change. <span class="h4">Symmetry</span> gives us conservation. Conservation gives us Newton. Newton gives us orbits and Einstein. And on, and on — all the way up to stars, to life, to minds.</p>
-        <p>This is the map. <em>Foundations at the centre.</em> Each ring outward is built from the one inside. Each colour is a different branch of knowledge.</p>
-        <p>Click any node for an explanation a 5-year-old could follow, a deeper one for grown-ups, the equation, and a live interactive simulation you can play with.</p>
+        <p>Every law of nature rests on a simpler one beneath it. <span class="h1">Logic</span> lets us think. <span class="h2">Numbers</span> let us count. <span class="h3">Calculus</span> lets us describe change. <span class="h4">Symmetry</span> gives us conservation. Conservation gives us Newton. Newton gives us orbits and Einstein. And on, all the way up to life, minds and galaxies.</p>
+        <p>This is the map. <em>Foundations at the centre.</em> Each ring outward builds on what came before. At the very top, in dashed circles, sits <em>the Frontier</em> — things humanity <em>doesn't</em> know yet. Because the iceberg has an underside.</p>
+        <p>Click any node for explanations at three depths (a five-year-old, a student, an expert), a live simulation, real imagery, a surprise fact, and the history.</p>
       </div>
       <div class="intro-controls">
         <span><kbd>click</kbd> node</span>
-        <span><kbd>drag</kbd> pan</span>
-        <span><kbd>scroll</kbd> zoom</span>
+        <span><kbd>/</kbd> search</span>
+        <span><kbd>T</kbd> tour</span>
         <span><kbd>R</kbd> reset</span>
-        <span><kbd>Esc</kbd> close</span>
         <span><kbd>M</kbd> mute</span>
+        <span><kbd>P</kbd> print</span>
       </div>
       <button id="introBtn">Begin the Journey</button>
       <div class="intro-footnote">🎧 headphones recommended — with sound</div>
@@ -37,19 +42,29 @@
 
   <!-- ── header ───────────────────────────────────── -->
   <header>
-    <div>
+    <div class="header-left">
       <div class="title">The <strong>Tapestry</strong></div>
       <div class="subtitle">Natural laws, from first principles</div>
     </div>
+    <div class="header-centre">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Search laws, ideas, people…" autocomplete="off">
+        <span class="search-icon">⌕</span>
+      </div>
+    </div>
     <div class="top-buttons">
       <div class="theme-switcher" role="group" aria-label="Theme">
-        <button class="theme-btn" data-theme="cosmos">Cosmos</button>
-        <button class="theme-btn" data-theme="paper">Paper</button>
-        <button class="theme-btn" data-theme="blueprint">Blueprint</button>
+        <button class="theme-btn" data-theme="cosmos" title="Dark starfield">◐</button>
+        <button class="theme-btn" data-theme="paper" title="Vintage manuscript">◧</button>
+        <button class="theme-btn" data-theme="blueprint" title="Engineering schematic">◨</button>
       </div>
-      <button class="top-btn" id="muteBtn" title="Toggle sound">♪ on</button>
-      <button class="top-btn" id="resetBtn" title="Recenter map">Recenter</button>
-      <button class="top-btn" id="helpBtn" title="Show intro">Intro</button>
+      <button class="top-btn" id="tourBtn" title="Auto-climb the tower">▶ Tour</button>
+      <button class="top-btn" id="view3dBtn" title="Spiral staircase view">◎ 3D</button>
+      <button class="top-btn" id="icebergBtn" title="What we know vs don't know">🧊</button>
+      <button class="top-btn" id="printBtn" title="Print poster">⎙</button>
+      <button class="top-btn" id="muteBtn" title="Toggle sound">♪</button>
+      <button class="top-btn" id="resetBtn" title="Recenter map">⌂</button>
+      <button class="top-btn" id="helpBtn" title="Show intro">?</button>
     </div>
   </header>
 
@@ -80,14 +95,72 @@
   <div id="legend"></div>
 
   <div class="hint">
-    drag · scroll · click · <kbd>R</kbd> reset · <kbd>M</kbd> mute · <kbd>Esc</kbd> close
+    drag · scroll · click · <kbd>/</kbd> search · <kbd>T</kbd> tour · <kbd>R</kbd> recentre · <kbd>M</kbd> mute
   </div>
 
   <!-- ── detail panel ─────────────────────────────── -->
   <aside id="panel">
     <button id="panelClose">✕</button>
+    <button id="narrateBtn" title="Read aloud">🔊</button>
     <div id="panelBody"></div>
   </aside>
+
+  <!-- ── iceberg modal ────────────────────────────── -->
+  <div id="iceberg-modal" class="modal">
+    <div class="modal-box">
+      <button class="modal-close" data-close="iceberg">✕</button>
+      <div class="iceberg-title">How much do we actually know?</div>
+      <div class="iceberg-body">
+        <svg class="iceberg-svg" viewBox="0 0 400 340">
+          <!-- water line -->
+          <line x1="0" y1="110" x2="400" y2="110" stroke="rgba(100,200,255,0.5)" stroke-dasharray="4 4"/>
+          <text x="10" y="100" class="iceberg-label" fill="#4facfe">what we see</text>
+          <text x="10" y="125" class="iceberg-label" fill="#8892b8">what lies below</text>
+          <!-- iceberg tip -->
+          <polygon points="200,20 260,110 140,110" fill="rgba(230,240,255,0.85)" stroke="#fff" stroke-width="1.5"/>
+          <!-- underside -->
+          <polygon points="140,110 260,110 340,300 60,300"
+                   fill="rgba(180,200,240,0.18)" stroke="rgba(180,200,240,0.5)" stroke-dasharray="2 4"/>
+          <text x="200" y="65" class="iceberg-big" fill="#04060e">known</text>
+          <text x="200" y="200" class="iceberg-big" fill="#9aa7d0">unknown</text>
+          <text x="200" y="230" class="iceberg-small" fill="#9aa7d0">questions we can ask</text>
+          <text x="200" y="270" class="iceberg-small" fill="rgba(154,167,208,0.5)">questions we can't</text>
+        </svg>
+        <div class="iceberg-stats">
+          <div class="stat">
+            <div class="stat-num" style="color:#64ffda">40</div>
+            <div class="stat-lbl">known laws mapped</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num" style="color:#d0d0d0">11</div>
+            <div class="stat-lbl">named frontier gaps</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num" style="color:#ff6f91">?</div>
+            <div class="stat-lbl">unknown unknowns</div>
+          </div>
+        </div>
+        <p class="iceberg-essay">
+          The Tapestry shows ~40 well-established natural laws — the "tip" we understand. Above them, dashed
+          into the fog, sits the Frontier: eleven explicitly-named open problems (quantum gravity, dark matter
+          and dark energy nature, the measurement problem, the origin of life, consciousness, fine-tuning,
+          the arrow of time, baryogenesis, P vs NP, and "what we don't know we don't know").
+        </p>
+        <p class="iceberg-essay">
+          How big is the iceberg really? Nobody knows. Every era of science has been blindsided by discoveries
+          it had no category for — quantum mechanics in 1900, DNA in 1953, dark energy in 1998. Our era is
+          almost certainly no different. Optimistic estimates put our understanding of the <em>fundamental</em>
+          physics at ~90% for accessible energies, and our understanding of <em>complex systems, minds and
+          origins</em> at perhaps 5–15%. The honest answer: we know the tip, and the underside keeps growing
+          as we learn.
+        </p>
+        <p class="iceberg-essay">
+          Click any dashed frontier node in the tower above to read the current state of what's known,
+          hypothesised, and still mysterious about that problem.
+        </p>
+      </div>
+    </div>
+  </div>
 
   <script src="data.js"></script>
   <script src="bg.js"></script>

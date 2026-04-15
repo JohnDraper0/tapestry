@@ -25,6 +25,7 @@ const DOMAINS = {
   info:      { label: 'Information & Computation', color: '#00e5ff' },
   emergence: { label: 'Emergence & Complexity',    color: '#ff6f91' },
   cosmos:    { label: 'Cosmology',                 color: '#7986cb' },
+  unknown:   { label: 'The Frontier — What We Don\'t Know', color: '#d0d0d0' },
 };
 
 const LAWS = [
@@ -523,6 +524,143 @@ const LAWS = [
     history: `Fritz Zwicky inferred dark matter from the Coma cluster in 1933 but was ignored. Vera Rubin's 1970s rotation-curve measurements made the case undeniable. The accelerating expansion was discovered by Perlmutter, Schmidt and Riess in 1998 using Type Ia supernovae (2011 Nobel). The nature of both remains unknown in 2026.`,
   },
 
+  // ───────────────────────────── THE FRONTIER ──────────────────────────────
+  // Entries marked known:false live ABOVE the known tower — they are the
+  // iceberg's underside: the questions humanity has not yet answered.
+  // Each one is a real, open problem in science or mathematics.
+
+  {
+    id: 'quantum_gravity', name: 'Quantum Gravity', domain: 'unknown', symbol: '?',
+    tagline: 'The theory we don\'t have.',
+    equation: '[ℋ_grav, ℋ_QM] = ?',
+    deps: ['general', 'qft'], known: false, sim: null,
+    eli5: `Einstein's gravity and the quantum rules both work beautifully on their own — but when you try to mix them, everything breaks. What happens inside a black hole? What happened at the Big Bang? Those are the moments when both matter — and no one, anywhere, knows the answer yet. This is the biggest unsolved problem in physics.`,
+    intermediate: `General relativity treats gravity as curved spacetime; quantum mechanics treats everything else as probabilistic fields on a fixed background. The two theories are mathematically incompatible. At black hole singularities and the first instant of the Big Bang, both are needed — and neither works alone. String theory, loop quantum gravity, causal dynamical triangulations and asymptotic safety are the main contenders, but none has been experimentally confirmed. It's the biggest gap in theoretical physics.`,
+    expert: `Naïve perturbative quantisation of Einstein gravity is non-renormalisable: UV divergences require infinitely many counterterms. String theory embeds gravity in a quantum framework by replacing point particles with extended strings, introducing supersymmetry and extra dimensions. Loop quantum gravity quantises spacetime itself into spin networks. The AdS/CFT correspondence (Maldacena 1997) gives a concrete non-perturbative definition of quantum gravity in anti-de Sitter space. Open problems: de Sitter / positive-Λ formulation, background independence, black hole information paradox, holographic principle, emergence of spacetime from entanglement (ER = EPR).`,
+    surprise: `A black hole appears to store its information on its surface, not its volume — one bit per four Planck areas. Gravity, it seems, is secretly a hologram.`,
+    history: `The tension was recognised by Einstein himself. John Wheeler coined "quantum foam" in the 1950s. String theory emerged in the late 1960s as a hadronic theory and was repurposed for gravity in 1974. Four decades later, we still don't have a complete theory, let alone one testable at accessible energies.`,
+  },
+
+  {
+    id: 'dark_nature', name: 'Nature of Dark Matter', domain: 'unknown', symbol: '?',
+    tagline: 'What is 26% of the universe made of?',
+    equation: 'σ_χN ≲ 10⁻⁴⁷ cm²',
+    deps: ['darkmatter', 'standard'], known: false, sim: null,
+    eli5: `Galaxies spin too fast. If they were made only of the stuff we can see, they'd fly apart like a merry-go-round spinning too quickly. So there must be a LOT of invisible stuff holding them together — about five times more than the visible stuff. We call it "dark matter." What it's actually made of? Nobody knows. Thousands of scientists are hunting.`,
+    intermediate: `Multiple independent observations — galaxy rotation curves, gravitational lensing, the cosmic microwave background power spectrum, large-scale structure — consistently require ~26% of the universe's energy density to be some form of matter that doesn't interact with light. Candidates include weakly interacting massive particles (WIMPs), axions, sterile neutrinos, primordial black holes, and modified-gravity alternatives. Decades of increasingly sensitive direct-detection experiments (XENON, LZ, PandaX) have ruled out vast swaths of parameter space without a positive signal.`,
+    expert: `WIMPs with mass ~ 1 GeV – 10 TeV would freeze out in the early universe with roughly the observed relic abundance (the "WIMP miracle"). Direct-detection cross-sections for spin-independent scattering are now below 10⁻⁴⁷ cm² for 30 GeV WIMPs — much of natural supersymmetric parameter space is excluded. Axions (10⁻⁶ – 10⁻³ eV, QCD solution to strong-CP) are now the leading alternative, with ADMX and HAYSTAC narrowing the QCD band. MOND fits rotation curves without dark matter but cannot explain the Bullet Cluster, CMB acoustic peaks, or cluster mass without additional ingredients.`,
+    surprise: `A dark-matter particle is streaming through your thumbnail roughly a billion times a second right now, and you cannot feel it. Several experiments the size of swimming pools, buried under mountains, have been watching for decades. So far: nothing.`,
+    history: `Fritz Zwicky inferred dark matter from the Coma cluster in 1933; ignored. Vera Rubin's rotation curves (1970s) made it unavoidable. The Bullet Cluster collision (2006) separated dark matter from normal matter spatially, refuting many modified-gravity alternatives. As of 2026, no direct detection.`,
+  },
+
+  {
+    id: 'dark_energy_nature', name: 'Nature of Dark Energy', domain: 'unknown', symbol: 'Λ?',
+    tagline: 'The cosmological-constant catastrophe.',
+    equation: 'ρ_Λ^obs / ρ_Λ^QFT ≈ 10⁻¹²³',
+    deps: ['darkmatter', 'qft', 'general'], known: false, sim: null,
+    eli5: `The universe isn't just expanding — it's expanding *faster* every year. Something is pushing everything apart, and it's nearly everywhere, and it makes up roughly 69% of the universe. We call it "dark energy." What is it? Vacuum energy? A new field? A change to gravity? Nobody knows, and this might be the deepest puzzle in all of physics.`,
+    intermediate: `Type Ia supernova observations (Perlmutter, Schmidt, Riess 1998) showed that the universe's expansion is accelerating, requiring a pervasive form of energy whose density remains nearly constant as space expands. The simplest interpretation is Einstein's cosmological constant Λ — vacuum energy. But quantum field theory's naive estimate of vacuum energy exceeds the observed value by 10¹²⁰. It's the largest disagreement between theory and observation in all of science.`,
+    expert: `Parameterised as an equation of state w = p/ρ ≈ −1 from CMB + BAO + SNe Ia. If w is exactly −1, it's a true cosmological constant; if w varies, it's dynamical (quintessence, k-essence, early dark energy). Vacuum-energy computation: Σ ½ℏω over all QFT modes up to the Planck cutoff gives ρ_vac ~ M_P⁴, about 10¹²⁰ times the observed ρ_Λ ~ (meV)⁴. Proposed resolutions: anthropic multiverse selection (string landscape), radiatively stable mechanisms (sequestering), modified gravity (f(R), DGP, Horndeski). Upcoming DESI and Euclid data will tighten w to percent precision.`,
+    surprise: `If you calculated how much vacuum energy the laws of physics predict, and how much there actually is, you'd be off by a factor with 120 zeroes in it. That's more than the number of atoms in every grain of sand on every beach on Earth.`,
+    history: `Einstein added Λ to his field equations in 1917 to allow a static universe, then called it his "greatest blunder" after Hubble's expansion. 1998 Type Ia supernova results resurrected it. 2011 Nobel Prize for the discovery of acceleration. Nature still unknown in 2026.`,
+  },
+
+  {
+    id: 'measurement', name: 'Quantum Measurement Problem', domain: 'unknown', symbol: '|ψ⟩?',
+    tagline: 'What actually happens when we look?',
+    equation: '|ψ⟩ → |n⟩ with P = |⟨n|ψ⟩|²',
+    deps: ['quantum', 'uncertainty'], known: false, sim: null,
+    eli5: `Quantum mechanics says a particle can be in many places at once — until someone checks. Then it picks a spot. But what counts as "checking"? Does it need a human? A thermometer? A cat? Does the particle split into parallel worlds where every possibility happens? Nobody agrees, and it's been 100 years. This is the single weirdest problem in physics.`,
+    intermediate: `The Schrödinger equation describes smooth, deterministic, reversible evolution — but measurement seems to cause abrupt, probabilistic, irreversible "collapse." What triggers the transition, and why can't we write it into the theory? Main interpretations: **Copenhagen** (measurement is a primitive), **Many-Worlds** (no collapse; all outcomes happen in branching universes), **de Broglie–Bohm** (hidden particle positions guided by the wave function), **GRW** (spontaneous random collapse), and **consistent histories**. All give the same experimental predictions. No experiment can currently distinguish them.`,
+    expert: `The measurement problem is the conflict between unitary Schrödinger evolution and the non-unitary Born-rule update. Decoherence (Zurek, Joos, Zeh) explains the *appearance* of classicality via environmental entanglement but does not select a single outcome. Bell's theorem + experimental violations (Aspect, Zeilinger, Hensen loophole-free) rule out local hidden variables. The 2022 Nobel recognised these experiments. Dynamical-collapse models (GRW, CSL) make testable predictions for rare non-linear collapse events — still searching. Pilot-wave theory reproduces all non-relativistic QM with deterministic ontology, at the price of manifest non-locality.`,
+    surprise: `You can ask a single electron "which slit did you go through?" and it will go through one. Or you can ask it "what pattern did you make?" and it will have gone through both. The question you ask seems to determine what happened in the past. Nobody has a settled explanation.`,
+    history: `Bohr and Einstein argued about measurement from 1927 until Einstein's death in 1955. Hugh Everett proposed many-worlds in his 1957 PhD thesis and was so discouraged he left physics for defence contracting. Bell published his theorem in 1964 while on sabbatical. Aspect's experiments confirmed it in the early 1980s.`,
+  },
+
+  {
+    id: 'abiogenesis', name: 'Origin of Life', domain: 'unknown', symbol: '?→🧬',
+    tagline: 'How did molecules first become alive?',
+    equation: 'chemistry → self-replicator = ?',
+    deps: ['bonding', 'selfrep'], known: false, sim: null,
+    eli5: `Somewhere on early Earth, about 4 billion years ago, a soup of ordinary chemicals did something amazing: a molecule appeared that could copy itself. From that first copy-maker, every single living thing on Earth is descended. But how that first replicator got built — out of just rocks, water and lightning — is still a mystery. We have good guesses. None of them have been proven.`,
+    intermediate: `The gap between complex non-living chemistry and the simplest self-replicating life is enormous and not yet bridged. Leading hypotheses: the **RNA world** (RNA can both store information and catalyse reactions, so a single molecule could act as both gene and enzyme); **metabolism-first** (autocatalytic networks of reactions preceded genetics); **alkaline hydrothermal vents** (mineral-surface catalysis plus natural proton gradients); and **panspermia** (life or precursors arrived from space). Miller–Urey (1953) showed amino acids can form from simple precursors; we still can't get from there to a full replicating system in the lab.`,
+    expert: `Szostak and Joyce have demonstrated ribozymes that catalyse template-directed RNA polymerisation with ~95% fidelity, approaching what's needed for Darwinian evolution. Russell and Martin argue that serpentinite-hosted alkaline hydrothermal systems supplied the geochemical proton gradients that became chemiosmosis. The universal ancestor (LUCA) is estimated to have lived ~3.8 Gya based on molecular clocks and the oldest biosignatures. The chirality problem (why only L-amino acids and D-sugars?) remains open, though parity-violating weak-force effects have been proposed. The minimal genome (Venter 2016) is ~473 genes — still vastly more complex than any prebiotic system can produce.`,
+    surprise: `Every living thing on Earth — every redwood, every mushroom, every blue whale, every person — descends from a single cell that lived roughly 3.8 billion years ago. How that cell got started is still guesswork.`,
+    history: `Alexander Oparin (1924) and J.B.S. Haldane (1929) independently proposed chemical evolution. Miller and Urey (1953) produced amino acids from a simulated early atmosphere. Carl Woese discovered archaea in 1977, rewiring the tree of life. Venter's synthetic minimal cell (2010, 2016) approached from the top down. The bottom-up gap is still unbridged.`,
+  },
+
+  {
+    id: 'consciousness', name: 'Consciousness', domain: 'unknown', symbol: '🧠?',
+    tagline: 'Why is there something it is like to be you?',
+    equation: 'brain states → qualia = ?',
+    deps: ['emergence', 'centraldogma'], known: false, sim: null,
+    eli5: `When you see red, there's a *feeling* of red — not just information about wavelengths. When you taste coffee, there's a *what-it's-like-to-taste-coffee*. Nobody has the slightest clue why any physical system should feel like anything from the inside. We can map brains in huge detail, and still the question "why is it not all just dark in there?" has no answer. This is called the hard problem.`,
+    intermediate: `The "easy problems" of consciousness — how brains discriminate, integrate and report information — are in principle tractable and partly solved. The "hard problem" (Chalmers 1995) is why any of this is accompanied by subjective experience. Proposed frameworks: **Integrated Information Theory** (Tononi) identifies consciousness with Φ, a measure of irreducible information integration; **Global Workspace Theory** (Baars, Dehaene) ties awareness to broadcast networks in the cortex; **higher-order theories** require representations of representations; **panpsychism** proposes that experience is fundamental and everywhere. None is conclusively supported, and no experiment can currently distinguish them.`,
+    expert: `Neural correlates of consciousness (NCC, Crick & Koch) have been localised to posterior hot zones (Koch 2018), fronto-parietal networks (Dehaene), or recurrent processing loops. IIT's Φ is formally defined but computationally intractable (exponential in system size) and makes the controversial claim that simple feedback circuits are conscious while standard computers are not — implying digital uploads would not preserve experience. The combination problem challenges panpsychism: how do micro-experiences combine into a unified self? Functional / higher-order accounts are compatible with substrate independence; IIT is not. There is currently no agreed way to even falsify these proposals.`,
+    surprise: `Nobody can prove anyone else is conscious. You know you experience things; you *assume* other humans do, because they're made of the same stuff. Whether an octopus experiences, an AI experiences, or a thermostat experiences — we have no agreed test.`,
+    history: `The "hard problem" framing comes from David Chalmers (1995). Francis Crick spent his later career hunting neural correlates of consciousness with Christof Koch. Giulio Tononi proposed IIT in 2004. Daniel Dennett argued the hard problem is a confusion. As of 2026, no consensus on whether it's a real problem or a conceptual mistake.`,
+  },
+
+  {
+    id: 'fine_tuning', name: 'Fine-Tuning Problem', domain: 'unknown', symbol: '⚖?',
+    tagline: 'Why are the constants so gentle to us?',
+    equation: 'ΔG/G, Δα/α ≪ 1',
+    deps: ['standard', 'bigbang'], known: false, sim: null,
+    eli5: `The strength of gravity, the weight of an electron, the speed of light — these numbers appear in the laws of physics. If they'd been even a tiny bit different, atoms wouldn't form, stars wouldn't shine, life wouldn't exist. Why do they have the exactly-right values? Is it coincidence? Lots of universes with every possible setting, and we're in the one that works? Something deeper? Nobody knows.`,
+    intermediate: `Several constants in physics — the ratio of electromagnetic to gravitational force, the cosmological constant, the Higgs mass — appear to be finely tuned to allow the existence of atoms, stars and life. Tiny changes would produce universes with no chemistry, no long-lived stars, or no structure at all. Proposed explanations: **multiverse** (infinitely many universes with random constants, and we observe a rare habitable one — the anthropic principle); **hidden symmetry** (a yet-unknown principle fixes the values); **simulation** (the constants were chosen); **landscape** selection in string theory. Each is either untestable or unconfirmed.`,
+    expert: `The most severe case is the cosmological constant: natural QFT estimates give 10¹²⁰ times the observed value, but any Λ larger than ~10²× our value would prevent galaxy formation (Weinberg 1987 anthropic bound, remarkably close to the 1998 measured value). The hierarchy problem — why the Higgs mass is not naturally of order M_Planck — motivated much of BSM physics including supersymmetry. The string landscape (~10⁵⁰⁰ vacua) provides a framework for anthropic selection but is not directly testable. Self-organised criticality and scale-invariant mechanisms are alternative, non-anthropic approaches.`,
+    surprise: `If the strong nuclear force were just 2% weaker, hydrogen couldn't fuse into helium and the Sun would not shine. If it were 2% stronger, all hydrogen would have fused in the Big Bang and there'd be no water. We live on a razor's edge we didn't earn.`,
+    history: `Fred Hoyle predicted a specific carbon-12 resonance in 1953 because without it, stars couldn't make carbon — and therefore us. He was right. That was the first famous "anthropic" prediction. Brandon Carter formalised the anthropic principle in 1973. The string landscape emerged from flux compactifications in the early 2000s.`,
+  },
+
+  {
+    id: 'arrow_of_time', name: 'Arrow of Time', domain: 'unknown', symbol: '→t',
+    tagline: 'Why does the past differ from the future?',
+    equation: 'S(t₀) ≪ S_max',
+    deps: ['thermo', 'bigbang'], known: false, sim: null,
+    eli5: `Drop an egg and it breaks. You've never seen a broken egg put itself back together. But the laws of physics don't actually say time has to flow forward — they work the same backwards. So why does the past feel different from the future? The deepest answer physicists have found is: because the universe started in a really special, ordered state, and it's been getting messier ever since. But *why* it started that way — we don't know.`,
+    intermediate: `The fundamental laws of physics are almost entirely time-reversal symmetric — replay any microscopic process backwards and it's still a legal process. Yet everything macroscopic has a clear arrow: entropy increases, we remember the past not the future, causes precede effects, radiation goes outward from sources. The standard answer (Boltzmann, Penrose) is that the universe started in an extraordinarily low-entropy state at the Big Bang, and the second law is just the statistical tendency to drift toward more probable (higher-entropy) configurations. Why the initial state was so special is itself unexplained — Penrose estimates the improbability at 1 in 10^(10^123).`,
+    expert: `CPT symmetry is exact; CP is slightly violated by the weak interaction, but this is insufficient to provide a fundamental arrow. The thermodynamic arrow (dS ≥ 0), psychological arrow (memory), radiation arrow (retarded potentials), cosmological arrow (expansion) and quantum measurement arrow appear to align but the reason is contested. Past Hypothesis (Albert, Loewer) posits a law-like low-entropy initial macrostate. Eternal-inflation cosmologies and the Boltzmann brain problem complicate the picture: in an infinite universe, fluctuations can generate observers with false memories, and avoiding this requires careful measure choices. CPT-symmetric cosmologies (Turok, Boyle) propose the Big Bang as a moment of minimum entropy with two arrows pointing away.`,
+    surprise: `Roger Penrose estimated that the initial low-entropy condition of our universe is improbable by a factor of 10^(10^123) — a number so enormous that if you tried to write it out there'd be more zeros than there are particles in the observable universe. Nobody knows why.`,
+    history: `Boltzmann wrestled with this in the 1870s and proposed a universe of fluctuations where we live in a low-entropy region. Eddington coined "arrow of time" in 1927. Penrose framed the initial-condition problem rigorously in *The Road to Reality* (2004). Still open.`,
+  },
+
+  {
+    id: 'baryogenesis', name: 'Matter–Antimatter Asymmetry', domain: 'unknown', symbol: 'B≠0',
+    tagline: 'Why is there anything at all?',
+    equation: 'n_B/n_γ ≈ 6 × 10⁻¹⁰',
+    deps: ['standard', 'bigbang'], known: false, sim: null,
+    eli5: `When energy turns into matter, it normally makes a particle and an anti-particle at the same time. When they meet, they vanish again. So after the Big Bang, all the matter should have met all the anti-matter, and the universe should be empty. It isn't. There's stuff — stars, planets, you. Where did the anti-matter go? We don't know. The slight imbalance that let us exist is one of physics' biggest open questions.`,
+    intermediate: `Observations show the universe is made almost entirely of matter, with only tiny traces of antimatter near high-energy sources. The ratio of baryons to photons is ≈ 6 × 10⁻¹⁰ — after most matter annihilated with antimatter in the first instants, only about a billionth survived, and that billionth is everything we see. Sakharov (1967) identified three necessary conditions for generating this asymmetry from a symmetric start: baryon-number violation, C and CP violation, and departure from thermal equilibrium. The Standard Model contains all three but at levels too small by many orders of magnitude.`,
+    expert: `Sakharov conditions: (1) baryon-number violation (SM sphalerons satisfy this non-perturbatively); (2) C and CP violation (SM has CKM-phase CP violation but insufficient); (3) departure from thermal equilibrium (SM electroweak phase transition is a smooth crossover, not first-order). Beyond-SM mechanisms: **leptogenesis** via heavy right-handed neutrino decays followed by sphaleron transfer; **electroweak baryogenesis** with an extended Higgs sector making a first-order transition; **Affleck–Dine** using supersymmetric flat directions; **GUT baryogenesis** via heavy boson decays. Direct tests are limited; matter–antimatter asymmetry in neutrino oscillations (DUNE, Hyper-K) would bolster leptogenesis.`,
+    surprise: `For every billion antimatter particles in the early universe, there were a billion and one matter particles. Everything you see — stars, galaxies, your body — is the one-in-a-billion survivor of the great annihilation.`,
+    history: `Andrei Sakharov published the three conditions in 1967. Fukugita and Yanagida proposed leptogenesis in 1986. CP violation was discovered by Cronin and Fitch (1964 kaon experiments, 1980 Nobel). The asymmetry's ultimate source is still unknown in 2026.`,
+  },
+
+  {
+    id: 'p_vs_np', name: 'P vs NP', domain: 'unknown', symbol: 'P=NP?',
+    tagline: 'Is finding an answer as hard as checking one?',
+    equation: 'P ⊆ NP;  P = NP ?',
+    deps: ['computation', 'logic'], known: false, sim: null,
+    eli5: `Some problems are easy to check once you have the answer — like a Sudoku puzzle, where you can verify a solution in seconds but finding it takes ages. P vs NP asks: is there always a shortcut? Could there be a fast way to solve every puzzle you can quickly check? If yes, maths and science get far easier overnight and most modern cryptography breaks. Most people think the answer is no — but nobody has proved it. It's worth a million dollars.`,
+    intermediate: `**P** is the class of problems solvable in polynomial time. **NP** is the class of problems whose solutions can be verified in polynomial time. Every problem in P is also in NP. The question is whether the reverse holds — whether there's a general shortcut from verification to solution. The consensus among theoretical computer scientists is P ≠ NP, but nobody has proved it. Thousands of important problems (Boolean satisfiability, the travelling salesman, protein folding, optimal scheduling) are "NP-complete" — a polynomial-time algorithm for any one would give polynomial algorithms for all. It's one of the Clay Millennium Prize problems.`,
+    expert: `NP-completeness was established by Cook (1971) and Levin (1973) for Boolean satisfiability. Karp (1972) showed 21 classic problems are NP-complete. Known barriers to proof include relativisation (Baker–Gill–Solovay 1975), natural proofs (Razborov–Rudich 1994), and algebrisation (Aaronson–Wigderson 2008) — any viable proof must evade all three. Geometric Complexity Theory (Mulmuley) aims to use representation theory to separate P from NP but has been slow going. The Unique Games Conjecture, if true, pins down the approximability of many problems. Quantum complexity (BQP) adds a third pillar: BQP is not known to equal or exceed NP.`,
+    surprise: `If P = NP turned out to be true, most of the internet's security would collapse overnight. Online banking, Bitcoin, end-to-end encryption — all of it depends on the belief that certain problems are hard to solve but easy to verify.`,
+    history: `Stephen Cook formalised the problem in 1971. The Clay Mathematics Institute offered $1 million for a proof either way in 2000. Over 100 serious attempted proofs have been posted to arXiv — none have survived scrutiny. As of 2026, still open.`,
+  },
+
+  {
+    id: 'missing_unknowns', name: 'What We Don\'t Know We Don\'t Know', domain: 'unknown', symbol: '??',
+    tagline: 'The unknown unknowns.',
+    equation: '∅',
+    deps: ['quantum_gravity', 'dark_nature', 'consciousness'], known: false, sim: null,
+    eli5: `Imagine if, 200 years ago, someone told a scientist "the universe is expanding, atoms are mostly empty, time slows down when you move fast, there are invisible particles everywhere, and 95% of the universe is made of stuff nobody knows about." They'd think you were mad. A lot of what we now know, we had no idea was even a question back then. So the scariest thought is: what enormous, obvious things are we missing today? We probably know less than we think.`,
+    intermediate: `Every major era of science has been blindsided by discoveries the previous era didn't even have categories for. Nineteenth-century physics had no concept of quantum mechanics or general relativity. Early twentieth-century biology had no concept of DNA. Mid-twentieth-century cosmology had no concept of dark energy. There is no particular reason to think our era is different. Estimates of how much we know range wildly, but a sober take: we understand the fundamental laws at energy scales we can access, and the basic machinery of life, and the rough history of the cosmos — but we barely understand complex systems, consciousness, emergence, the origin of life, or the full contents of the universe. The iceberg analogy is optimistic; it might be more like a snowball on a mountain.`,
+    expert: `Donald Rumsfeld's taxonomy — known knowns, known unknowns, unknown unknowns — is unexpectedly useful here. Our *known unknowns* include quantum gravity, dark matter nature, dark energy nature, the measurement problem, abiogenesis, consciousness, the fine-tuning of constants, the strong-CP problem, the hierarchy problem, baryogenesis, neutrino mass ordering, the nature of inflation, and the matter composition of 95% of the universe. Historical precedents suggest *unknown unknowns* are the larger category. Fermi's paradox, the discovery of dark energy, the measurement problem itself, and the persistence of the hard problem of consciousness all hint that our framework is incomplete in ways we cannot currently articulate. Epistemic humility is the appropriate stance: the map is not the territory, and the territory may not be made of anything like maps.`,
+    surprise: `Every generation of scientists has been absolutely certain they were close to a "final theory." Every generation has been wrong. At least three separate times in the last 150 years, famous physicists have announced that physics was almost done. Shortly after each announcement, something enormous was discovered.`,
+    history: `In 1894 Albert Michelson said "the grand underlying principles [of physics] have been firmly established" — quantum mechanics and relativity followed within 30 years. In 1928 Max Born said "physics, as we know it, will be over in six months" — quantum field theory, QED, the weak and strong forces, the Standard Model, dark matter, dark energy and black holes were all still ahead. The pattern is conspicuous.`,
+  },
+
   {
     id: 'stars', name: 'Stars & Nucleosynthesis', domain: 'cosmos', symbol: '★',
     tagline: 'You are made of stars.',
@@ -624,6 +762,30 @@ const IMAGES = {
                    caption: 'Simulated dark-matter halo structure' },
   stars:         { image: WM('Pillars_2014_HST_WFC3-UVIS_full-res_denoised.jpg'),
                    caption: "Hubble's Pillars of Creation — a star nursery" },
+
+  // Frontier / unknown
+  quantum_gravity:    { image: WM('Calabi_yau.jpg'),
+                        caption: 'A Calabi–Yau manifold — proposed string-theory geometry' },
+  dark_nature:        { image: WM('Bullet_cluster_dark_matter_map.jpg'),
+                        caption: 'The Bullet Cluster — dark matter separated by lensing' },
+  dark_energy_nature: { image: WM('Supernova-1994D.jpg'),
+                        caption: 'SN 1994D — Type Ia supernova used to measure acceleration' },
+  measurement:        { image: WM('Bohr-atom-PAR.svg'),
+                        caption: 'Collapse or branch? A century-old question' },
+  abiogenesis:        { image: WM('Miller-Urey_experiment-en.svg'),
+                        caption: 'The Miller–Urey experiment — chemistry to amino acids' },
+  consciousness:      { image: WM('Cajal_cortex_drawings.png'),
+                        caption: "Cajal's cortical drawings — billions of cells, one mind" },
+  fine_tuning:        { image: WM('Lambda-Cold_Dark_Matter%2C_Accelerated_Expansion_of_the_Universe%2C_Big_Bang-Inflation.jpg'),
+                        caption: 'The cosmic timeline — every constant finely placed' },
+  arrow_of_time:      { image: WM('Boltzmann2.jpg'),
+                        caption: 'Boltzmann — wrestled with time\'s direction' },
+  baryogenesis:       { image: WM('Feynmann_Diagram_Gluon_Radiation.svg'),
+                        caption: 'An asymmetry we cannot yet explain' },
+  p_vs_np:            { image: WM('Complexity_classes.svg'),
+                        caption: 'Complexity classes — is P really inside NP?' },
+  missing_unknowns:   { image: WM('Iceberg_in_the_Arctic_with_its_underside_exposed.jpg'),
+                        caption: 'What we see vs what is below the waterline' },
 };
 
 LAWS.forEach(l => {
@@ -633,3 +795,27 @@ LAWS.forEach(l => {
     l.caption = img.caption;
   }
 });
+
+// Cross-links: conceptual kinships that aren't strict dependencies.
+// Rendered as faint dashed arrows in a second colour to suggest
+// "these ideas rhyme even though one doesn't build on the other."
+const ANALOGIES = [
+  ['symmetry',    'conservation', 'Noether: each symmetry is a conservation law'],
+  ['information', 'thermo',       'Shannon entropy ≈ physical entropy (Landauer)'],
+  ['euler',       'quantum',      'complex exponentials = quantum waves'],
+  ['probability', 'quantum',      'Born rule: probabilities from amplitudes'],
+  ['gametheory',  'evolution',    'evolutionarily stable strategies'],
+  ['complexity',  'emergence',    'chaos + self-organisation'],
+  ['geometry',    'general',      'curved manifolds = gravity'],
+  ['sets',        'logic',        'ZFC: set theory and logic entwined'],
+  ['computation', 'logic',        'proof = program (Curry–Howard)'],
+  ['statmech',    'information',  'both measure disorder in bits'],
+];
+const byIdMap = new Map(LAWS.map(l => [l.id, l]));
+ANALOGIES.forEach(([a, b, note]) => {
+  const A = byIdMap.get(a), B = byIdMap.get(b);
+  if (!A || !B) return;
+  (A.analogous ||= []).push({ id: b, note });
+  (B.analogous ||= []).push({ id: a, note });
+});
+
