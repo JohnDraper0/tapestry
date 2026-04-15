@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>The Tapestry · Natural Laws from First Principles</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ── animated cosmic background ────────────────── -->
+  <canvas id="bg"></canvas>
+
+  <!-- ── intro overlay ─────────────────────────────── -->
+  <div id="intro">
+    <div class="intro-box">
+      <div class="intro-eyebrow">An Interactive Cosmology of Knowledge</div>
+      <h1 class="intro-title">The&nbsp;<strong>Tapestry</strong></h1>
+      <div class="intro-sub">Natural laws, from first principles</div>
+      <div class="intro-body">
+        <p>Every law of nature rests on a simpler one beneath it. <span class="h1">Logic</span> lets us think. <span class="h2">Numbers</span> let us count. <span class="h3">Calculus</span> lets us describe change. <span class="h4">Symmetry</span> gives us conservation. Conservation gives us Newton. Newton gives us orbits and Einstein. And on, and on — all the way up to stars, to life, to minds.</p>
+        <p>This is the map. <em>Foundations at the centre.</em> Each ring outward is built from the one inside. Each colour is a different branch of knowledge.</p>
+        <p>Click any node for an explanation a 5-year-old could follow, a deeper one for grown-ups, the equation, and a live interactive simulation you can play with.</p>
+      </div>
+      <div class="intro-controls">
+        <span><kbd>click</kbd> node</span>
+        <span><kbd>drag</kbd> pan</span>
+        <span><kbd>scroll</kbd> zoom</span>
+        <span><kbd>R</kbd> reset</span>
+        <span><kbd>Esc</kbd> close</span>
+        <span><kbd>M</kbd> mute</span>
+      </div>
+      <button id="introBtn">Begin the Journey</button>
+      <div class="intro-footnote">🎧 headphones recommended — with sound</div>
+    </div>
+  </div>
+
+  <!-- ── header ───────────────────────────────────── -->
+  <header>
+    <div>
+      <div class="title">The <strong>Tapestry</strong></div>
+      <div class="subtitle">Natural laws, from first principles</div>
+    </div>
+    <div class="top-buttons">
+      <div class="theme-switcher" role="group" aria-label="Theme">
+        <button class="theme-btn" data-theme="cosmos">Cosmos</button>
+        <button class="theme-btn" data-theme="paper">Paper</button>
+        <button class="theme-btn" data-theme="blueprint">Blueprint</button>
+      </div>
+      <button class="top-btn" id="muteBtn" title="Toggle sound">♪ on</button>
+      <button class="top-btn" id="resetBtn" title="Recenter map">Recenter</button>
+      <button class="top-btn" id="helpBtn" title="Show intro">Intro</button>
+    </div>
+  </header>
+
+  <!-- ── the map ──────────────────────────────────── -->
+  <svg id="map">
+    <defs>
+      <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="4" result="b1"/>
+        <feGaussianBlur stdDeviation="12" result="b2"/>
+        <feMerge>
+          <feMergeNode in="b2"/>
+          <feMergeNode in="b1"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="softglow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="2" result="b1"/>
+        <feMerge>
+          <feMergeNode in="b1"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g id="viewport"></g>
+  </svg>
+
+  <!-- ── legend ───────────────────────────────────── -->
+  <div id="legend"></div>
+
+  <div class="hint">
+    drag · scroll · click · <kbd>R</kbd> reset · <kbd>M</kbd> mute · <kbd>Esc</kbd> close
+  </div>
+
+  <!-- ── detail panel ─────────────────────────────── -->
+  <aside id="panel">
+    <button id="panelClose">✕</button>
+    <div id="panelBody"></div>
+  </aside>
+
+  <script src="data.js"></script>
+  <script src="bg.js"></script>
+  <script src="sound.js"></script>
+  <script src="sims.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
