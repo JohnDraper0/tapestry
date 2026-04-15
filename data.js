@@ -128,6 +128,18 @@ const LAWS = [
     history: `Pascal and Fermat exchanged letters in 1654 about gambling odds — the birth of probability theory. Bayes' posthumous essay (1763) introduced conditional reasoning. Kolmogorov's axioms (1933) put the whole field on rigorous ground.`,
   },
 
+  {
+    id: 'fourier', name: 'Fourier Analysis', domain: 'math', symbol: 'f̂(ξ)',
+    tagline: 'Every signal is a sum of simple waves.',
+    equation: '\\hat{f}(\\xi) = \\int_{-\\infty}^{\\infty} f(x)\\,e^{-2\\pi i x \\xi}\\,dx',
+    deps: ['calculus', 'euler'], sim: null,
+    eli5: `Listen to a chord on a piano — three notes ringing at once, all tangled together. Your ear untangles them and hears each note separately. Fourier analysis is the mathematical version of that trick. Any signal — a sound, a heartbeat, a radio wave, even a photograph — can be sliced apart into pure, simple waves. Once you know which waves are in there, you can filter them, fix them, compress them, or transmit them.`,
+    intermediate: `In 1822 Joseph Fourier showed that any periodic function — however jagged and complicated — can be written as an infinite sum of simple sine and cosine waves, each with its own frequency and amplitude. The Fourier transform extends this to any function whatsoever. The result is a "frequency portrait" of a signal: which frequencies are loud, which are quiet, and which are absent entirely. That portrait underlies mobile-phone audio compression, MRI scanning (images reconstructed from radio echoes), noise-cancelling headphones, JPEG image compression, earthquake seismology, and the uncertainty principle in quantum mechanics — the impossibility of knowing both position and momentum precisely is literally a statement about Fourier transforms.`,
+    expert: `The Fourier transform f̂(ξ) = ∫ f(x) e^(−2πixξ) dx is a unitary isomorphism on L²(ℝ) (Plancherel theorem): ∫|f|² = ∫|f̂|². The convolution theorem (f * g)^ = f̂ · ĝ makes linear filter theory algebraically transparent. Shannon's sampling theorem is a direct corollary: a signal band-limited to B Hz is fully characterised by 2B samples per second. Heisenberg's uncertainty relation Δx · Δξ ≥ 1/(4π) follows because localising in x necessarily spreads f̂ in ξ. The Cooley–Tukey fast Fourier transform (FFT) computes the discrete N-point DFT in O(N log N) operations rather than O(N²), which in 1965 collapsed the cost of a 1,000-point transform from a million to ten thousand multiplications. Fourier duality extends to locally compact abelian groups (Pontryagin duality), and to non-abelian groups via representation theory — the same machinery underlies the Standard Model's gauge structure.`,
+    surprise: `Your cochlea — the spiral in your inner ear — performs a mechanical Fourier transform in real time. Different positions along its basilar membrane resonate at different frequencies, so your brain receives a ready-made frequency decomposition of every sound you hear. You are a living spectrum analyser.`,
+    history: `Joseph Fourier developed his series while studying heat diffusion in solids, publishing *Théorie analytique de la chaleur* in 1822. Lagrange initially rejected his claim that any function could be represented this way, calling it too audacious. The fast Fourier transform was independently found by Gauss around 1805 and lay unpublished until Cooley and Tukey rediscovered it in 1965 — a quarter-century after digital computing began, meaning an entire generation of scientists did FFT-like work the slow way unnecessarily.`,
+  },
+
   // ───────────────────────────── DEEP PRINCIPLES ────────────────────────────
 
   {
@@ -710,6 +722,8 @@ const IMAGES = {
                    caption: "Newton's own notebook — calculus invented here" },
   probability:   { image: WM('Pierre-Simon%2C_marquis_de_Laplace_%281745-1827%29_-_Guerin.jpg'),
                    caption: 'Laplace — chief architect of probability theory' },
+  fourier:       { image: WM('Joseph_Fourier.jpg'),
+                   caption: 'Joseph Fourier — heat, harmonics, and the frequency portrait of the universe' },
   symmetry:      { image: WM('Noether.jpg'),
                    caption: 'Emmy Noether — proved symmetry is conservation' },
   action:        { image: WM('Pendulum_animation.gif'),
