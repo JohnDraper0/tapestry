@@ -280,6 +280,18 @@ const LAWS = [
     history: `Faraday's experiments and intuitions about "lines of force" gave Maxwell his starting point. Maxwell published his treatise *A Dynamical Theory of the Electromagnetic Field* in 1865. Heinrich Hertz produced and detected radio waves in 1887, confirming the theory. Marconi made a radio fortune; Einstein built special relativity on Maxwell's foundation.`,
   },
 
+  {
+    id: 'ohms_law', name: "Ohm's Law", domain: 'em', symbol: 'V=IR',
+    tagline: 'Voltage, current, resistance — three in one.',
+    equation: 'V = IR',
+    deps: ['maxwell', 'statmech'], sim: null,
+    eli5: `Imagine water flowing through a pipe. Voltage is the water pressure — how hard it's being pushed. Current is how much water flows past each second. Resistance is how narrow or cloggy the pipe is. Ohm's law says: push harder (more voltage), more flows. Make the pipe thinner (more resistance), less flows. These three are always locked together: voltage equals current times resistance. Every light bulb, every phone charger, every battery in the world lives by this rule.`,
+    intermediate: `Georg Ohm discovered in 1827 that for most conductors, the current through them is exactly proportional to the voltage across them — double the voltage, double the current. The proportionality constant is resistance R, measured in ohms. Resistance depends on the material (copper vs rubber), the geometry (longer wire = more resistance), and temperature. Microscopically, electrons drift through a metal, scattering off atoms and shedding energy as heat — Joule heating P = I²R, which is why resistors get warm. Ohm's law is the starting point of every circuit calculation, from the LED current limiter to the national power grid. It breaks down in semiconductors, LEDs, and superconductors, where the current-voltage relationship turns non-linear or disappears entirely.`,
+    expert: `The Drude model (1900) treats conduction electrons as a classical gas: drift velocity v_d = eEτ/m with mean free time τ between collisions, yielding the microscopic form J = σE where σ = ne²τ/m. Bloch theory refines this: only electrons near the Fermi surface scatter; τ increases at low T as phonon scattering freezes, so metallic resistivity follows ρ(T) ≈ ρ₀ + AT². The full frequency-dependent conductivity σ(ω) governs the Drude peak and interband optical absorption. Ohm's law is violated in: Mott insulators (strong Coulomb repulsion localises electrons), Luttinger liquids (collective bosonic modes replace single-particle excitations in 1D), and superconductors, where Cooper pairs condense below T_c into a macroscopic quantum state with exactly zero resistance — described by BCS theory (Bardeen, Cooper, Schrieffer, Nobel 1972). Josephson junctions, where a supercurrent flows across an insulating barrier, extend Ohm's-law breakdown into quantum devices including qubits.`,
+    surprise: `In a superconductor, Ohm's law vanishes completely. A current set flowing in a superconducting ring has been measured still circulating, undimmed, more than two years later — the electrons travelling trillions of laps without losing a single joule to resistance. It is not very low resistance; it is exactly zero.`,
+    history: `Georg Ohm deduced his law in 1827 from painstaking galvanometer measurements on wires of different gauges and lengths. The Prussian education minister dismissed the paper as "a tissue of naked fancies" and Ohm was forced to resign his teaching post in humiliation. A decade later the Royal Society awarded him the Copley Medal — one of science's highest honours — and named the unit of resistance after him. He died in 1854, the same year the unit "ohm" was officially adopted.`,
+  },
+
   // ───────────────────────────── RELATIVITY ─────────────────────────────────
 
   {
@@ -770,6 +782,8 @@ const IMAGES = {
                    caption: 'Maxwell–Boltzmann speed distributions — temperature is molecules in motion' },
   maxwell:       { image: WM('James_Clerk_Maxwell.png'),
                    caption: 'James Clerk Maxwell — electricity, magnetism, light unified' },
+  ohms_law:      { image: WM('Georg_Simon_Ohm3.jpg'),
+                   caption: 'Georg Ohm — vindicated a decade after his law was called "naked fancies"' },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
                    caption: 'Einstein, 1921 — E = mc²' },
   general:       { image: WM('Black_hole_-_Messier_87_crop_max_res.jpg'),
