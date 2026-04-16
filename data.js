@@ -216,6 +216,18 @@ const LAWS = [
     history: `Newton's theory was published in the *Principia* (1687). Henry Cavendish measured G in 1798 using a torsion balance so sensitive he called it "weighing the Earth." Le Verrier predicted Neptune's existence from anomalies in Uranus's orbit in 1846, confirming Newton's law to spectacular accuracy.`,
   },
 
+  {
+    id: 'navier_stokes', name: 'Navier–Stokes Equations', domain: 'mechanics', symbol: '∇·v=0',
+    tagline: 'Every fluid in the universe, one equation.',
+    equation: '\\rho(\\partial_t\\mathbf{v} + \\mathbf{v}\\cdot\\nabla\\mathbf{v}) = -\\nabla p + \\mu\\,\\nabla^2\\mathbf{v} + \\mathbf{f}',
+    deps: ['newton', 'calculus', 'conservation'], sim: null,
+    eli5: `Watch water pour from a tap. Why does it narrow as it falls, swirl when it hits the basin, spray into droplets at the rim? The Navier–Stokes equations answer all of that. They say: a lump of fluid has momentum just like a ball, and the forces on it come from three things — pressure pushing it from high to low, its own stickiness slowing the edges down, and anything outside prodding it like gravity. Those two sentences, written as maths, govern every river, every hurricane, every cloud, every blood vessel, and every airplane wing on Earth.`,
+    intermediate: `The Navier–Stokes equations are Newton's second law written for a continuous fluid. The left side is mass times acceleration for every tiny parcel; the right side sums three forces: pressure gradients, viscous friction between neighbouring layers, and external body forces like gravity. At low speeds, flow is smooth and laminar; at high speeds — measured by the dimensionless Reynolds number Re = ρvL/μ — it breaks into turbulence: swirling eddies that cascade down to smaller eddies to still-smaller eddies, dissipating energy as heat. Every weather model, CFD simulation, aerodynamic design, and ocean-circulation model solves these equations — usually with approximations, because exact solutions exist only for a handful of simple geometries.`,
+    expert: `For an incompressible Newtonian fluid: ρ(∂_t𝐯 + 𝐯·∇𝐯) = −∇p + μ∇²𝐯 + 𝐟, with ∇·𝐯 = 0. The nonlinear advective term 𝐯·∇𝐯 is what makes exact solutions rare and turbulence possible. Reynolds number Re = ρvL/μ governs the laminar-to-turbulent transition; above Re ~ 10³–10⁶ (geometry-dependent), flow becomes chaotic. Kolmogorov's 1941 theory predicts a −5/3 power law for the turbulent energy spectrum: E(k) ∝ k^(−5/3), confirmed in experiments from pipe flow to the solar wind. Whether smooth initial data always yield globally smooth solutions in 3D or can blow up in finite time is the Navier–Stokes Clay Millennium Prize Problem — one of seven problems worth $1 M each, and the only classical-mechanics equation among them. In 2D smoothness is proven; 3D remains entirely open after 180 years. Exact solutions include Poiseuille flow (parabolic profile in a pipe), Couette flow, and Stokes flow (Re → 0, linearity recovers, used in microfluidics and swimming microbes). DNS (direct numerical simulation) must resolve all scales from the domain L down to the Kolmogorov dissipation scale η = (ν³/ε)^{1/4}; for a fully turbulent atmospheric flow this ratio exceeds 10⁹, making DNS astronomically expensive.`,
+    surprise: `Weather forecasts become unreliable after roughly 10 days — not because the equations are wrong, but because the atmosphere is so exquisitely sensitive to initial conditions that a tiny unmeasured perturbation grows to dominate the forecast. Edward Lorenz discovered this in 1961 while running a simplified version of Navier–Stokes on a room-sized computer. The limit is not a failure of technology; it is a theorem. The equations are predictable; the system they govern is not.`,
+    history: `Claude-Louis Navier added viscosity to Euler's ideal-fluid equations in 1822. George Gabriel Stokes put the derivation on rigorous mechanical grounds in 1845, not knowing Navier had done it first. The equations have been used, almost unchanged, for 180 years to design ships, planes, engines, and climate models — yet in 2000 the Clay Mathematics Institute listed proving (or disproving) whether their 3D solutions always remain smooth as one of the seven hardest unsolved problems in mathematics, offering $1 million for a proof.`,
+  },
+
   // ───────────────────────────── THERMODYNAMICS ─────────────────────────────
 
   {
@@ -846,6 +858,8 @@ const IMAGES = {
                    caption: "Hubble's Pillars of Creation — a star nursery" },
   chandrasekhar: { image: WM('Subrahmanyan_Chandrasekhar.jpg'),
                    caption: 'Subrahmanyan Chandrasekhar — derived the mass limit at 19' },
+  navier_stokes: { image: WM('Karman_vortex_street_off_Alejandro_Selkirk_Island.jpg'),
+                   caption: 'Von Kármán vortex streets from orbit — turbulence written in clouds' },
 
   // Frontier / unknown
   quantum_gravity:    { image: WM('Calabi_yau.jpg'),
@@ -894,6 +908,7 @@ const ANALOGIES = [
   ['sets',        'logic',        'ZFC: set theory and logic entwined'],
   ['computation', 'logic',        'proof = program (Curry–Howard)'],
   ['statmech',    'information',  'both measure disorder in bits'],
+  ['navier_stokes', 'complexity', 'turbulence is the canonical example of deterministic chaos'],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
