@@ -242,6 +242,18 @@ const LAWS = [
     history: `Maxwell distributed molecular velocities in 1860. Boltzmann wrote down S = k log W in the 1870s, was fiercely attacked by Mach and Ostwald for his "atom hypothesis," and died by suicide in 1906 — just as Einstein's Brownian motion paper vindicated him.`,
   },
 
+  {
+    id: 'stefan_boltzmann', name: 'Stefan–Boltzmann Law', domain: 'thermo', symbol: 'σT⁴',
+    tagline: 'Hotter things glow far more than you expect.',
+    equation: 'j = \\sigma T^4',
+    deps: ['thermo', 'statmech'], sim: null,
+    eli5: `Hold your hand near — not on — a hot stove. You feel warmth from a distance. That's invisible infrared light streaming off the hot metal. Everything above absolute zero glows with light, mostly infrared. Now here's the jaw-dropper: if something gets twice as hot, it doesn't glow twice as bright — it glows sixteen times as bright. Make it three times as hot and it's eighty-one times brighter. That rule — called the Stefan–Boltzmann law — is why stars look different colours, why the Sun is blindingly brilliant while a glowing coal is merely orange, and why your doctor can take your temperature with an infrared thermometer without touching you.`,
+    intermediate: `Every object above absolute zero radiates energy as electromagnetic waves. The total power per square metre of surface is j = σT⁴, where σ ≈ 5.67 × 10⁻⁸ W m⁻² K⁻⁴ and T is temperature in Kelvin. The fourth-power relationship is the key: double the temperature, sixteen times the power; triple it, eighty-one times. The Sun's surface at ~5,778 K radiates about 63 MW per square metre. Earth reaches thermal equilibrium with the Sun when its outgoing thermal radiation exactly balances incoming sunlight — making this law the backbone of climate science. It also governs stellar luminosity (L = 4πR²σT⁴), thermal cameras, pyrometers measuring furnace temperatures without contact, and why Venus is hotter than Mercury despite being farther from the Sun.`,
+    expert: `The Stefan–Boltzmann law is derived by integrating the Planck spectral radiance B_ν = (2hν³/c²)/(e^{hν/k_BT} − 1) over all frequencies and the upward hemisphere: j = ∫₀^∞ πB_ν dν = σT⁴. The dimensionless integral ∫₀^∞ u³/(e^u − 1) du = π⁴/15 yields σ = 2π⁵k_B⁴/(15h³c²) ≈ 5.670374419 × 10⁻⁸ W m⁻² K⁻⁴. Josef Stefan inferred the T⁴ law empirically in 1879; Boltzmann derived it from Maxwell radiation pressure and thermodynamics alone in 1884 — without any quantum hypothesis. The derivation of the exact constant σ required Planck's 1900 quantisation of the radiation field. For real surfaces, emissivity ε ∈ (0, 1] gives j = εσT⁴; a perfect blackbody has ε = 1. Earth's equilibrium temperature T_eq = T_⊙(R_⊙/2d)^{1/2} ≈ 255 K follows from equating absorbed solar flux and emitted thermal flux; the observed surface mean of ~288 K reflects a greenhouse forcing of ~33 K. Hawking radiation — the quantum thermal emission of black holes — is also a Stefan–Boltzmann process at T_H = ℏc³/(8πGMk_B): a solar-mass black hole has T_H ~ 60 nK and would take 2 × 10⁶⁷ years to evaporate.`,
+    surprise: `Hawking radiation — the slow thermal glow quantum mechanics forces every black hole to emit — obeys the Stefan–Boltzmann law. A stellar-mass black hole is only 60 nanokelvins above absolute zero and would take longer to evaporate than 10⁵⁷ current ages of the universe. The universe is far too young and far too warm for any such black hole to have shed even a single gram yet.`,
+    history: `Josef Stefan deduced the T⁴ law in 1879 from Tyndall's measurements of heated platinum wires. His student Ludwig Boltzmann derived it from first principles in 1884 using Maxwell's radiation pressure and the second law of thermodynamics — a triumph before quantum theory existed. The constant σ's exact value had to wait for Max Planck's 1900 quantum hypothesis, which was introduced specifically to make the integral converge and accidentally founded quantum mechanics.`,
+  },
+
   // ───────────────────────────── ELECTROMAGNETISM ───────────────────────────
 
   {
@@ -740,6 +752,8 @@ const IMAGES = {
                    caption: 'Watt steam engine — thermodynamics in iron' },
   statmech:      { image: WM('Boltzmann2.jpg'),
                    caption: 'Ludwig Boltzmann — S = k log W on his tombstone' },
+  stefan_boltzmann: { image: WM('Blackbody-lg.png'),
+                      caption: 'Blackbody spectra at different temperatures — the T⁴ law made visible' },
   maxwell:       { image: WM('James_Clerk_Maxwell.png'),
                    caption: 'James Clerk Maxwell — electricity, magnetism, light unified' },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
