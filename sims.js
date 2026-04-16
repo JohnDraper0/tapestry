@@ -859,6 +859,118 @@ SIMS.expansion = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── LOTKA–VOLTERRA ──────────────────────────────
+SIMS.lotka_volterra = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // α prey birth-rate, β predation rate, δ conversion efficiency, γ predator death-rate
+  // Coexistence equilibrium: x* = γ/δ = 10,  y* = α/β = 8
+  // Period ≈ 2π / √(αγ) ≈ 9.9 model-units; at dt=0.05/frame @60fps ≈ 3.3 s/cycle
+  const α = 0.8, β = 0.1, δ = 0.05, γ = 0.5;
+  let x = 15, y = 4;   // prey, predator — off-equilibrium start
+
+  const HIST = 380;
+  const hist = [];
+  let raf;
+
+  function rk4() {
+    const dt = 0.05;
+    const dx = (px, py) => α * px - β * px * py;
+    const dy = (px, py) => δ * px * py - γ * py;
+    const k1x = dx(x, y),                           k1y = dy(x, y);
+    const k2x = dx(x+dt/2*k1x, y+dt/2*k1y),        k2y = dy(x+dt/2*k1x, y+dt/2*k1y);
+    const k3x = dx(x+dt/2*k2x, y+dt/2*k2y),        k3y = dy(x+dt/2*k2x, y+dt/2*k2y);
+    const k4x = dx(x+dt*k3x,   y+dt*k3y),           k4y = dy(x+dt*k3x,   y+dt*k3y);
+    x = Math.max(0.01, x + dt/6 * (k1x + 2*k2x + 2*k3x + k4x));
+    y = Math.max(0.01, y + dt/6 * (k1y + 2*k2y + 2*k3y + k4y));
+  }
+
+  function draw() {
+    rk4();
+    hist.push({ x, y });
+    if (hist.length > HIST) hist.shift();
+    ctx.clearRect(0, 0, w, h);
+
+    // ── TOP 55%: time-series ────────────────────────────────────────────
+    const SPLIT = Math.floor(h * 0.55);
+    const maxPop = 30;
+
+    ctx.lineWidth = 1.5;
+    [['#8bc34a', 'x'], ['#ef5350', 'y']].forEach(([col, key]) => {
+      ctx.strokeStyle = col;
+      ctx.beginPath();
+      hist.forEach((p, i) => {
+        const px = (i / HIST) * w;
+        const py = SPLIT - 6 - Math.max(0, Math.min(1, p[key] / maxPop)) * (SPLIT - 16);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+    });
+
+    ctx.font = '12px system-ui';
+    ctx.fillStyle = '#8bc34a'; ctx.fillText(`prey  ${x.toFixed(1)}`, 10, 16);
+    ctx.fillStyle = '#ef5350'; ctx.fillText(`predators  ${y.toFixed(1)}`, 10, 32);
+    ctx.fillStyle = 'rgba(180,180,180,0.55)'; ctx.font = '10px system-ui';
+    ctx.fillText('prey peak leads predator peak by a quarter-cycle', 10, 50);
+
+    // divider
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath(); ctx.moveTo(0, SPLIT + 2); ctx.lineTo(w, SPLIT + 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── BOTTOM 45%: phase portrait ──────────────────────────────────────
+    const pHh = h - SPLIT - 20;
+    const pX0 = 42, pY0 = SPLIT + 8;
+    const pW  = w - pX0 - 16;
+    const maxX = 30, maxY = 22;
+
+    const ppX = v => pX0 + Math.max(0, Math.min(1, v / maxX)) * pW;
+    const ppY = v => pY0 + pHh - Math.max(0, Math.min(1, v / maxY)) * pHh;
+
+    // axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pX0, pY0); ctx.lineTo(pX0, pY0 + pHh);
+    ctx.moveTo(pX0, pY0 + pHh); ctx.lineTo(pX0 + pW, pY0 + pHh);
+    ctx.stroke();
+
+    // orbit trail
+    if (hist.length > 2) {
+      ctx.strokeStyle = 'rgba(100, 190, 255, 0.5)'; ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      hist.forEach((p, i) =>
+        i === 0 ? ctx.moveTo(ppX(p.x), ppY(p.y)) : ctx.lineTo(ppX(p.x), ppY(p.y))
+      );
+      ctx.stroke();
+    }
+
+    // equilibrium crosshair
+    const eqX = ppX(γ / δ), eqY = ppY(α / β);
+    ctx.strokeStyle = 'rgba(255,210,80,0.85)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(eqX - 6, eqY); ctx.lineTo(eqX + 6, eqY);
+    ctx.moveTo(eqX, eqY - 6); ctx.lineTo(eqX, eqY + 6);
+    ctx.stroke();
+
+    // current-state dot
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(ppX(x), ppY(y), 4, 0, Math.PI * 2); ctx.fill();
+
+    // axis labels
+    ctx.fillStyle = 'rgba(160,160,160,0.65)'; ctx.font = '10px system-ui';
+    ctx.fillText('prey →', pX0 + pW - 44, pY0 + pHh + 14);
+    ctx.fillText('pred ↑', 2, pY0 + 10);
+    ctx.fillStyle = 'rgba(255,210,80,0.8)';
+    ctx.fillText('equilibrium', eqX + 8, eqY - 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
