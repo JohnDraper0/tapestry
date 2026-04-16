@@ -1154,6 +1154,106 @@ SIMS.fourier = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ──────────────────────── GAME THEORY ───────────────────────────────
+// Spatial prisoner's dilemma — Nowak & May, Nature 359:826 (1992).
+// Each cell plays C or D against its 4 neighbours + self each generation.
+// Cells copy the strategy of their highest-scoring neighbour.
+// At b = 1.85 cooperators and defectors coexist in fractal-like clusters.
+// 4-colour code: blue=stable C, red=stable D, yellow=newly C, green=newly D.
+SIMS.gametheory = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  const CELL = 6;
+  const COLS = Math.floor(w / CELL);
+  const ROWS = Math.floor(h / CELL);
+  const N = COLS * ROWS;
+  const B = 1.85; // temptation to defect — cooperators persist for 1 < b < 2
+
+  let grid  = new Uint8Array(N); // 0 = cooperate, 1 = defect
+  let next  = new Uint8Array(N);
+  let scores = new Float32Array(N);
+  let gen = 0, raf;
+
+  const idx = (x, y) =>
+    ((y + ROWS) % ROWS) * COLS + ((x + COLS) % COLS);
+
+  const pay = (me, opp) =>
+    me === 1 && opp === 0 ? B : (me === 0 && opp === 0 ? 1 : 0);
+
+  function init() {
+    grid.fill(0); next.fill(0);
+    const cx = Math.floor(COLS / 2), cy = Math.floor(ROWS / 2);
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++)
+        grid[idx(cx + dx, cy + dy)] = 1;
+    gen = 0;
+  }
+
+  function reset() {
+    for (let i = 0; i < N; i++) grid[i] = next[i] = Math.random() < 0.5 ? 1 : 0;
+    gen = 0;
+  }
+
+  function step() {
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const me = grid[y * COLS + x];
+        scores[y * COLS + x] = pay(me, me)
+          + pay(me, grid[idx(x-1, y)]) + pay(me, grid[idx(x+1, y)])
+          + pay(me, grid[idx(x, y-1)]) + pay(me, grid[idx(x, y+1)]);
+      }
+    }
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        let best = scores[y * COLS + x], strat = grid[y * COLS + x];
+        for (const [nx, ny] of [[x-1,y],[x+1,y],[x,y-1],[x,y+1]]) {
+          const ni = idx(nx, ny);
+          if (scores[ni] > best) { best = scores[ni]; strat = grid[ni]; }
+        }
+        next[y * COLS + x] = strat;
+      }
+    }
+    const tmp = grid; grid = next; next = tmp; // grid=new, next=old (for 4-colour)
+    gen++;
+    if (gen > 350) reset();
+  }
+
+  function draw() {
+    step();
+    let nC = 0;
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const i = y * COLS + x;
+        const newS = grid[i], oldS = next[i];
+        if (newS === 0) nC++;
+        ctx.fillStyle = newS === 0
+          ? (oldS === 0 ? '#4488ff' : '#ffcc00')   // stable-C=blue, newly-C=yellow
+          : (oldS === 1 ? '#ff4444' : '#44cc44');  // stable-D=red,  newly-D=green
+        ctx.fillRect(x * CELL, y * CELL, CELL - 1, CELL - 1);
+      }
+    }
+    // Status bar
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(0, h - 22, w, 22);
+    ctx.fillStyle = '#fff'; ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText(`gen ${gen}   cooperators ${((nC/N)*100).toFixed(1)}%   (b = ${B})`, 6, h - 6);
+    // Colour legend
+    const LEG = [['#4488ff','C stable'],['#ffcc00','→ C'],['#ff4444','D stable'],['#44cc44','→ D']];
+    let lx = 6;
+    ctx.font = '10px system-ui';
+    LEG.forEach(([col, label]) => {
+      ctx.fillStyle = col; ctx.fillRect(lx, 6, 8, 8);
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.fillText(label, lx + 10, 15);
+      lx += ctx.measureText(label).width + 22;
+    });
+    raf = requestAnimationFrame(draw);
+  }
+
+  init();
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
