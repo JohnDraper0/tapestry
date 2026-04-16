@@ -47,7 +47,7 @@ const LAWS = [
   {
     id: 'sets', name: 'Set Theory', domain: 'math', symbol: '∈',
     tagline: 'The language mathematics speaks.',
-    equation: 'ℵ₀ < 2^ℵ₀',
+    equation: '\\aleph_0 < 2^{\\aleph_0}',
     deps: ['logic'], sim: null,
     eli5: `A set is just a bag of things — any things. A bag of apples. A bag of all cats. A bag of all numbers. Once you can talk about bags, you can talk about almost anything: bags inside bags, bags that have the same count, bags that are bigger than other bags — even bags of infinity!`,
     intermediate: `In the late 1800s, Georg Cantor showed something shocking: there are different sizes of infinity. The whole numbers are infinite, but the real numbers are *more* infinite — you can't pair them up one-to-one. Modern maths is built on a tiny handful of rules about sets (the ZFC axioms), from which everything else — numbers, functions, geometry, calculus — can be constructed. Set theory is the common language every branch of mathematics is translated into.`,
@@ -71,7 +71,7 @@ const LAWS = [
   {
     id: 'geometry', name: 'Geometry', domain: 'math', symbol: '△',
     tagline: 'The shape of space.',
-    equation: 'a² + b² = c²',
+    equation: 'a^2 + b^2 = c^2',
     deps: ['numbers', 'logic'], sim: 'pythagoras',
     eli5: `Geometry is the maths of shapes. Stretch a string tight and you get a straight line. Spin a string around a pin and you get a circle. These rules are so reliable that the Egyptians used them to rebuild farm boundaries after the Nile flooded — and we use them today to aim rockets at Mars.`,
     intermediate: `Around 300 BCE Euclid showed you could derive almost all of geometry from just five axioms. Later mathematicians discovered his fifth (the parallel postulate) was optional — drop it and you get new geometries for curved surfaces like the sphere and the hyperbolic plane. This was the first time humans fully appreciated the power of axioms: pick a few simple rules and an entire universe of truths tumbles out.`,
@@ -95,7 +95,7 @@ const LAWS = [
   {
     id: 'euler', name: "Euler's Identity", domain: 'math', symbol: 'eⁱᵖ',
     tagline: 'Five constants, one equation.',
-    equation: 'e^(iπ) + 1 = 0',
+    equation: 'e^{i\\pi} + 1 = 0',
     deps: ['algebra', 'calculus'], sim: null,
     eli5: `Imagine spinning round and round on a roundabout. Leonhard Euler found a single sentence that connects spinning, growing, circles, imaginary numbers and zero — all at once. Many mathematicians call it the most beautiful equation ever written, because it shouldn't be so short, but it is.`,
     intermediate: `Euler's identity unites the five most important numbers in mathematics: 0 and 1 (the additive and multiplicative identities), π (geometry of circles), e (the base of natural growth), and i (the imaginary unit). The identity e^(iπ) + 1 = 0 says that rotating by π radians in the complex plane lands you at −1. More generally, e^(iθ) = cos θ + i sin θ — the exponential function is a rotation, which is why complex numbers describe waves, oscillations, and quantum amplitudes so elegantly.`,
@@ -107,7 +107,7 @@ const LAWS = [
   {
     id: 'calculus', name: 'Calculus', domain: 'math', symbol: '∫ d/dt',
     tagline: 'The mathematics of change.',
-    equation: 'f′(x) = lim (f(x+h) − f(x))/h',
+    equation: "f'(x) = \\lim_{h\\to 0}\\dfrac{f(x+h)-f(x)}{h}",
     deps: ['algebra', 'geometry'], sim: 'calculus',
     eli5: `Imagine rolling a ball down a hill. It speeds up. How fast is it going right *now*, at this exact instant? Calculus is the amazing trick that lets you answer "right now." It slices time into impossibly thin slivers and asks: over a sliver this small, how much did things change?`,
     intermediate: `Newton and Leibniz independently invented calculus in the late 1600s. It has two halves: the derivative (the instantaneous rate of change — speed is the derivative of position) and the integral (the total accumulation — distance is the integral of speed). The fundamental theorem of calculus says these operations are inverses of each other. With calculus, any process that changes smoothly — orbits, heat flow, populations, currents, fluid motion — can be written down and solved.`,
@@ -119,7 +119,7 @@ const LAWS = [
   {
     id: 'probability', name: 'Probability', domain: 'math', symbol: 'P(x)',
     tagline: 'The mathematics of not knowing.',
-    equation: 'P(A|B) = P(B|A)·P(A) / P(B)',
+    equation: 'P(A|B) = \\dfrac{P(B|A)\\,P(A)}{P(B)}',
     deps: ['algebra', 'sets'], sim: null,
     eli5: `When you roll a die, you don't know which face will land up — but you know each face is equally likely, so each has a 1-in-6 chance. Probability is the maths of "I don't know exactly, but I know how likely." It turns out this maths runs everything from insurance to quantum physics.`,
     intermediate: `Probability measures uncertainty on a scale from 0 (impossible) to 1 (certain). From Kolmogorov's three axioms we get a whole calculus of uncertainty: conditional probability, Bayes' theorem, expectations, distributions. Statistics applies probability to data: given what we observed, what should we believe? Probability is essential for statistical mechanics (many particles), quantum theory (the laws themselves are probabilistic), machine learning, finance, and any science that has to infer from noisy measurements.`,
@@ -157,7 +157,7 @@ const LAWS = [
   {
     id: 'action', name: 'Principle of Least Action', domain: 'principle', symbol: 'δS = 0',
     tagline: 'Nature is lazy — beautifully.',
-    equation: 'S = ∫L dt,   δS = 0',
+    equation: 'S = \\int L\\,dt,\\quad \\delta S = 0',
     deps: ['calculus', 'symmetry'], sim: 'action',
     eli5: `If you throw a ball, it traces a curve through the air. Of all the possible paths it could have taken, why *that* one? The magical answer: nature always picks the path that makes a special quantity called "action" as small as possible. A ball, a ray of light, a tumbling planet — they all find the "laziest" path. From this one rule you can derive nearly all of physics.`,
     intermediate: `The principle of stationary action says a physical system evolves along the path that makes the integral of its Lagrangian (kinetic energy minus potential energy) stationary. From this single principle you can derive Newton's laws, Maxwell's equations, Einstein's general relativity, and even quantum field theory. In Feynman's path-integral formulation, a quantum particle literally "tries" every path; most cancel by interference, and the classical path is the one where they all add up. It's the closest physics gets to a single deep principle everything else flows from.`,
@@ -195,7 +195,7 @@ const LAWS = [
   {
     id: 'kepler', name: "Kepler's Laws", domain: 'mechanics', symbol: '☉',
     tagline: 'How planets really move.',
-    equation: 'T² ∝ a³',
+    equation: 'T^2 \\propto a^3',
     deps: ['geometry', 'newton'], sim: null,
     eli5: `Planets don't go around the Sun in perfect circles. Johannes Kepler worked out they actually go in stretched-out ovals called ellipses, with the Sun sitting at one squished side. They go fastest when they're closest to the Sun and slowest when they're farthest. And small planets whip around fast while big outer ones plod. Three simple rules describe the entire clockwork of a solar system.`,
     intermediate: `(1) Planets travel in ellipses with the Sun at one focus. (2) A line from Sun to planet sweeps equal areas in equal times — so orbits speed up near the Sun and slow down far from it. (3) The square of a planet's year is proportional to the cube of its average distance — Mars's 1.88-year year and 1.52-AU orbit are linked by exactly this formula. Kepler extracted these rules from naked-eye observations before Newton explained *why* they held.`,
@@ -207,7 +207,7 @@ const LAWS = [
   {
     id: 'gravity', name: 'Universal Gravitation', domain: 'mechanics', symbol: 'G',
     tagline: 'Everything pulls on everything.',
-    equation: 'F = G m₁m₂ / r²',
+    equation: 'F = \\dfrac{Gm_1 m_2}{r^2}',
     deps: ['newton', 'kepler'], sim: 'orbit',
     eli5: `Every piece of stuff in the universe tugs on every other piece. The tug gets stronger when things are heavier and weaker when they're farther apart — a lot weaker, fast. Earth tugs on you, you tug back on Earth (equally!), the Moon tugs on the oceans and makes tides, and the Sun tugs the whole Earth around in a big loop. Same rule everywhere.`,
     intermediate: `Newton's law of universal gravitation: F = G·m₁·m₂ / r². Two masses attract along the line between them, proportional to the product of the masses and inversely proportional to the square of their distance. The inverse-square law matters — double the distance, quarter the force. From this single equation Newton derived Kepler's three laws and explained the tides. For anything short of black holes, Newton's gravity is still the right tool.`,
@@ -221,7 +221,7 @@ const LAWS = [
   {
     id: 'thermo', name: 'Laws of Thermodynamics', domain: 'thermo', symbol: 'dS ≥ 0',
     tagline: 'Why time goes forward.',
-    equation: 'dU = TdS − PdV',
+    equation: 'dU = T\\,dS - P\\,dV',
     deps: ['conservation', 'probability', 'newton'], sim: 'entropy',
     eli5: `Drop an ice cube in hot tea. The tea cools, the ice melts. It never, ever runs backwards — you never see cold tea spontaneously heat up while freezing a cube. This is the deepest "arrow of time" in physics. Heat spreads out, and spread-out heat is much more likely than concentrated heat, just like shuffled cards are more likely than sorted ones. Energy can't be made or destroyed, but it always gets more spread out.`,
     intermediate: `Four laws: (0) Temperature is transitive — A in equilibrium with B and B with C means A with C. (1) Energy is conserved — you can't get out more than you put in. (2) Entropy (a measure of spread-out-ness) never decreases — you can't even break even. (3) As T → 0, S → S₀, a minimum value. The second law is especially profound: it's purely statistical — there are vastly more disordered states than ordered ones, so systems drift toward disorder. This gives time its direction.`,
@@ -233,7 +233,7 @@ const LAWS = [
   {
     id: 'statmech', name: 'Statistical Mechanics', domain: 'thermo', symbol: 'k_B ln W',
     tagline: 'Temperature is just counting microstates.',
-    equation: 'S = k_B ln W',
+    equation: 'S = k_{\\mathrm{B}}\\ln W',
     deps: ['thermo', 'probability', 'newton'], sim: null,
     eli5: `Imagine a million tiny bouncing balls in a box. You can't track them all — but you don't need to. You can just ask, on average, how fast they're bouncing, how spread out they are, how much energy they share. That averaging trick is statistical mechanics. It's how a jar of air "knows" to be at room temperature without anyone telling it.`,
     intermediate: `Ludwig Boltzmann and Josiah Gibbs showed that the laws of thermodynamics emerge from the statistics of enormous numbers of particles. Temperature is the average energy per particle. Pressure is the average rate of momentum transfer. Entropy counts how many microscopic arrangements (microstates) correspond to the same macroscopic description. Phase transitions — ice to water, iron magnetising — are collective effects of these statistics. The bridge from microscopic determinism to macroscopic thermodynamics was one of the great achievements of 19th-century physics.`,
@@ -271,7 +271,7 @@ const LAWS = [
   {
     id: 'maxwell', name: "Maxwell's Equations", domain: 'em', symbol: '∇·E, ∇×B',
     tagline: 'Light is a wave in the electric field.',
-    equation: '∇·E = ρ/ε₀, ∇×B − ∂E/∂t = μ₀J',
+    equation: '\\nabla\\!\\cdot\\!\\mathbf{E} = \\rho/\\varepsilon_0,\\quad \\nabla\\!\\times\\!\\mathbf{B} - \\partial_t\\mathbf{E} = \\mu_0\\mathbf{J}',
     deps: ['calculus', 'newton', 'conservation'], sim: 'wave',
     eli5: `Rub a balloon on your hair — it sticks to the wall. Swing a magnet past a wire — electricity flows. For ages these seemed like different things. Then James Maxwell figured out they're the same thing, dancing together. When they dance, they make ripples. Those ripples travel at exactly the speed of light — because light *is* those ripples. Radio, Wi-Fi, X-rays, the visible glow you're reading by: all the same wave, just at different frequencies.`,
     intermediate: `Four equations describe all classical electricity and magnetism: Gauss's law (charges make electric fields), Gauss's law for magnetism (no magnetic monopoles), Faraday's law (changing magnetic fields make electric fields), and Ampère–Maxwell (currents and changing electric fields make magnetic fields). From these, Maxwell derived that oscillating electric and magnetic fields propagate as waves at a specific speed — 1/√(ε₀μ₀) ≈ 3 × 10⁸ m/s, exactly the speed of light. Electricity, magnetism and light are one phenomenon.`,
@@ -285,7 +285,7 @@ const LAWS = [
   {
     id: 'special', name: 'Special Relativity', domain: 'relativity', symbol: 'E = mc²',
     tagline: 'Time and space bend to keep light constant.',
-    equation: 'E² = (mc²)² + (pc)²',
+    equation: 'E^2 = (mc^2)^2 + (pc)^2',
     deps: ['maxwell', 'symmetry'], sim: 'lightclock',
     eli5: `If you run next to a beam of light, how fast does the light seem to move? You'd think: light-speed minus your speed, like running next to a car. Nope. Light always looks like it's moving at the same speed — no matter how fast you're chasing. For this to work, time itself has to slow down for you as you speed up, and lengths have to shrink. Einstein figured out the weird consequences, and it turned out mass and energy are the same thing: E = mc².`,
     intermediate: `Einstein's 1905 theory has two postulates: (1) the laws of physics look the same in any non-accelerating frame; (2) the speed of light in vacuum is the same for all observers. From these come time dilation (moving clocks run slow), length contraction (moving rulers shrink), relativity of simultaneity (observers disagree on which events happened at the same time), and mass-energy equivalence E = mc². A tiny mass contains an enormous energy — which is why nuclear reactors and stars work.`,
@@ -297,7 +297,7 @@ const LAWS = [
   {
     id: 'general', name: 'General Relativity', domain: 'relativity', symbol: 'Gμν',
     tagline: 'Gravity is the shape of spacetime.',
-    equation: 'G_μν = 8πG · T_μν',
+    equation: 'G_{\\mu\\nu} = 8\\pi G\\,T_{\\mu\\nu}',
     deps: ['special', 'gravity', 'geometry'], sim: 'spacetime',
     eli5: `Imagine a stretched trampoline. Drop a bowling ball in the middle — it sinks, and the fabric curves. Roll a marble nearby; it spirals in toward the ball, not because the ball is pulling it, but because the fabric is bent. That's gravity. Heavy things like stars and planets bend the fabric of space and time itself, and everything else just rolls along the curves. Even light does.`,
     intermediate: `In 1915 Einstein replaced Newton's force of gravity with geometry. Matter and energy curve spacetime, and objects in free fall follow the straightest possible paths (geodesics) through this curved geometry. Einstein's field equations G_μν = 8πG·T_μν relate the curvature of spacetime to the matter-energy content. The theory predicts gravitational lensing, Mercury's perihelion precession, gravitational waves (detected directly in 2015), black holes, and the expanding universe. It is the most accurately tested theory of gravity we have.`,
@@ -311,7 +311,7 @@ const LAWS = [
   {
     id: 'quantum', name: 'Quantum Mechanics', domain: 'quantum', symbol: 'Ψ',
     tagline: 'Everything is waves of probability.',
-    equation: 'iℏ ∂Ψ/∂t = ĤΨ',
+    equation: 'i\\hbar\\dfrac{\\partial\\Psi}{\\partial t} = \\hat{H}\\Psi',
     deps: ['maxwell', 'probability', 'calculus', 'action'], sim: 'doubleslit',
     eli5: `Zoom way, way in, down to the level of atoms. Things stop behaving like little balls and start behaving like ripples. An electron isn't "here" or "there" — it's a cloud of "how likely" that fills the whole area. Only when you actually look does it settle on one spot. How likely it is to be spotted anywhere follows a wave pattern. That's why atoms exist, why chemistry works, why the Sun shines.`,
     intermediate: `Quantum mechanics describes matter at atomic scales. Key ideas: (1) wave-particle duality — electrons and photons act as both; (2) the wave function Ψ encodes all possible outcomes, and its squared magnitude gives probabilities; (3) the Schrödinger equation governs how Ψ evolves; (4) measurement "collapses" Ψ to a definite outcome; (5) energy and other quantities come in discrete lumps (quanta). This framework explains atomic structure, the periodic table, chemical bonding, lasers, semiconductors — essentially all of modern technology.`,
@@ -323,7 +323,7 @@ const LAWS = [
   {
     id: 'uncertainty', name: 'Uncertainty Principle', domain: 'quantum', symbol: 'Δx·Δp ≥ ℏ/2',
     tagline: 'Knowing one thing costs knowing another.',
-    equation: 'Δx·Δp ≥ ℏ/2',
+    equation: '\\Delta x\\,\\Delta p \\geq \\hbar/2',
     deps: ['quantum'], sim: null,
     eli5: `At the tiniest scales, nature has a weird rule: the more precisely you know *where* something is, the less you can know *how fast* it's moving — and vice versa. It's not that our instruments are bad. It's baked into reality. A particle with a very definite position is a very fuzzy wave of speeds. A particle with a very definite speed is spread out across all space.`,
     intermediate: `Heisenberg's uncertainty principle says that for certain pairs of quantities (position/momentum, energy/time), the product of their uncertainties has a lower bound: Δx·Δp ≥ ℏ/2. This isn't about measurement technology — it's a mathematical consequence of describing particles as waves. A wave tightly localised in space is a sum of many wavelengths; a wave of a single wavelength is infinitely spread out. Since momentum relates to wavelength, precise position forces fuzzy momentum. This is why atoms don't collapse — an electron squeezed to a point would have infinite momentum.`,
@@ -335,7 +335,7 @@ const LAWS = [
   {
     id: 'pauli', name: 'Pauli Exclusion Principle', domain: 'quantum', symbol: '≠',
     tagline: 'No two electrons in the same seat.',
-    equation: 'Ψ(1,2) = −Ψ(2,1)',
+    equation: '\\Psi(1,2) = -\\Psi(2,1)',
     deps: ['quantum'], sim: null,
     eli5: `Electrons have a weird rule: no two of them in the same atom can be in exactly the same state at exactly the same time. It's like a game of musical chairs where every chair can only hold one electron. This is why atoms have shells, why the periodic table exists, why you don't fall through your chair, why stars eventually hold themselves up against their own gravity. One tiny rule — and matter stays matter.`,
     intermediate: `Electrons (and all other fermions) obey a strict antisocial rule: two of them cannot occupy the same quantum state. Swap two identical fermions and their combined wave function changes sign — which forces them to avoid each other. This single constraint builds the periodic table: electrons fill atomic shells one at a time because they can't pile up. It's the reason chemistry works, the reason ordinary matter is rigid, and the reason white dwarfs and neutron stars don't immediately collapse under their own gravity.`,
@@ -347,7 +347,7 @@ const LAWS = [
   {
     id: 'qft', name: 'Quantum Field Theory', domain: 'quantum', symbol: 'φ̂(x)',
     tagline: 'Particles are ripples in fields.',
-    equation: 'ℒ = ψ̄(iγ^μ∂_μ − m)ψ',
+    equation: '\\mathcal{L} = \\bar{\\psi}(i\\gamma^\\mu\\partial_\\mu - m)\\psi',
     deps: ['quantum', 'special', 'action'], sim: null,
     eli5: `Imagine the whole universe is filled with invisible, jiggling fields — one for electrons, one for photons, one for every kind of particle. A "particle" is just a little wave on its field. Smash two particles together and you're really smashing two waves — new waves can pop out. That's where new particles come from in colliders. Every particle you've ever heard of is a ripple on one of these fields.`,
     intermediate: `Quantum field theory marries quantum mechanics with special relativity. Instead of a fixed number of particles, it treats fields as the fundamental objects; particles are localised excitations of these fields. QFT predicts antimatter, explains why all electrons are identical (they're all ripples on the same field), and provides the framework for the Standard Model. It has produced some of the most precise predictions in all of science — the electron's magnetic moment is calculated and measured to better than one part in a trillion.`,
@@ -373,7 +373,7 @@ const LAWS = [
   {
     id: 'higgs', name: 'Higgs Mechanism', domain: 'forces', symbol: 'ϕ',
     tagline: 'How particles got their mass.',
-    equation: '|Φ|² = v²/2',
+    equation: '|\\Phi|^2 = v^2/2',
     deps: ['standard', 'qft'], sim: null,
     eli5: `Imagine the universe is filled with invisible jelly. Some particles slide through easily — those are "light." Others get stuck and drag through — those are "heavy." The Higgs field is the jelly, and how much it sticks to each kind of particle is what we call mass. Scientists found the jelly by watching it ripple when they smashed protons together at enormous speeds. A ripple in the jelly is the Higgs boson.`,
     intermediate: `Before the Higgs field "switched on" in the early universe, all particles were massless and flew at the speed of light. A spontaneous symmetry-breaking event gave the Higgs field a constant, nonzero value everywhere — and particles interacting with it behave as though they were heavy. The heavier a particle's coupling to the Higgs, the more mass it has. This mechanism was essential to unify the electromagnetic and weak forces while still allowing the W and Z bosons to be heavy and the photon to be massless. Finding the Higgs boson in 2012 confirmed the theory.`,
@@ -411,7 +411,7 @@ const LAWS = [
   {
     id: 'bonding', name: 'Chemical Bonds', domain: 'chemistry', symbol: 'H-O-H',
     tagline: 'How atoms hold hands.',
-    equation: 'ΔG = ΔH − TΔS',
+    equation: '\\Delta G = \\Delta H - T\\Delta S',
     deps: ['atoms', 'periodic', 'thermo'], sim: null,
     eli5: `Atoms are happiest when their outermost electron shell is full. So they trade or share electrons with other atoms to make everyone happy. When they do, they stick together — that's a bond. Water is two hydrogens sharing electrons with one oxygen. Salt is sodium and chlorine swapping an electron. Every material you've ever touched is atoms holding hands in some way.`,
     intermediate: `Chemical bonds form when atoms share or transfer electrons to reach more stable configurations. Covalent bonds share electrons (H₂O, DNA, plastics); ionic bonds transfer them (NaCl); metallic bonds delocalise electrons across a lattice (copper wire); hydrogen bonds are weaker electrostatic attractions holding water cohesive and proteins folded. All bonding is ultimately electromagnetic and governed by quantum mechanics of overlapping orbitals. From these rules emerge all 100 million-plus known chemical substances.`,
@@ -449,7 +449,7 @@ const LAWS = [
   {
     id: 'evolution', name: 'Natural Selection', domain: 'biology', symbol: '🧬',
     tagline: 'Copies that make more copies win.',
-    equation: 'Δp = p·q·(w_A − w_B)/w̄',
+    equation: '\\Delta p = pq(w_A - w_B)/\\bar{w}',
     deps: ['selfrep', 'centraldogma', 'probability'], sim: 'evolution',
     eli5: `If creatures make copies of themselves, but the copies are sometimes slightly different, then whichever differences help make *more* copies will get more common. Over millions of years, tiny changes stack up into eyes, wings, brains, you. It's not magic, and there's no designer — it's arithmetic applied to copies across an enormous amount of time.`,
     intermediate: `Natural selection needs only three ingredients: variation (individuals differ), heredity (offspring resemble parents), differential reproductive success (some variants leave more descendants). From these three conditions, evolution follows inescapably — almost a mathematical theorem. Given time and a fitness landscape, populations accumulate adaptations and diversify into species. Modern evolutionary biology adds genetic drift, sexual selection, and molecular mechanisms, but Darwin's insight stands: differential reproduction of heritable variation produces design without a designer.`,
@@ -475,7 +475,7 @@ const LAWS = [
   {
     id: 'information', name: 'Information Theory', domain: 'info', symbol: 'bits',
     tagline: 'How much surprise is in a message.',
-    equation: 'H = −Σ p log₂ p',
+    equation: 'H = -\\sum_i p_i \\log_2 p_i',
     deps: ['probability', 'thermo'], sim: null,
     eli5: `If I tell you "the sun rose today," that's not really news — you already knew. But if I tell you "a comet will hit tomorrow," that's a lot of news. Information is how much a message reduces your uncertainty. Claude Shannon figured out how to measure it in bits — the smallest possible yes/no question. Every phone call, text, photo and streamed movie is made of bits.`,
     intermediate: `Shannon's 1948 theory defines information as a reduction in uncertainty, measured in bits. A source's entropy H = −Σ p log₂ p gives the minimum average bits needed to encode its messages. Shannon also proved that noisy channels can transmit information reliably as long as you stay below their capacity C, through clever coding. His work founded modern telecommunications, the internet, data compression and cryptography. Information turns out to be deeply connected to physical entropy — erasing one bit of information dissipates at least kT ln 2 of heat (Landauer's principle).`,
@@ -513,7 +513,7 @@ const LAWS = [
   {
     id: 'complexity', name: 'Complex Systems', domain: 'emergence', symbol: '⚙',
     tagline: 'Simple rules, wild results.',
-    equation: 'x_(n+1) = r·x_n·(1−x_n)',
+    equation: 'x_{n+1} = r\\,x_n(1-x_n)',
     deps: ['emergence', 'computation'], sim: null,
     eli5: `Some things are simple — a clock, a falling rock. Some are random — a shuffled deck. But the most interesting things in the world are in between: weather, economies, brains, ecosystems. They follow rules, but the rules interact so much that you can't predict everything. Small changes explode into big ones (a butterfly flaps its wings in Brazil and months later there's a storm in Texas). Complex systems are where the universe gets surprising.`,
     intermediate: `Complex systems consist of many interacting components whose collective behaviour cannot be simply inferred from the components alone. They typically exhibit non-linear dynamics, sensitivity to initial conditions (chaos), self-organisation, feedback loops, and power-law distributions. Examples include weather, economies, ecosystems, brains, the internet. Complexity science develops tools — dynamical systems, network science, statistical mechanics, agent-based models — to understand them. It sits at the intersection of maths, physics, biology, and the social sciences.`,
@@ -525,7 +525,7 @@ const LAWS = [
   {
     id: 'gametheory', name: 'Game Theory', domain: 'emergence', symbol: '♟',
     tagline: 'The maths of strategy.',
-    equation: 'u_i(s*) ≥ u_i(s_i, s_{−i}*)',
+    equation: 'u_i(s^*) \\geq u_i(s_i,\\, s^*_{-i})',
     deps: ['probability', 'emergence'], sim: null,
     eli5: `When you play a game like rock-paper-scissors, your best choice depends on what the other person will do — and their best choice depends on what *you'll* do. It's a loop. Game theory is the maths of working out what to do when other people are also thinking about what to do. It turns out evolution, economics, traffic, war, cooperation — all of it — can be described with the same rules.`,
     intermediate: `Game theory was founded by John von Neumann and Oskar Morgenstern in 1944. A "game" is any situation where each player's payoff depends on everyone's choices. The Nash equilibrium (proven in 1950 by John Nash, age 22) is a set of strategies where no player can unilaterally improve. Prisoner's dilemma shows how individually rational choices can produce collectively bad outcomes — the root of many social problems. Evolutionary game theory applies the same ideas to populations of competing strategies, explaining cooperation, altruism, and signalling in biology.`,
@@ -551,7 +551,7 @@ const LAWS = [
   {
     id: 'bigbang', name: 'Big Bang Cosmology', domain: 'cosmos', symbol: '💥',
     tagline: 'The universe had a beginning.',
-    equation: 'H² = (8πG/3)ρ − k/a²',
+    equation: 'H^2 = \\dfrac{8\\pi G}{3}\\rho - \\dfrac{k}{a^2}',
     deps: ['general', 'thermo', 'standard'], sim: 'expansion',
     eli5: `About 13.8 billion years ago, everything — every bit of matter, every bit of space itself — was squished into a tiny hot point. Then it started expanding and cooling. As it cooled, particles formed, then atoms, then stars, then galaxies, then solar systems, then planets, then us. The universe is still expanding today, and you can literally see the leftover heat from the Big Bang with a radio telescope.`,
     intermediate: `The observable universe began 13.8 billion years ago in an extremely hot, dense state and has been expanding and cooling ever since. Key evidence: the cosmic microwave background (CMB) — the leftover radiation at 2.725 K; Hubble's law (distant galaxies recede faster the farther they are); and the abundance of light elements, matching Big Bang nucleosynthesis predictions. General relativity naturally describes an expanding universe. Open questions include inflation, dark matter, dark energy, and what, if anything, came "before."`,
@@ -563,7 +563,7 @@ const LAWS = [
   {
     id: 'darkmatter', name: 'Dark Matter & Dark Energy', domain: 'cosmos', symbol: 'Λ',
     tagline: '95 % of the universe is missing.',
-    equation: 'Ω_Λ ≈ 0.69, Ω_DM ≈ 0.26',
+    equation: '\\Omega_\\Lambda \\approx 0.69,\\;\\Omega_\\mathrm{DM} \\approx 0.26',
     deps: ['bigbang', 'general'], sim: null,
     eli5: `When astronomers weigh galaxies and watch how they spin, the answer is always wrong — unless the galaxies contain about five times as much invisible stuff as visible stuff. We call this "dark matter." And on top of *that*, something seems to be pushing the whole universe apart faster and faster — we call that "dark energy." Together they make up 95 % of the universe. We have no idea what they actually are.`,
     intermediate: `Observations — galaxy rotation curves, galaxy cluster dynamics, gravitational lensing, the cosmic microwave background, large-scale structure — all demand that about 26 % of the universe's energy density is some kind of matter that doesn't interact with light. Another 69 % is dark energy, a form of energy that stays uniform as space expands and drives that expansion to accelerate. Only 5 % is ordinary atoms. We don't know what dark matter is made of; we don't know why dark energy has the value it does (it's 120 orders of magnitude off naïve theoretical expectations). These are the two biggest outstanding puzzles in physics.`,
@@ -580,7 +580,7 @@ const LAWS = [
   {
     id: 'quantum_gravity', name: 'Quantum Gravity', domain: 'unknown', symbol: '?',
     tagline: 'The theory we don\'t have.',
-    equation: '[ℋ_grav, ℋ_QM] = ?',
+    equation: '[\\hat{\\mathcal{H}}_\\mathrm{grav},\\,\\hat{\\mathcal{H}}_\\mathrm{QM}] = ?',
     deps: ['general', 'qft'], known: false, sim: null,
     eli5: `Einstein's gravity and the quantum rules both work beautifully on their own — but when you try to mix them, everything breaks. What happens inside a black hole? What happened at the Big Bang? Those are the moments when both matter — and no one, anywhere, knows the answer yet. This is the biggest unsolved problem in physics.`,
     intermediate: `General relativity treats gravity as curved spacetime; quantum mechanics treats everything else as probabilistic fields on a fixed background. The two theories are mathematically incompatible. At black hole singularities and the first instant of the Big Bang, both are needed — and neither works alone. String theory, loop quantum gravity, causal dynamical triangulations and asymptotic safety are the main contenders, but none has been experimentally confirmed. It's the biggest gap in theoretical physics.`,
@@ -592,7 +592,7 @@ const LAWS = [
   {
     id: 'dark_nature', name: 'Nature of Dark Matter', domain: 'unknown', symbol: '?',
     tagline: 'What is 26% of the universe made of?',
-    equation: 'σ_χN ≲ 10⁻⁴⁷ cm²',
+    equation: '\\sigma_{\\chi N} \\lesssim 10^{-47}\\,\\mathrm{cm}^2',
     deps: ['darkmatter', 'standard'], known: false, sim: null,
     eli5: `Galaxies spin too fast. If they were made only of the stuff we can see, they'd fly apart like a merry-go-round spinning too quickly. So there must be a LOT of invisible stuff holding them together — about five times more than the visible stuff. We call it "dark matter." What it's actually made of? Nobody knows. Thousands of scientists are hunting.`,
     intermediate: `Multiple independent observations — galaxy rotation curves, gravitational lensing, the cosmic microwave background power spectrum, large-scale structure — consistently require ~26% of the universe's energy density to be some form of matter that doesn't interact with light. Candidates include weakly interacting massive particles (WIMPs), axions, sterile neutrinos, primordial black holes, and modified-gravity alternatives. Decades of increasingly sensitive direct-detection experiments (XENON, LZ, PandaX) have ruled out vast swaths of parameter space without a positive signal.`,
@@ -604,7 +604,7 @@ const LAWS = [
   {
     id: 'dark_energy_nature', name: 'Nature of Dark Energy', domain: 'unknown', symbol: 'Λ?',
     tagline: 'The cosmological-constant catastrophe.',
-    equation: 'ρ_Λ^obs / ρ_Λ^QFT ≈ 10⁻¹²³',
+    equation: '\\rho_\\Lambda^\\mathrm{obs}/\\rho_\\Lambda^\\mathrm{QFT} \\approx 10^{-123}',
     deps: ['darkmatter', 'qft', 'general'], known: false, sim: null,
     eli5: `The universe isn't just expanding — it's expanding *faster* every year. Something is pushing everything apart, and it's nearly everywhere, and it makes up roughly 69% of the universe. We call it "dark energy." What is it? Vacuum energy? A new field? A change to gravity? Nobody knows, and this might be the deepest puzzle in all of physics.`,
     intermediate: `Type Ia supernova observations (Perlmutter, Schmidt, Riess 1998) showed that the universe's expansion is accelerating, requiring a pervasive form of energy whose density remains nearly constant as space expands. The simplest interpretation is Einstein's cosmological constant Λ — vacuum energy. But quantum field theory's naive estimate of vacuum energy exceeds the observed value by 10¹²⁰. It's the largest disagreement between theory and observation in all of science.`,
@@ -616,7 +616,7 @@ const LAWS = [
   {
     id: 'measurement', name: 'Quantum Measurement Problem', domain: 'unknown', symbol: '|ψ⟩?',
     tagline: 'What actually happens when we look?',
-    equation: '|ψ⟩ → |n⟩ with P = |⟨n|ψ⟩|²',
+    equation: '|\\psi\\rangle \\to |n\\rangle,\\; P = |\\langle n|\\psi\\rangle|^2',
     deps: ['quantum', 'uncertainty'], known: false, sim: null,
     eli5: `Quantum mechanics says a particle can be in many places at once — until someone checks. Then it picks a spot. But what counts as "checking"? Does it need a human? A thermometer? A cat? Does the particle split into parallel worlds where every possibility happens? Nobody agrees, and it's been 100 years. This is the single weirdest problem in physics.`,
     intermediate: `The Schrödinger equation describes smooth, deterministic, reversible evolution — but measurement seems to cause abrupt, probabilistic, irreversible "collapse." What triggers the transition, and why can't we write it into the theory? Main interpretations: **Copenhagen** (measurement is a primitive), **Many-Worlds** (no collapse; all outcomes happen in branching universes), **de Broglie–Bohm** (hidden particle positions guided by the wave function), **GRW** (spontaneous random collapse), and **consistent histories**. All give the same experimental predictions. No experiment can currently distinguish them.`,
@@ -652,7 +652,7 @@ const LAWS = [
   {
     id: 'fine_tuning', name: 'Fine-Tuning Problem', domain: 'unknown', symbol: '⚖?',
     tagline: 'Why are the constants so gentle to us?',
-    equation: 'ΔG/G, Δα/α ≪ 1',
+    equation: '\\Delta G/G,\\;\\Delta\\alpha/\\alpha \\ll 1',
     deps: ['standard', 'bigbang'], known: false, sim: null,
     eli5: `The strength of gravity, the weight of an electron, the speed of light — these numbers appear in the laws of physics. If they'd been even a tiny bit different, atoms wouldn't form, stars wouldn't shine, life wouldn't exist. Why do they have the exactly-right values? Is it coincidence? Lots of universes with every possible setting, and we're in the one that works? Something deeper? Nobody knows.`,
     intermediate: `Several constants in physics — the ratio of electromagnetic to gravitational force, the cosmological constant, the Higgs mass — appear to be finely tuned to allow the existence of atoms, stars and life. Tiny changes would produce universes with no chemistry, no long-lived stars, or no structure at all. Proposed explanations: **multiverse** (infinitely many universes with random constants, and we observe a rare habitable one — the anthropic principle); **hidden symmetry** (a yet-unknown principle fixes the values); **simulation** (the constants were chosen); **landscape** selection in string theory. Each is either untestable or unconfirmed.`,
@@ -664,7 +664,7 @@ const LAWS = [
   {
     id: 'arrow_of_time', name: 'Arrow of Time', domain: 'unknown', symbol: '→t',
     tagline: 'Why does the past differ from the future?',
-    equation: 'S(t₀) ≪ S_max',
+    equation: 'S(t_0) \\ll S_\\mathrm{max}',
     deps: ['thermo', 'bigbang'], known: false, sim: null,
     eli5: `Drop an egg and it breaks. You've never seen a broken egg put itself back together. But the laws of physics don't actually say time has to flow forward — they work the same backwards. So why does the past feel different from the future? The deepest answer physicists have found is: because the universe started in a really special, ordered state, and it's been getting messier ever since. But *why* it started that way — we don't know.`,
     intermediate: `The fundamental laws of physics are almost entirely time-reversal symmetric — replay any microscopic process backwards and it's still a legal process. Yet everything macroscopic has a clear arrow: entropy increases, we remember the past not the future, causes precede effects, radiation goes outward from sources. The standard answer (Boltzmann, Penrose) is that the universe started in an extraordinarily low-entropy state at the Big Bang, and the second law is just the statistical tendency to drift toward more probable (higher-entropy) configurations. Why the initial state was so special is itself unexplained — Penrose estimates the improbability at 1 in 10^(10^123).`,
@@ -676,7 +676,7 @@ const LAWS = [
   {
     id: 'baryogenesis', name: 'Matter–Antimatter Asymmetry', domain: 'unknown', symbol: 'B≠0',
     tagline: 'Why is there anything at all?',
-    equation: 'n_B/n_γ ≈ 6 × 10⁻¹⁰',
+    equation: 'n_B/n_\\gamma \\approx 6\\times 10^{-10}',
     deps: ['standard', 'bigbang'], known: false, sim: null,
     eli5: `When energy turns into matter, it normally makes a particle and an anti-particle at the same time. When they meet, they vanish again. So after the Big Bang, all the matter should have met all the anti-matter, and the universe should be empty. It isn't. There's stuff — stars, planets, you. Where did the anti-matter go? We don't know. The slight imbalance that let us exist is one of physics' biggest open questions.`,
     intermediate: `Observations show the universe is made almost entirely of matter, with only tiny traces of antimatter near high-energy sources. The ratio of baryons to photons is ≈ 6 × 10⁻¹⁰ — after most matter annihilated with antimatter in the first instants, only about a billionth survived, and that billionth is everything we see. Sakharov (1967) identified three necessary conditions for generating this asymmetry from a symmetric start: baryon-number violation, C and CP violation, and departure from thermal equilibrium. The Standard Model contains all three but at levels too small by many orders of magnitude.`,
@@ -688,7 +688,7 @@ const LAWS = [
   {
     id: 'p_vs_np', name: 'P vs NP', domain: 'unknown', symbol: 'P=NP?',
     tagline: 'Is finding an answer as hard as checking one?',
-    equation: 'P ⊆ NP;  P = NP ?',
+    equation: 'P \\subseteq NP;\\; P = NP\\,?',
     deps: ['computation', 'logic'], known: false, sim: null,
     eli5: `Some problems are easy to check once you have the answer — like a Sudoku puzzle, where you can verify a solution in seconds but finding it takes ages. P vs NP asks: is there always a shortcut? Could there be a fast way to solve every puzzle you can quickly check? If yes, maths and science get far easier overnight and most modern cryptography breaks. Most people think the answer is no — but nobody has proved it. It's worth a million dollars.`,
     intermediate: `**P** is the class of problems solvable in polynomial time. **NP** is the class of problems whose solutions can be verified in polynomial time. Every problem in P is also in NP. The question is whether the reverse holds — whether there's a general shortcut from verification to solution. The consensus among theoretical computer scientists is P ≠ NP, but nobody has proved it. Thousands of important problems (Boolean satisfiability, the travelling salesman, protein folding, optimal scheduling) are "NP-complete" — a polynomial-time algorithm for any one would give polynomial algorithms for all. It's one of the Clay Millennium Prize problems.`,
@@ -712,7 +712,7 @@ const LAWS = [
   {
     id: 'stars', name: 'Stars & Nucleosynthesis', domain: 'cosmos', symbol: '★',
     tagline: 'You are made of stars.',
-    equation: '4 ¹H → ⁴He + 2e⁺ + 2ν + γ',
+    equation: '4\\,{}^1\\!\\mathrm{H} \\to {}^4\\!\\mathrm{He} + 2e^+ + 2\\nu + \\gamma',
     deps: ['bigbang', 'standard', 'general'], sim: null,
     eli5: `Stars are giant nuclear furnaces. Deep in their cores, hydrogen squishes into helium and releases huge amounts of energy — that's why they shine. When big stars run out of fuel, they explode. The explosion forges heavier atoms — iron, gold, uranium — and scatters them across space. All those atoms eventually clump together into new stars and planets. Every atom of iron in your blood and every calcium atom in your bones was forged inside a star that died before our Sun was born. You are literally made of stardust.`,
     intermediate: `Stars are self-regulating fusion reactors: gravity pulls mass inward, nuclear fusion pushes energy outward, and the balance determines their size, brightness, and lifespan. Light elements fuse into heavier ones up to iron; beyond iron, fusion requires energy rather than releasing it, so iron marks the end of fusion. Elements heavier than iron are forged in supernovae and neutron-star mergers, then dispersed into interstellar clouds from which new stars and planets form. The carbon, oxygen, nitrogen, and iron in your body were all cooked inside ancient stars. Cosmic recycling is the reason life is possible.`,
