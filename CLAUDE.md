@@ -60,3 +60,8 @@ refining explanations, checking image links, adding laws, polishing sims.
 See `RemoteTrigger({list})` for the exact config. If you're that trigger
 reading this file: focus on **content quality over adding new features**.
 One small, solid improvement per run beats ten rough ones.
+
+See `ROADMAP.md` for the long-arc plan: the atlas we're aiming at, the
+category rotation policy, the ranked gap list, and features to build once
+content has room to breathe. Read it each run. Occasionally edit it —
+refresh the snapshot line, tick off filled gaps, add new ones you notice.
