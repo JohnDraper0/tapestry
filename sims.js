@@ -971,6 +971,99 @@ SIMS.lotka_volterra = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── IDEAL GAS ───────────────────────────────
+SIMS.ideal_gas = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  const N = 80, R = 4;
+  const mg = 38;
+  const bL = mg, bR = w - mg, bT = mg + 26, bB = h - mg;
+  const bW = bR - bL, bH = bB - bT;
+
+  // Box-Muller: velocity components drawn from N(0, √T)
+  function mbVel(T) {
+    const sig = Math.sqrt(T);
+    const r1 = Math.max(Math.random(), 1e-9), r2 = Math.random();
+    const a = Math.sqrt(-2 * Math.log(r1));
+    return {
+      vx: a * Math.cos(2 * Math.PI * r2) * sig,
+      vy: a * Math.sin(2 * Math.PI * r2) * sig,
+    };
+  }
+
+  const parts = Array.from({ length: N }, () => {
+    const { vx, vy } = mbVel(80);
+    return {
+      x: bL + R + Math.random() * (bW - 2 * R),
+      y: bT + R + Math.random() * (bH - 2 * R),
+      vx, vy,
+    };
+  });
+
+  let pAcc = 0, tAcc = 0, displayP = 0;
+  let raf, last = performance.now();
+
+  canvas.addEventListener('click', () => {
+    // heat: multiply all speeds by √1.8 → T scales by 1.8
+    const f = Math.sqrt(1.8);
+    parts.forEach(p => { p.vx *= f; p.vy *= f; });
+  });
+
+  function getT() {
+    return parts.reduce((s, p) => s + p.vx * p.vx + p.vy * p.vy, 0) / (2 * N);
+  }
+
+  function step(dt) {
+    tAcc += dt;
+    parts.forEach(p => {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      if (p.x < bL + R) { p.x = bL + R; pAcc += 2 * Math.abs(p.vx); p.vx =  Math.abs(p.vx); }
+      if (p.x > bR - R) { p.x = bR - R; pAcc += 2 * Math.abs(p.vx); p.vx = -Math.abs(p.vx); }
+      if (p.y < bT + R) { p.y = bT + R; pAcc += 2 * Math.abs(p.vy); p.vy =  Math.abs(p.vy); }
+      if (p.y > bB - R) { p.y = bB - R; pAcc += 2 * Math.abs(p.vy); p.vy = -Math.abs(p.vy); }
+    });
+    if (tAcc > 0.3) {
+      // pressure = total wall impulse / (time × perimeter)
+      // kinetic theory gives P = NT/A, so PV/NT → 1
+      displayP = pAcc / (tAcc * 2 * (bW + bH));
+      pAcc = 0; tAcc = 0;
+    }
+  }
+
+  function draw(now) {
+    const dt = Math.min(0.032, (now - last) / 1000); last = now;
+    step(dt);
+    ctx.clearRect(0, 0, w, h);
+
+    // box
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5;
+    ctx.strokeRect(bL, bT, bW, bH);
+
+    // particles: colour by speed (blue=slow, orange=fast)
+    const T = getT();
+    const vMax = Math.sqrt(6 * T + 1);
+    parts.forEach(p => {
+      const t = Math.min(Math.hypot(p.vx, p.vy) / vMax, 1);
+      ctx.fillStyle = `rgb(${Math.round(70 + 185 * t)},${Math.round(185 - 105 * t)},${Math.round(255 - 220 * t)})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // HUD
+    const PV = displayP * bW * bH;
+    const NT = N * T;
+    const ratio = NT > 0 ? (PV / NT).toFixed(2) : '—';
+    ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font = '12px system-ui';
+    ctx.fillText(`T = ${T.toFixed(0)}   P = ${displayP.toFixed(2)}   PV / NT = ${ratio}`, bL + 4, bT - 9);
+    ctx.fillStyle = 'rgba(200,200,200,0.45)'; ctx.font = '11px system-ui';
+    ctx.fillText('click to heat', bR - 76, bB + 16);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
