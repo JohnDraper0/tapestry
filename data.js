@@ -254,6 +254,18 @@ const LAWS = [
     history: `Josef Stefan deduced the T⁴ law in 1879 from Tyndall's measurements of heated platinum wires. His student Ludwig Boltzmann derived it from first principles in 1884 using Maxwell's radiation pressure and the second law of thermodynamics — a triumph before quantum theory existed. The constant σ's exact value had to wait for Max Planck's 1900 quantum hypothesis, which was introduced specifically to make the integral converge and accidentally founded quantum mechanics.`,
   },
 
+  {
+    id: 'ideal_gas', name: 'Ideal Gas Law', domain: 'thermo', symbol: 'PV=nRT',
+    tagline: 'Temperature is molecules in motion.',
+    equation: 'PV = nRT',
+    deps: ['thermo', 'statmech'], sim: null,
+    eli5: `Squeeze a balloon and the air inside pushes back harder. Heat it and the balloon swells and pushes even harder. Three things — pressure, volume, temperature — are always locked together by one simple rule: if you change one, the others must adjust. Double the temperature (properly measured from absolute zero), double the pressure if you hold the size fixed. Squeeze the volume in half, pressure doubles. This single law runs bicycle pumps, weather balloons, scuba tanks, car engines, and the air in your tyres right now.`,
+    intermediate: `The ideal gas law PV = nRT links pressure P, volume V, amount of substance n (in moles), and absolute temperature T through the universal gas constant R = 8.314 J mol⁻¹ K⁻¹. It is the union of three earlier empirical laws: Boyle's (P ∝ 1/V at constant T), Charles's (V ∝ T at constant P), and Avogadro's (V ∝ n). Statistical mechanics explains all three at once: pressure is just molecules bouncing off walls. More molecules, faster-moving molecules, or a smaller box — all increase the collision rate and push the pressure up. Real gases deviate at high pressures (crowding) or low temperatures (attraction), but for the atmosphere, engineering, and most of chemistry, the ideal law is accurate enough.`,
+    expert: `Kinetic derivation: for N molecules of mass m with mean-square speed ⟨v²⟩ in volume V, PV = ⅓Nm⟨v²⟩. Equipartition gives ½m⟨v²⟩ = (3/2)k_BT per molecule, yielding PV = Nk_BT = nRT with R = N_A k_B ≈ 8.31446 J mol⁻¹ K⁻¹. The Maxwell–Boltzmann speed distribution f(v) ∝ v² exp(−mv²/2k_BT) follows from maximising entropy subject to fixed mean energy; the mean speed is v̄ = √(8k_BT/πm). Real-gas corrections: the van der Waals equation (P + an²/V²)(V − nb) = nRT introduces hard-core volume b and pairwise attraction a; the virial expansion PV/nRT = 1 + B(T)/V + C(T)/V² + … links systematically to intermolecular pair potentials. The compressibility factor Z = PV/nRT measures departure from ideality. Quantum statistics take over at low temperatures or high density: Fermi degeneracy pressure supports white dwarfs against gravitational collapse up to the Chandrasekhar limit, making the ideal gas law — heavily modified — the last bulwark of a dying star.`,
+    surprise: `In 1783, Jacques Charles launched the first hydrogen balloon because he'd noticed hot air expands — but he had no idea why. It took another 75 years, until Maxwell and Clausius worked out kinetic theory, to reveal that temperature is simply the average kinetic energy of molecules. The law predated its own explanation by three generations of scientists who used it without understanding it.`,
+    history: `Robert Boyle established P ∝ 1/V in 1662 using a sealed J-tube of mercury. Jacques Charles found V ∝ T in 1787 but never published; Gay-Lussac confirmed and published it in 1802. Avogadro proposed equal volumes of gas at equal conditions hold equal numbers of molecules in 1811, but was ignored for decades. Clapeyron unified all three into PV = nRT in 1834. Clausius and Maxwell gave the kinetic-theory explanation in 1856–57 and finally showed why the law works.`,
+  },
+
   // ───────────────────────────── ELECTROMAGNETISM ───────────────────────────
 
   {
@@ -754,6 +766,8 @@ const IMAGES = {
                    caption: 'Ludwig Boltzmann — S = k log W on his tombstone' },
   stefan_boltzmann: { image: WM('Blackbody-lg.png'),
                       caption: 'Blackbody spectra at different temperatures — the T⁴ law made visible' },
+  ideal_gas:     { image: WM('Maxwell_BoltzmannDistributions.gif'),
+                   caption: 'Maxwell–Boltzmann speed distributions — temperature is molecules in motion' },
   maxwell:       { image: WM('James_Clerk_Maxwell.png'),
                    caption: 'James Clerk Maxwell — electricity, magnetism, light unified' },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
