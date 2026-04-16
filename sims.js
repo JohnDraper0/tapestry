@@ -1064,6 +1064,96 @@ SIMS.ideal_gas = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── FOURIER ──────────────────────────────
+SIMS.fourier = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // Square-wave: f(t) = (4/π) Σ_{k=0}^{N-1} sin((2k+1)ωt) / (2k+1)
+  const N = 7;
+  const harmonics = Array.from({ length: N }, (_, k) => ({
+    n: 2 * k + 1,
+    amp: (4 / Math.PI) / (2 * k + 1),
+  }));
+
+  const cx = w * 0.33;
+  const cy = h * 0.50;
+  const scale = h * 0.12;   // pixels per unit amplitude
+  const omega = 1.5;        // rad/s
+
+  const traceLeft = w * 0.56;
+  const traceW    = w * 0.41;
+  const maxPts    = 260;
+  const pts       = [];     // rolling y-values
+  let t = 0, raf;
+
+  function draw() {
+    t += 1 / 60;
+    ctx.clearRect(0, 0, w, h);
+
+    // ── phasor chain ──
+    let px = cx, py = cy;
+    harmonics.forEach(({ n, amp }, i) => {
+      const r  = amp * scale;
+      const θ  = n * omega * t;
+      const nx = px + r * Math.cos(θ - Math.PI / 2);
+      const ny = py + r * Math.sin(θ - Math.PI / 2);
+
+      // orbit circle (faint)
+      ctx.strokeStyle = `rgba(100, 210, 255, ${0.10 + 0.04 * (N - i)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(px, py, r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // spoke
+      ctx.strokeStyle = `rgba(100, 210, 255, ${0.6 + 0.05 * (N - i)})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(nx, ny); ctx.stroke();
+
+      px = nx; py = ny;
+    });
+
+    // tip dot
+    ctx.fillStyle = '#ff6b6b';
+    ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
+
+    // ── trace buffer ──
+    pts.unshift(py);
+    if (pts.length > maxPts) pts.pop();
+
+    // dashed guide from tip to trace
+    ctx.strokeStyle = 'rgba(255, 107, 107, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(traceLeft, pts[0]); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // waveform
+    if (pts.length > 1) {
+      const step = traceW / maxPts;
+      ctx.strokeStyle = '#ff6b6b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((y, i) => {
+        const x = traceLeft + i * step;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    // labels
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '11px system-ui';
+    ctx.fillText(`${N} odd harmonics → square wave`, traceLeft + 2, h - 12);
+    ctx.fillText('phasor chain', 6, h - 12);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
