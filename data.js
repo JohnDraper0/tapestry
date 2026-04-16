@@ -733,6 +733,18 @@ const LAWS = [
     history: `Hans Bethe worked out stellar fusion cycles in 1939 (1967 Nobel). Fred Hoyle, Willy Fowler, Margaret and Geoffrey Burbidge published the landmark B²FH paper in 1957 on stellar nucleosynthesis. The 2017 LIGO/Virgo detection of GW170817 plus electromagnetic follow-up confirmed neutron-star mergers as the r-process source.`,
   },
 
+  {
+    id: 'chandrasekhar', name: 'Chandrasekhar Limit', domain: 'cosmos', symbol: 'M_Ch',
+    tagline: 'The mass that separates white dwarfs from catastrophe.',
+    equation: 'M_{\\rm Ch} \\approx \\dfrac{5.83}{\\mu_e^2}\\,M_\\odot \\approx 1.44\\,M_\\odot',
+    deps: ['pauli', 'stars', 'gravity'], sim: null,
+    eli5: `When a star like our Sun runs out of fuel, it collapses into a white dwarf — a ball the size of Earth but as heavy as the Sun. What stops it from collapsing further? The Pauli exclusion principle: electrons absolutely refuse to share the same quantum state, so squeezing them together takes enormous force. But this quantum stubbornness has a weight limit: above about 1.4 times the Sun's mass, gravity wins, and the white dwarf collapses or explodes. A 19-year-old student figured this out on a boat trip from India to England in 1930. His supervisor refused to believe him for twenty years.`,
+    intermediate: `White dwarfs are supported not by heat (as normal stars are) but by quantum degeneracy pressure: the Pauli exclusion principle prevents electrons from occupying the same state, generating a resistance to compression that doesn't depend on temperature. Chandrasekhar showed this support has a maximum — about 1.44 solar masses — above which gravity wins. Stars that exceed this limit either collapse to neutron stars or trigger a thermonuclear explosion (Type Ia supernova). Because every Type Ia supernova erupts from a white dwarf near this mass, they all have nearly the same intrinsic brightness. This makes them "standard candles" for measuring cosmic distances — and it was Type Ia supernovae that revealed in 1998 that the universe's expansion is accelerating. The measurement of dark energy rests, ultimately, on a quantum rule about electrons.`,
+    expert: `Non-relativistic Fermi pressure scales as n^{5/3}, supporting white dwarfs at any mass. The crucial insight is that as density increases, electrons become relativistic and Fermi pressure scales instead as n^{4/3} — a softer equation of state that can no longer balance gravity above a critical mass. Setting the relativistic Fermi energy equal to the gravitational potential energy gives M_Ch = (5.83/μ_e²) M_⊙, where μ_e is the mean molecular weight per electron (≈ 2 for C/O white dwarfs). A clean dimensional estimate: M_Ch ~ (ℏc/G)^{3/2}/m_p² — pure quantum gravity, no free parameters. Near the limit, inverse beta decay (p + e⁻ → n + ν_e) triggers collapse to neutron-star densities. Rotating white dwarfs can transiently exceed M_Ch; the resulting diversity of Type Ia light curves is calibrated via the Phillips relation. The Tolman–Oppenheimer–Volkoff limit is the neutron-star analogue, where neutron degeneracy pressure holds back gravity up to ~2–3 M_⊙.`,
+    surprise: `Every cosmic yardstick that proved the universe is accelerating — a discovery worth the 2011 Nobel Prize — was calibrated against stellar explosions whose triggering mass was calculated by a teenager using quantum mechanics. Pauli's exclusion principle is the reason we know dark energy exists.`,
+    history: `Subrahmanyan Chandrasekhar derived the mass limit in 1930, aged 19, on the steamship from Madras to Southampton. He showed it to Arthur Eddington — the most celebrated astrophysicist alive — who publicly ridiculed the result at the 1935 Royal Astronomical Society meeting, calling it "stellar buffoonery." Humiliated, Chandrasekhar left astrophysics for stellar dynamics and later fluid dynamics. He was awarded the Nobel Prize in 1983, fifty-three years after the calculation.`,
+  },
+
 ];
 
 // ─── HERO IMAGERY ──────────────────────────────────────────────────────────
@@ -832,6 +844,8 @@ const IMAGES = {
                    caption: 'Simulated dark-matter halo structure' },
   stars:         { image: WM('Pillars_2014_HST_WFC3-UVIS_full-res_denoised.jpg'),
                    caption: "Hubble's Pillars of Creation — a star nursery" },
+  chandrasekhar: { image: WM('Subrahmanyan_Chandrasekhar.jpg'),
+                   caption: 'Subrahmanyan Chandrasekhar — derived the mass limit at 19' },
 
   // Frontier / unknown
   quantum_gravity:    { image: WM('Calabi_yau.jpg'),
