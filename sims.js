@@ -1638,6 +1638,149 @@ SIMS.uncertainty = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── PAULI ───────────────────────────────────
+SIMS.pauli = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf, frame = 0;
+  const BW = 36, BH = 22, PAD = 5, SGAP = 12;
+
+  // [shell n, label, colour, orbital-count] in aufbau order
+  const SUBSHELLS = [
+    [1, '1s', '#4fc3f7', 1],
+    [2, '2s', '#81c784', 1], [2, '2p', '#81c784', 3],
+    [3, '3s', '#ffb74d', 1], [3, '3p', '#ffb74d', 3],
+  ];
+
+  // Build flat orbital list with canvas positions
+  const rowY = [0, h * 0.18, h * 0.42, h * 0.62];
+  const orbs = [];
+  { let lastN = 0, cx = 0;
+    SUBSHELLS.forEach(([n, lbl, col, nOrb]) => {
+      if (n !== lastN) { lastN = n; cx = w * 0.18; } else { cx += SGAP; }
+      for (let i = 0; i < nOrb; i++, cx += BW + PAD)
+        orbs.push({ x: cx, y: rowY[n], col, lbl: i === 0 ? lbl : '', n });
+    });
+  }
+
+  // Element symbols and names for Z = 1–18
+  const ELEMS = [null,
+    ['H','Hydrogen'],  ['He','Helium'],    ['Li','Lithium'],   ['Be','Beryllium'],
+    ['B','Boron'],     ['C','Carbon'],     ['N','Nitrogen'],   ['O','Oxygen'],
+    ['F','Fluorine'],  ['Ne','Neon'],      ['Na','Sodium'],    ['Mg','Magnesium'],
+    ['Al','Aluminium'],['Si','Silicon'],   ['P','Phosphorus'], ['S','Sulfur'],
+    ['Cl','Chlorine'], ['Ar','Argon'],
+  ];
+
+  const CFGS = ['', '1s¹', '1s²',
+    '[He]2s¹', '[He]2s²', '[He]2s²2p¹', '[He]2s²2p²', '[He]2s²2p³',
+    '[He]2s²2p⁴', '[He]2s²2p⁵', '[He]2s²2p⁶',
+    '[Ne]3s¹', '[Ne]3s²', '[Ne]3s²3p¹', '[Ne]3s²3p²', '[Ne]3s²3p³',
+    '[Ne]3s²3p⁴', '[Ne]3s²3p⁵', '[Ne]3s²3p⁶',
+  ];
+
+  // Aufbau + Hund: fill spin-up across all orbitals of a subshell first, then spin-down
+  function occupation(Z) {
+    const o = orbs.map(() => ({ up: false, dn: false }));
+    let rem = Z, idx = 0;
+    for (const [, , , nOrb] of SUBSHELLS) {
+      if (!rem) break;
+      const up = Math.min(rem, nOrb); for (let k = 0; k < up; k++) o[idx + k].up = true; rem -= up;
+      const dn = Math.min(rem, nOrb); for (let k = 0; k < dn; k++) o[idx + k].dn  = true; rem -= dn;
+      idx += nOrb;
+    }
+    return o;
+  }
+
+  // Spin arrow centred at (cx, cy): dir = 'up' or 'dn'
+  function arw(cx, cy, dir, sz) {
+    const hw = sz * 0.45, hd = sz * 0.5, sh = 2.5;
+    ctx.beginPath();
+    if (dir === 'up') {
+      ctx.moveTo(cx, cy - sz); ctx.lineTo(cx - hw, cy - sz + hd); ctx.lineTo(cx + hw, cy - sz + hd);
+      ctx.closePath(); ctx.fill();
+      ctx.fillRect(cx - sh / 2, cy - sz + hd, sh, sz - hd + 2);
+    } else {
+      ctx.moveTo(cx, cy + sz); ctx.lineTo(cx - hw, cy + sz - hd); ctx.lineTo(cx + hw, cy + sz - hd);
+      ctx.closePath(); ctx.fill();
+      ctx.fillRect(cx - sh / 2, cy - 2, sh, sz - hd + 2);
+    }
+  }
+
+  function draw() {
+    frame++;
+    const STEP = 55, HOLD = 120, cycle = STEP * 18 + HOLD;
+    const ph = frame % cycle;
+    const Z = ph < STEP * 18 ? Math.floor(ph / STEP) + 1 : 18;
+    const pulse = 0.55 + 0.45 * Math.sin(frame * 0.22);
+
+    const cur = occupation(Z), prev = occupation(Math.max(0, Z - 1));
+    let ni = -1, ns = '';
+    for (let i = 0; i < orbs.length; i++) {
+      if (cur[i].up && !prev[i].up) { ni = i; ns = 'up'; break; }
+      if (cur[i].dn && !prev[i].dn) { ni = i; ns = 'dn'; break; }
+    }
+
+    ctx.fillStyle = '#0a0e1e'; ctx.fillRect(0, 0, w, h);
+
+    ctx.fillStyle = '#b9f6ca'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Electron Shell Filling — Pauli Exclusion', 8, 15);
+
+    // Shell row labels
+    [1, 2, 3].forEach(n => {
+      const oy = orbs.find(o => o.n === n)?.y;
+      if (oy == null) return;
+      ctx.fillStyle = n === 1 ? '#4fc3f7' : n === 2 ? '#81c784' : '#ffb74d';
+      ctx.font = '11px system-ui'; ctx.textAlign = 'right';
+      ctx.fillText(`n=${n}`, w * 0.15, oy + BH * 0.5 + 4);
+    });
+
+    // Orbital boxes with spin arrows
+    orbs.forEach((o, i) => {
+      const c = cur[i], full = c.up && c.dn, isN = i === ni;
+      ctx.strokeStyle = full ? o.col : 'rgba(255,255,255,0.28)';
+      ctx.lineWidth = full ? 1.8 : 1;
+      ctx.strokeRect(o.x, o.y, BW, BH);
+      if (full) { ctx.fillStyle = o.col + '18'; ctx.fillRect(o.x, o.y, BW, BH); }
+
+      const sz = BH * 0.38, cy = o.y + BH / 2;
+      if (c.up) {
+        ctx.fillStyle = `rgba(79,195,247,${isN && ns === 'up' ? pulse : 1})`;
+        arw(o.x + BW * 0.28, cy, 'up', sz);
+      }
+      if (c.dn) {
+        ctx.fillStyle = `rgba(239,154,154,${isN && ns === 'dn' ? pulse : 1})`;
+        arw(o.x + BW * 0.72, cy, 'dn', sz);
+      }
+
+      if (o.lbl) {
+        ctx.fillStyle = o.col; ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+        ctx.fillText(o.lbl, o.x + BW / 2, o.y - 3);
+      }
+    });
+
+    // Element info panel
+    const el = ELEMS[Z];
+    if (el) {
+      const by = h * 0.82;
+      ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = '11px system-ui'; ctx.textAlign = 'left';
+      ctx.fillText(`Z = ${Z}`, 10, by);
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 26px system-ui';
+      ctx.fillText(el[0], 10, by + 24);
+      ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '13px system-ui';
+      ctx.fillText(el[1], 56, by + 12);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '11px system-ui';
+      ctx.fillText(CFGS[Z], 56, by + 27);
+    }
+
+    ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.font = '10px system-ui'; ctx.textAlign = 'right';
+    ctx.fillText('↑ spin-up   ↓ spin-down   max 2 per orbital', w - 6, h - 5);
+
+    raf = requestAnimationFrame(draw);
+  }
+  draw();
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
