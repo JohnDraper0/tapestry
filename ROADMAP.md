@@ -16,7 +16,7 @@ architecture in their head and know which rungs hold which weight.
 
 - Nodes: 58 (47 known, 11 frontier). Domains: 14. Sims: 18. Analogous
   cross-links populated: 11. Images mirrored locally: 0.
-- Last updated: 2026-04-16.
+- Last updated: 2026-04-17.
 
 ## The atlas we want (inventory)
 
