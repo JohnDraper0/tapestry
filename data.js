@@ -293,6 +293,18 @@ const LAWS = [
   },
 
   {
+    id: 'faraday', name: "Faraday's Law of Induction", domain: 'em', symbol: '∮E·dl',
+    tagline: 'A changing magnetic field conjures electricity from nothing.',
+    equation: '\\mathcal{E} = -\\dfrac{d\\Phi_B}{dt}',
+    deps: ['maxwell'], sim: null,
+    eli5: `Take a magnet and a coil of wire with a tiny bulb attached. No battery — nothing. Now move the magnet toward the coil: the bulb lights up. Move it away: it lights up again. Hold it still: darkness. The bulb only glows when the magnet is *moving*, when the magnetic field through the coil is *changing*. That changing field shoves electrons around the wire. That shove is electricity. Every power station on Earth — coal, nuclear, wind, hydro — is just a giant, expensive version of a magnet moving past a coil.`,
+    intermediate: `In 1831 Michael Faraday discovered that whenever the magnetic flux through a wire loop changes — because the field grows, the loop rotates, or the loop moves — a voltage appears around the loop. The voltage equals the rate of change of the flux. The minus sign (Lenz's law) means the induced current always fights back against the change that caused it: it spawns its own magnetic field trying to cancel whatever disturbed it. This is energy conservation in action. From that single discovery flow electric generators, transformers, induction cooktops, wireless phone chargers, and MRI machines. It is the hinge between the science of magnetism and the age of electricity.`,
+    expert: `Faraday's law in integral form: \\(\\oint_C \\mathbf{E}\\cdot d\\mathbf{l} = -d\\Phi_B/dt\\), where \\(\\Phi_B = \\iint_S \\mathbf{B}\\cdot d\\mathbf{A}\\). Via Stokes' theorem this becomes the differential form \\(\\nabla\\times\\mathbf{E} = -\\partial\\mathbf{B}/\\partial t\\) — the third of Maxwell's four equations. The minus sign (Lenz's law) is mandated by energy conservation. For an N-turn coil rotating at angular velocity ω in a uniform field B: \\(\\varepsilon = NBA\\omega\\sin(\\omega t)\\) — the AC generator formula. Mutual inductance \\(M = N_2\\Phi_{21}/I_1\\) (henries) governs transformers: \\(V_2/V_1 = N_2/N_1\\). In superconductors, flux threading a ring is frozen and quantised: \\(\\Phi = n\\Phi_0\\) where \\(\\Phi_0 = h/2e \\approx 2.07\\times10^{-15}\\) Wb. SQUIDs exploit this to detect magnetic fields as weak as \\(10^{-18}\\) T — one billionth of Earth's surface field — and are the most sensitive magnetometers ever built.`,
+    surprise: `Every coal plant, nuclear reactor, wind turbine, and hydroelectric dam on Earth generates electricity by the exact same mechanism Faraday discovered with a magnet and a coil in 1831. The entire electrical grid of human civilisation is one man's afternoon experiment, scaled up.`,
+    history: `Faraday discovered electromagnetic induction on 29 August 1831. He had long suspected that if electricity could produce magnetism (Ørsted had shown this in 1820), the reverse must also be possible. He wound two coils on an iron ring, connected one to a battery, and watched a galvanometer on the other. The needle kicked — not while the current flowed steadily, but only the instant it started or stopped. The *change* was what mattered. Faraday was the son of a blacksmith, had no mathematical training, and described everything in plain English and field-line diagrams. Maxwell later translated those diagrams into equations and wrote that Faraday's pictorial intuitions were more profound than most algebra.`,
+  },
+
+  {
     id: 'ohms_law', name: "Ohm's Law", domain: 'em', symbol: 'V=IR',
     tagline: 'Voltage, current, resistance — three in one.',
     equation: 'V = IR',
@@ -818,6 +830,8 @@ const IMAGES = {
                    caption: 'Maxwell–Boltzmann speed distributions — temperature is molecules in motion' },
   maxwell:       { image: WM('James_Clerk_Maxwell.png'),
                    caption: 'James Clerk Maxwell — electricity, magnetism, light unified' },
+  faraday:       { image: WM('Thomas_Phillips_%281770-1845%29_-_Michael_Faraday_-_NPG_269_-_National_Portrait_Gallery.jpg'),
+                   caption: 'Michael Faraday, portrait by Thomas Phillips, c. 1841' },
   ohms_law:      { image: WM('Georg_Simon_Ohm3.jpg'),
                    caption: 'Georg Ohm — vindicated a decade after his law was called "naked fancies"' },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
