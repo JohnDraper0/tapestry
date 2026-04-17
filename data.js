@@ -937,6 +937,10 @@ const ANALOGIES = [
   ['computation', 'logic',        'proof = program (Curry–Howard)'],
   ['statmech',    'information',  'both measure disorder in bits'],
   ['navier_stokes', 'complexity', 'turbulence is the canonical example of deterministic chaos'],
+  ['lotka_volterra', 'gametheory',    'replicator dynamics are Lotka–Volterra in disguise: ecology and evolution share one equation'],
+  ['action',         'quantum',       'Feynman path integral: quantum amplitude sums exp(iS/ℏ) over every classical path'],
+  ['pauli',          'chandrasekhar', 'electron degeneracy pressure (Pauli exclusion) is what holds up a white dwarf — until 1.44 M☉'],
+  ['fourier',        'uncertainty',   'Heisenberg uncertainty is the Fourier bandwidth–duration inequality, transplanted to matter waves'],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
