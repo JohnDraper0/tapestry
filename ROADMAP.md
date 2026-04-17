@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 58 (47 known, 11 frontier). Domains: 14. Sims: 18. Analogous
+- Nodes: 59 (48 known, 11 frontier). Domains: 14. Sims: 18. Analogous
   cross-links populated: 11. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
@@ -32,7 +32,7 @@ points, not quotas.
 | thermo          |   4   |    7   | Wien displacement, Carnot, chemical potential             |
 | em              |   2   |    5   | Faraday induction, Snell, Poynting, plasma                |
 | relativity      |   2   |    4   | equivalence principle, Schwarzschild, gravitational waves |
-| quantum         |   4   |    7   | entanglement, decoherence, photoelectric effect           |
+| quantum         |   5   |    7   | entanglement, decoherence, spin-statistics                |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
 | biology         |   4   |    9   | Hardy–Weinberg, ATP, Hodgkin–Huxley, immunity, development|
@@ -80,7 +80,7 @@ run a breadcrumb in the commit message.
 eli5/intermediate/expert/surprise/history, a real Wikimedia image, a LaTeX
 equation, and valid `deps`:
 
-1. **Photoelectric effect** (quantum) — the pivot from classical to quantum.
+1. ~~**Photoelectric effect** (quantum)~~ — added 2026-04-17.
 2. **Faraday's law of induction** (em) — the thread from magnetism to power.
 3. **Hardy–Weinberg equilibrium** (biology) — the null model of evolution.
 4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.

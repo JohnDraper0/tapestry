@@ -369,6 +369,18 @@ const LAWS = [
   },
 
   {
+    id: 'photoelectric', name: 'Photoelectric Effect', domain: 'quantum', symbol: 'hν',
+    tagline: 'Light kicks out electrons — but only if the colour is right.',
+    equation: 'K_{\\text{max}} = h\\nu - \\phi',
+    deps: ['quantum', 'maxwell'], sim: null,
+    eli5: `When light shines on metal, it can knock electrons loose. But here's the strange part: it doesn't matter how bright the light is — if the colour is wrong, nothing comes out. A single flash of violet light ejects an electron. A flood of red light does nothing at all. Einstein figured out why: light doesn't arrive as a smooth wave, it comes in individual packets called photons. Each packet's energy depends on colour, not brightness. He won the Nobel Prize for this — not for relativity.`,
+    intermediate: `In 1905, Einstein showed that light carries energy not as a continuous wave but as discrete quanta called photons, each with energy E = hf, where h is Planck's constant and f is frequency. A metal holds its electrons with a binding energy called the work function φ. If a photon arrives with energy hf > φ, the electron escapes with kinetic energy KE = hf − φ. If hf < φ, nothing comes out — even if the light is blinding. More intensity just means more photons, not more energetic ones. This was decisive evidence against purely wave-based theories of light and established that light itself is quantised.`,
+    expert: `Einstein's photoelectric equation: KE_max = hν − φ, where φ is the work function (2–5 eV for typical metals). Millikan measured stopping potentials V_stop = KE_max/e for Li, Na, and K over 1905–1916, obtaining h ≈ 6.57 × 10⁻³⁴ J·s — within 0.5% of the modern value 6.626 × 10⁻³⁴ J·s — despite his own disbelief in photons throughout. Threshold frequency ν₀ = φ/h; for copper (φ ≈ 4.7 eV), ν₀ ≈ 1.14 × 10¹⁵ Hz (deep UV). Quantum efficiency (photoelectrons per photon) is 10⁻⁵–10⁻² for bulk metals, and approaches unity in purpose-built photocathodes used in photomultiplier tubes. The Duane–Hunt law (1915) — the inverse: electrons decelerated in a target emit X-rays up to a maximum frequency hν_max = eV — gave an independent measurement of h agreeing to within 1%. In semiconductors the band gap replaces the work function; this is the operating principle of solar cells, photodiodes, and CMOS image sensors.`,
+    surprise: `Robert Millikan spent a decade trying to disprove Einstein's photon theory with precision measurements. He failed so completely that his own data helped win Einstein the Nobel Prize. The man who set out to kill the photon became one of its key witnesses.`,
+    history: `Heinrich Hertz stumbled on the effect in 1887 while testing his radio transmitter — UV light made his spark gap spark more readily, but he had no explanation. Philipp Lenard mapped the phenomenon and won the 1905 Nobel Prize for the measurements alone. That same year, Einstein — a 26-year-old patent clerk in Bern — explained it with photons. He waited 16 years for the 1921 Nobel.`,
+  },
+
+  {
     id: 'qft', name: 'Quantum Field Theory', domain: 'quantum', symbol: 'φ̂(x)',
     tagline: 'Particles are ripples in fields.',
     equation: '\\mathcal{L} = \\bar{\\psi}(i\\gamma^\\mu\\partial_\\mu - m)\\psi',
@@ -818,6 +830,8 @@ const IMAGES = {
                    caption: 'Werner Heisenberg — you can\'t know both where and how fast' },
   pauli:         { image: WM('Pauli.jpg'),
                    caption: 'Wolfgang Pauli — no two electrons alike' },
+  photoelectric: { image: WM('Photoelectric_effect.svg'),
+                   caption: 'Photoelectric effect: photons strike metal, ejecting electrons' },
   qft:           { image: WM('RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg'),
                    caption: 'Richard Feynman — diagrams that tamed quantum fields' },
   standard:      { image: WM('CERN_LHC_Tunnel1.jpg'),
