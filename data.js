@@ -518,6 +518,18 @@ const LAWS = [
     history: `Ernst Haeckel coined "ecology" in 1866. Tansley introduced "ecosystem" in 1935. Lindeman's 1942 paper on trophic dynamics quantified energy flow through food webs. Rachel Carson's *Silent Spring* (1962) launched modern environmentalism.`,
   },
 
+  {
+    id: 'hardy_weinberg', name: 'Hardy–Weinberg Principle', domain: 'biology', symbol: 'p²+2pq+q²',
+    tagline: 'The null model of evolution — a population at rest.',
+    equation: 'p^2 + 2pq + q^2 = 1',
+    deps: ['evolution', 'probability'], sim: null,
+    eli5: `Imagine a big bag of coloured marbles — say blue and red — and each new generation is made by randomly grabbing two marbles and pairing them up. As long as no colour is luckier, no marbles spill out, and the bag is enormous, the ratio of blue to red stays exactly the same forever, generation after generation. Your genes work exactly the same way. Hardy–Weinberg is the rule that says: *nothing changes* unless something pushes it. Evolution is that push.`,
+    intermediate: `Hardy–Weinberg says that in a large, randomly-mating population with no selection, no mutation, no migration, and no random luck, allele frequencies stay constant indefinitely. If allele A has frequency p and allele a has frequency q = 1 − p, then after one round of random mating the genotype proportions settle to AA : p², Aa : 2pq, aa : q² — and stay there forever. That's the equilibrium, and it matters because it's a null model: it tells you what a gene pool looks like when evolution is *not* happening. Any real deviation — a recessive disease more common than expected, a gene that keeps shifting frequency — is a signal that selection, drift, mutation, or migration is at work. Population geneticists use this as a daily sanity check on large datasets.`,
+    expert: `Derivation is a single binomial sampling: gametes drawn independently with probabilities p (A) and q = 1 − p (a) yield zygote frequencies AA : p², Aa : 2pq, aa : q² by the product rule. Crucially, equilibrium is reached in one generation from any starting genotype frequencies — not gradually. Violations: (1) selection shifts Δq ≈ s·q(1−q)(q − q̂) per generation where s is the selection coefficient; (2) genetic drift in a population of size N introduces allele-frequency variance p(1−p)/(2N) per generation (Wright–Fisher model); (3) inbreeding elevates homozygotes by inbreeding coefficient F; (4) mutation at rates μ (A → a) and ν (a → A) sets equilibrium q* = μ/(μ + ν); (5) gene flow pulls frequencies toward the migrant source. In GWAS pipelines, SNPs failing HWE at p < 10⁻⁶ are flagged as probable genotyping errors. Sex-linked loci reach equilibrium in two generations (not one) and only after averaging across sexes. The multi-allele extension is simply Σᵢ Σⱼ pᵢpⱼ = 1 for all genotype combinations.`,
+    surprise: `Hardy — one of the greatest pure mathematicians of the 20th century — was mortified by the biological simplicity of the result. He published it as a throwaway letter in *Science*, calling the conclusion "not in the least original." The genetics community kept his name on it anyway. He always considered it one of the least interesting things he ever wrote.`,
+    history: `In 1908, Cambridge geneticist Reginald Punnett was puzzled why dominant alleles don't crowd out recessives over time. He asked mathematician G.H. Hardy at a cricket match. Hardy dashed off a two-paragraph letter to *Science*, visibly impatient with the triviality. That same year, German physician Wilhelm Weinberg independently derived the same law and tested it on twin-birth data. The two men never corresponded; both names stuck.`,
+  },
+
   // ───────────────────────────── INFORMATION & COMPUTATION ──────────────────
 
   {
@@ -866,6 +878,8 @@ const IMAGES = {
                    caption: 'Charles Darwin — design without a designer' },
   ecosystems:    { image: WM('Amazon_Manaus_forest.jpg'),
                    caption: 'The Amazon — thermodynamics made alive' },
+  hardy_weinberg:{ image: WM('Ghhardy@72.jpg'),
+                   caption: 'G.H. Hardy — wrote the null model of evolution at a cricket match' },
   information:   { image: WM('ClaudeShannon_MFO3807.jpg'),
                    caption: 'Claude Shannon — invented the bit' },
   computation:   { image: WM('Alan_Turing_Aged_16.jpg'),

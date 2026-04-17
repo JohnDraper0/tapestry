@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 60 (49 known, 11 frontier). Domains: 14. Sims: 19. Analogous
+- Nodes: 61 (50 known, 11 frontier). Domains: 14. Sims: 19. Analogous
   cross-links populated: 11. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
@@ -35,7 +35,7 @@ points, not quotas.
 | quantum         |   5   |    7   | entanglement, decoherence, spin-statistics                |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
-| biology         |   4   |    9   | Hardy–Weinberg, ATP, Hodgkin–Huxley, immunity, development|
+| biology         |   5   |    9   | ATP, Hodgkin–Huxley, immunity, development                |
 | info            |   2   |    5   | Kolmogorov complexity, channel coding, error correction   |
 | emergence       |   4   |    7   | self-organised criticality, Zipf, networks, cellular auto |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
@@ -82,7 +82,7 @@ equation, and valid `deps`:
 
 1. ~~**Photoelectric effect** (quantum)~~ — added 2026-04-17.
 2. ~~**Faraday's law of induction** (em)~~ — added 2026-04-17.
-3. **Hardy–Weinberg equilibrium** (biology) — the null model of evolution.
+3. ~~**Hardy–Weinberg equilibrium** (biology) — the null model of evolution.~~ — added 2026-04-17.
 4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
 5. **ATP / chemiosmosis** (biology) — life's universal energy currency.
 6. **Navier–Stokes** (mechanics) — the fluid law we can't prove well-posed.
