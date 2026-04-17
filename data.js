@@ -140,6 +140,18 @@ const LAWS = [
     history: `Joseph Fourier developed his series while studying heat diffusion in solids, publishing *Théorie analytique de la chaleur* in 1822. Lagrange initially rejected his claim that any function could be represented this way, calling it too audacious. The fast Fourier transform was independently found by Gauss around 1805 and lay unpublished until Cooley and Tukey rediscovered it in 1965 — a quarter-century after digital computing began, meaning an entire generation of scientists did FFT-like work the slow way unnecessarily.`,
   },
 
+  {
+    id: 'clt', name: 'Central Limit Theorem', domain: 'math', symbol: '𝒩',
+    tagline: 'Sum enough randomness and a bell curve always emerges.',
+    equation: '\\frac{\\bar{X}_n - \\mu}{\\sigma/\\!\\sqrt{n}} \\xrightarrow{\\,d\\,} \\mathcal{N}(0,1)',
+    deps: ['probability', 'calculus'], sim: null,
+    eli5: `Roll one die — any number 1 to 6, equally likely, no pattern. Roll ten dice and add them up — the total hovers around 35, rarely near the ends. Roll a hundred dice and add them up — the total clusters in a beautiful bell curve around 350. It doesn't matter what shape each individual die has: flat, lumpy, wildly lopsided. The sum *always* makes a bell. This is the central limit theorem, and it's why bell curves appear everywhere — in heights of people, errors of measurements, noise in electronics — because almost anything you measure is the sum of many small, independent nudges.`,
+    intermediate: `The central limit theorem says something remarkable: take any collection of independent random quantities — no matter their individual shape — and add enough of them together. The sum converges to a perfect normal (bell-curve) distribution. The average of n measurements, each with mean μ and variance σ², is approximately normal with mean μ and variance σ²/n. The more measurements, the tighter and better-behaved the bell. This is why statistical tests based on normal distributions work so broadly — you are measuring averages, and averages are always approximately normal. It also explains why errors in physics experiments follow bell curves, why heights follow bell curves, and why almost any quantity shaped by many small contributing factors does too.`,
+    expert: `Let X₁, …, Xₙ be i.i.d. random variables with mean μ and finite variance σ². Standardise: Z_n = (X̄_n − μ)/(σ/√n). The CLT states Z_n → N(0,1) in distribution. Standard proof via characteristic functions: φ_{(X−μ)/σ}(t) = 1 − t²/2 + O(t³), so φ_{Z_n}(t) = [φ(t/√n)]^n → e^{−t²/2} as n → ∞ — the standard-normal characteristic function. The Berry–Esseen theorem quantifies the rate: sup_x |F_n(x) − Φ(x)| ≤ C ρ/(σ³√n) where ρ = 𝔼[|X − μ|³] and the best-known constant is C ≤ 0.4748 (Shevtsova, 2010). Lindeberg's (1922) condition ∑ 𝔼[X_i² 1_{|X_i|>ε√s_n²}] / s_n² → 0 is the minimal hypothesis for the i.n.i.d. generalisation; Feller proved necessity. When variance is infinite — Cauchy, power-law, and Pareto distributions — the CLT fails; sums converge instead to Lévy α-stable distributions with power-law tails, the Gaussian being the α = 2 special case. The theorem underpins least-squares estimation, the t-test, chi-squared tests, confidence intervals, and maximum-likelihood asymptotics, and — via Donsker's theorem — Brownian motion as the functional CLT for random-walk paths.`,
+    surprise: `Physicists used the normal distribution to describe measurement errors for a century before anyone proved *why* it applied. Gauss himself derived the bell curve in 1809 by assuming the mean is always the best estimate and working backward — unaware that the theorem explaining his derivation wouldn't be proved until Lyapunov, nearly a hundred years later. The tool preceded its own justification by three generations.`,
+    history: `Abraham de Moivre privately circulated his first result on 12 November 1733, proving the normal approximation to the binomial — the first appearance of the bell curve in mathematics. Laplace dramatically generalised it in his 1812 *Théorie analytique des probabilités*, extending convergence to sums of almost any distribution. Lyapunov gave the first fully rigorous proof in 1901 using characteristic functions; Lindeberg weakened the conditions in 1922. George Pólya coined the name "central limit theorem" (*Zentraler Grenzwertsatz*) in 1920 — "central" not merely as a mark of importance, but because it is the limit theorem that stands at the centre of all probability theory.`,
+  },
+
   // ───────────────────────────── DEEP PRINCIPLES ────────────────────────────
 
   {
@@ -832,6 +844,8 @@ const IMAGES = {
                    caption: 'Laplace — chief architect of probability theory' },
   fourier:       { image: WM('Joseph_Fourier.jpg'),
                    caption: 'Joseph Fourier — heat, harmonics, and the frequency portrait of the universe' },
+  clt:           { image: WM('Galton_Board.svg'),
+                   caption: 'A Galton board — balls cascading through pegs always form a bell curve below' },
   symmetry:      { image: WM('Noether.jpg'),
                    caption: 'Emmy Noether — proved symmetry is conservation' },
   action:        { image: WM('Pendulum_animation.gif'),

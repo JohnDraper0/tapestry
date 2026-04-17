@@ -14,8 +14,8 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 62 (51 known, 11 frontier). Domains: 14. Sims: 19. Analogous
-  cross-links populated: 11. Images mirrored locally: 0.
+- Nodes: 63 (52 known, 11 frontier). Domains: 14. Sims: 19. Analogous
+  cross-links populated: 15. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
 ## The atlas we want (inventory)
@@ -26,7 +26,7 @@ points, not quotas.
 
 | Domain          | Today | Target | Gaps worth filling next                                   |
 |-----------------|------:|-------:|-----------------------------------------------------------|
-| math            |   9   |   14   | topology, group theory, Gödel's theorems, graph theory    |
+| math            |  10   |   14   | topology, group theory, Gödel's theorems, graph theory    |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   4   |    7   | Wien displacement, Carnot, chemical potential             |
@@ -85,10 +85,10 @@ equation, and valid `deps`:
 3. ~~**Hardy–Weinberg equilibrium** (biology) — the null model of evolution.~~ — added 2026-04-17.
 4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
 5. **ATP / chemiosmosis** (biology) — life's universal energy currency.
-6. **Navier–Stokes** (mechanics) — the fluid law we can't prove well-posed.
+6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
 7. **Wien's displacement law** (thermo) — hot things glow in predictable hues.
 8. **Plate tectonics** (earth) — the Earth as a slow, convecting engine.
-9. **Central limit theorem** (math/probability) — why bell curves everywhere.
+9. ~~**Central limit theorem** (math/probability)~~ — added 2026-04-17.
 10. **Kolmogorov complexity** (info) — the absolute information of a string.
 11. **Self-organised criticality** (emergence) — Bak's sandpile universality.
 12. ~~**Gravitational waves** (relativity)~~ — added 2026-04-17.
