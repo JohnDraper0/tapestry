@@ -1254,6 +1254,139 @@ SIMS.gametheory = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── KEPLER ──────────────────────────────────
+SIMS.kepler = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // Orbit parameters — use an obvious eccentricity so Laws 1 & 2 are vivid
+  const GM = 40000;
+  const e  = 0.62;
+  const a  = Math.min(w, h) * 0.30;
+  const b  = a * Math.sqrt(1 - e * e);
+
+  // Sun sits at right focus; centre of ellipse is to the left of sun
+  const sunX = w * 0.52, sunY = h * 0.50;
+
+  // Perihelion (closest point) is to the left of the sun
+  const r_peri = a * (1 - e);
+  const v_peri = Math.sqrt(GM * (1 + e) / r_peri);
+
+  // State: planet starts at perihelion moving "up" (vy < 0 in canvas coords)
+  let px = sunX - r_peri, py = sunY;
+  let vx = 0, vy = -v_peri;
+
+  // Period: T = 2π √(a³/GM)
+  const T = 2 * Math.PI * Math.sqrt(a * a * a / GM);
+  const SLICES = 6;
+  const sliceDur = T / SLICES;
+  const PALETTE = ['#ff6b6b50','#ffd93d50','#6bcb7750','#4d96ff50','#c77dff50','#ff9f4350'];
+
+  let sliceTimer = 0, colorIdx = 0;
+  let sliceStart = { x: px, y: py };
+  let slicePath  = [];
+  let done = [];   // completed sweep sectors
+  let trail = [];
+  let raf, last = performance.now();
+
+  // Leapfrog integrator — conserves energy well
+  function accel(x, y) {
+    const dx = sunX - x, dy = sunY - y;
+    const r3 = Math.pow(dx * dx + dy * dy, 1.5);
+    return { ax: GM * dx / r3, ay: GM * dy / r3 };
+  }
+
+  const SUBSTEPS = 6;
+  function step(realDt) {
+    const dt = Math.min(realDt * 1.4, 0.05) / SUBSTEPS;
+    for (let s = 0; s < SUBSTEPS; s++) {
+      let { ax, ay } = accel(px, py);
+      vx += ax * dt * 0.5; vy += ay * dt * 0.5;
+      px += vx * dt;       py += vy * dt;
+      ({ ax, ay } = accel(px, py));
+      vx += ax * dt * 0.5; vy += ay * dt * 0.5;
+
+      sliceTimer += dt;
+      slicePath.push({ x: px, y: py });
+      trail.push({ x: px, y: py });
+
+      if (sliceTimer >= sliceDur) {
+        done.push({ start: sliceStart, path: slicePath, col: PALETTE[colorIdx % SLICES] });
+        if (done.length > SLICES * 2) done.shift();
+        colorIdx++;
+        sliceTimer = 0;
+        sliceStart = { x: px, y: py };
+        slicePath = [];
+      }
+    }
+    if (trail.length > 800) trail = trail.slice(-800);
+  }
+
+  function fillSector(start, path, col) {
+    if (path.length < 2) return;
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(sunX, sunY);
+    ctx.lineTo(start.x, start.y);
+    path.forEach(p => ctx.lineTo(p.x, p.y));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    step(dt);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Faint ellipse guide
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    ctx.ellipse(sunX - a * e, sunY, a, b, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Sweep sectors
+    done.forEach(s => fillSector(s.start, s.path, s.col));
+    if (slicePath.length > 1) fillSector(sliceStart, slicePath, PALETTE[colorIdx % SLICES]);
+
+    // Orbit trail
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    trail.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+    ctx.stroke();
+
+    // Sun
+    const g = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, 28);
+    g.addColorStop(0, '#fff7b0'); g.addColorStop(1, 'rgba(255,210,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(sunX, sunY, 28, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffe04a';
+    ctx.beginPath(); ctx.arc(sunX, sunY, 9, 0, Math.PI * 2); ctx.fill();
+
+    // Planet
+    ctx.shadowBlur = 10; ctx.shadowColor = '#82cfff';
+    ctx.fillStyle = '#82cfff';
+    ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Laws
+    ctx.font = 'bold 12px system-ui'; ctx.fillStyle = '#eee';
+    ctx.fillText('Kepler\'s Three Laws', 10, 20);
+    ctx.font = '11px system-ui'; ctx.fillStyle = '#bbb';
+    ctx.fillText('① Orbits are ellipses — Sun at one focus', 10, 38);
+    ctx.fillText('② Each coloured slice = equal time → equal area', 10, 54);
+    ctx.fillText('③ T ² ∝ a ³ — larger orbit, slower year', 10, 70);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

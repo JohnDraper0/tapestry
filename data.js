@@ -196,7 +196,7 @@ const LAWS = [
     id: 'kepler', name: "Kepler's Laws", domain: 'mechanics', symbol: '☉',
     tagline: 'How planets really move.',
     equation: 'T^2 \\propto a^3',
-    deps: ['geometry', 'newton'], sim: null,
+    deps: ['geometry', 'newton'], sim: 'kepler',
     eli5: `Planets don't go around the Sun in perfect circles. Johannes Kepler worked out they actually go in stretched-out ovals called ellipses, with the Sun sitting at one squished side. They go fastest when they're closest to the Sun and slowest when they're farthest. And small planets whip around fast while big outer ones plod. Three simple rules describe the entire clockwork of a solar system.`,
     intermediate: `(1) Planets travel in ellipses with the Sun at one focus. (2) A line from Sun to planet sweeps equal areas in equal times — so orbits speed up near the Sun and slow down far from it. (3) The square of a planet's year is proportional to the cube of its average distance — Mars's 1.88-year year and 1.52-AU orbit are linked by exactly this formula. Kepler extracted these rules from naked-eye observations before Newton explained *why* they held.`,
     expert: `Kepler's laws are rigorous consequences of the 1/r² force law combined with conservation of angular momentum. Equal areas follow from L = mr² θ̇ = const. The elliptic orbit is a conic section arising from the Laplace–Runge–Lenz vector, which is conserved for inverse-square potentials only; this hidden symmetry (SO(4) in the bound-state case) explains the accidental degeneracy of hydrogen's energy levels. General relativity corrects Kepler's third law at order (v/c)² — the anomalous perihelion precession of Mercury (43″ per century) was the first classical test of GR.`,
