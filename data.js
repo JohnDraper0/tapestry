@@ -279,6 +279,18 @@ const LAWS = [
   },
 
   {
+    id: 'wien', name: "Wien's Displacement Law", domain: 'thermo', symbol: 'λT = b',
+    tagline: 'Hot things glow in predictable colours.',
+    equation: '\\lambda_{\\max} = \\dfrac{b}{T}, \\quad b = 2897.77\\,\\mu\\text{m}\\cdot\\text{K}',
+    deps: ['thermo', 'statmech', 'stefan_boltzmann'], sim: null,
+    eli5: `Everything warm glows — not always with light you can see, but with light. A poker that's barely warm glows in the far infrared, invisible. Heat it red-hot and you can just see the glow. Heat it to white-hot and it's blazing. Here's the trick: the colour of the glow tells you the temperature precisely. Wien's law says the peak colour shifts toward blue as something gets hotter. Your oven, the stars, even your own body — all broadcasting their temperature in light.`,
+    intermediate: `Everything above absolute zero radiates a spectrum of light, and Wien's displacement law pins down where that spectrum peaks: λ_max = b/T, where b ≈ 2898 μm·K and T is in kelvin. The Sun's surface at 5778 K peaks at about 502 nm (green), but our eyes blend all its colours into white. A human body at 310 K peaks at roughly 9.4 μm — deep infrared, invisible to eyes but bright to a thermal camera. Astronomers use Wien's law to read stellar temperatures from colour alone: a blue-white star is tens of thousands of kelvin; a red star is a few thousand. The law is beautifully simple, and it works across the entire electromagnetic spectrum from microwave to X-ray.`,
+    expert: `Wien's law follows from differentiating Planck's spectral radiance B_λ(T) = (2hc²/λ⁵)/(e^{hc/λk_BT} − 1) and setting dB_λ/dλ = 0. This yields the transcendental equation x = 5(1 − e^{−x}) where x = hc/λ_max k_B T; the root is x_max = 4.965114..., giving b = hc/(x_max k_B) = 2.897771955 × 10^{−3} m·K. Crucial subtlety: the frequency-domain peak ν_max = αk_BT/h (α ≈ 2.821439) is NOT at c/λ_max — the Jacobian of the λ↔ν change of variables shifts it, so "peak frequency" and "peak wavelength" are inconsistent measures. Wien himself derived the displacement law in 1893 from thermodynamic scaling (B_λ/T⁵ = f(λT)) without quantum theory; his 1896 approximation B_λ ≈ (2hc²/λ⁵)e^{−hc/λk_BT} works for short wavelengths (hν >> k_BT) but fails in the Rayleigh–Jeans regime. That mismatch was the experimental crack Planck pried open in 1900 to introduce energy quantisation. The cosmic microwave background at T_CMB = 2.7255 K peaks at λ ≈ 1.06 mm — exactly microwave, explaining why we can observe it with radio dishes.`,
+    surprise: `The Sun peaks in green light — about 502 nm. We don't see a green sun because our eyes evolved under exactly that spectrum: our three cone types are tuned to blend its light into white. Every star is broadcasting its temperature in colour; astronomers just have to read it.`,
+    history: `Wilhelm Wien deduced the displacement law in 1893 from thermodynamic scaling arguments, years before Planck solved the full spectrum. Wien also derived an approximate blackbody formula in 1896 that was almost right — but failed at long wavelengths. That failure nagged at Planck until, on the evening of 7 October 1900, he found the fix by quantising radiation energy. Wien received the Nobel Prize in Physics in 1911 for the displacement law; Planck received his in 1918 for the quantisation hypothesis it inadvertently provoked.`,
+  },
+
+  {
     id: 'ideal_gas', name: 'Ideal Gas Law', domain: 'thermo', symbol: 'PV=nRT',
     tagline: 'Temperature is molecules in motion.',
     equation: 'PV = nRT',
@@ -864,6 +876,8 @@ const IMAGES = {
                    caption: 'Ludwig Boltzmann — S = k log W on his tombstone' },
   stefan_boltzmann: { image: WM('Blackbody-lg.png'),
                       caption: 'Blackbody spectra at different temperatures — the T⁴ law made visible' },
+  wien:          { image: WM('Wiens_law.svg'),
+                   caption: "Wien's displacement law — each temperature glows at a different peak colour" },
   ideal_gas:     { image: WM('Maxwell_BoltzmannDistributions.gif'),
                    caption: 'Maxwell–Boltzmann speed distributions — temperature is molecules in motion' },
   maxwell:       { image: WM('James_Clerk_Maxwell.png'),

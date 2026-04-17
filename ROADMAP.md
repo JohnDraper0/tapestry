@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 63 (52 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+- Nodes: 64 (53 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 15. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
@@ -29,7 +29,7 @@ points, not quotas.
 | math            |  10   |   14   | topology, group theory, Gödel's theorems, graph theory    |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
-| thermo          |   4   |    7   | Wien displacement, Carnot, chemical potential             |
+| thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
 | em              |   3   |    5   | Snell's law, Poynting vector, plasma                      |
 | relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
 | quantum         |   5   |    7   | entanglement, decoherence, spin-statistics                |
@@ -86,7 +86,7 @@ equation, and valid `deps`:
 4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
 5. **ATP / chemiosmosis** (biology) — life's universal energy currency.
 6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
-7. **Wien's displacement law** (thermo) — hot things glow in predictable hues.
+7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
 8. **Plate tectonics** (earth) — the Earth as a slow, convecting engine.
 9. ~~**Central limit theorem** (math/probability)~~ — added 2026-04-17.
 10. **Kolmogorov complexity** (info) — the absolute information of a string.
