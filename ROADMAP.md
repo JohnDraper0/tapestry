@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 60 (49 known, 11 frontier). Domains: 14. Sims: 18. Analogous
+- Nodes: 60 (49 known, 11 frontier). Domains: 14. Sims: 19. Analogous
   cross-links populated: 11. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
@@ -103,7 +103,7 @@ hierarchy problem · nature of time · hard problem of consciousness
 
 **Sims still missing on existing nodes, ranked by teachability:**
 - `uncertainty` — wave packet with inverse Δx↔Δp width.
-- `statmech` — Maxwell–Boltzmann speed distribution, live.
+- ~~`statmech` — Maxwell–Boltzmann speed distribution, live.~~ — added 2026-04-17.
 - `pauli` — electron-shell filling by aufbau + exclusion.
 - `kepler` — three-law visualiser (ellipses, equal areas, T²∝a³).
 - `stars` — HR diagram with a live evolving track.

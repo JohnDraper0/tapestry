@@ -1387,6 +1387,140 @@ SIMS.kepler = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── MAXWELL–BOLTZMANN ───────────────────────────
+SIMS.statmech = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  const N = 100, R = 3.5;
+
+  // Box-Muller: velocity component from N(0, sqrt(T))
+  function mbComp(T) {
+    const r1 = Math.max(Math.random(), 1e-9), r2 = Math.random();
+    return Math.sqrt(-2 * Math.log(r1)) * Math.cos(2 * Math.PI * r2) * Math.sqrt(T);
+  }
+
+  const SPLIT = Math.floor(h * 0.55);
+  const mg = 8;
+  const bL = mg, bR = w - mg, bTop = 24, bBot = SPLIT - 4;
+  const bW = bR - bL, bH = bBot - bTop;
+
+  const parts = Array.from({ length: N }, () => ({
+    x: bL + R + Math.random() * (bW - 2 * R),
+    y: bTop + R + Math.random() * (bH - 2 * R),
+    vx: mbComp(80), vy: mbComp(80),
+  }));
+
+  let raf, last = performance.now();
+
+  function getT() {
+    return parts.reduce((s, p) => s + p.vx * p.vx + p.vy * p.vy, 0) / (2 * N);
+  }
+
+  // 2D Maxwell-Boltzmann PDF: f(v) = (v/T) exp(-v²/2T)
+  function mbPDF(v, t) { return (v / t) * Math.exp(-v * v / (2 * t)); }
+
+  canvas.addEventListener('click', () => {
+    const f = Math.sqrt(1.6);
+    parts.forEach(p => { p.vx *= f; p.vy *= f; });
+  });
+
+  const BINS = 22;
+
+  function step(dt) {
+    parts.forEach(p => {
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      if (p.x < bL + R) { p.x = bL + R; p.vx = Math.abs(p.vx); }
+      if (p.x > bR - R) { p.x = bR - R; p.vx = -Math.abs(p.vx); }
+      if (p.y < bTop + R) { p.y = bTop + R; p.vy = Math.abs(p.vy); }
+      if (p.y > bBot - R) { p.y = bBot - R; p.vy = -Math.abs(p.vy); }
+    });
+  }
+
+  function draw(now) {
+    const dt = Math.min(0.028, (now - last) / 1000); last = now;
+    step(dt);
+    ctx.clearRect(0, 0, w, h);
+
+    const Tcur = Math.max(getT(), 1);
+    const vMaxHist = 4.5 * Math.sqrt(Tcur);
+    const binW = vMaxHist / BINS;
+    const vRms = Math.sqrt(2 * Tcur);
+
+    // ── TOP: particles coloured by speed ────────────────────────
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.strokeRect(bL, bTop, bW, bH);
+
+    parts.forEach(p => {
+      const t = Math.min(Math.hypot(p.vx, p.vy) / (1.8 * vRms), 1);
+      ctx.fillStyle = `rgb(${Math.round(50 + 200 * t)},${Math.round(160 - 80 * t)},${Math.round(255 - 210 * t)})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI * 2); ctx.fill();
+    });
+
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '12px system-ui';
+    ctx.fillText(`T = ${Tcur.toFixed(0)}  (click to heat)`, bL + 4, bTop - 8);
+
+    // divider
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath(); ctx.moveTo(0, SPLIT + 2); ctx.lineTo(w, SPLIT + 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── BOTTOM: speed histogram + theoretical MB curve ───────────
+    const hX = mg + 10, hY = SPLIT + 8;
+    const hW = w - hX - mg, hH = h - hY - mg - 18;
+    const barW = hW / BINS;
+
+    const bins = new Array(BINS).fill(0);
+    parts.forEach(p => {
+      const i = Math.min(Math.floor(Math.hypot(p.vx, p.vy) / binW), BINS - 1);
+      bins[i]++;
+    });
+    const binMax = Math.max(...bins, 1);
+
+    bins.forEach((cnt, i) => {
+      const barH = (cnt / binMax) * hH;
+      const t = Math.min(((i + 0.5) * binW) / (1.8 * vRms), 1);
+      ctx.fillStyle = `hsla(${210 - 160 * t}, 80%, 60%, 0.55)`;
+      ctx.fillRect(hX + i * barW, hY + hH - barH, barW - 1, barH);
+    });
+
+    // Theoretical MB curve, peak normalised to hH
+    const mbPeak = mbPDF(Math.sqrt(Tcur), Tcur);
+    ctx.beginPath(); ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 2;
+    for (let i = 0; i <= Math.floor(hW); i++) {
+      const v = (i / hW) * vMaxHist;
+      const y = hY + hH - (mbPDF(v, Tcur) / mbPeak) * hH * 0.92;
+      i === 0 ? ctx.moveTo(hX + i, y) : ctx.lineTo(hX + i, y);
+    }
+    ctx.stroke();
+
+    // Key speed markers
+    [[Math.sqrt(Tcur), 'v_p', '#64ffda'],
+     [Math.sqrt(Math.PI * Tcur / 2), 'v̄', '#80d8ff'],
+     [vRms, 'v_rms', '#ff8a80']].forEach(([v, lbl, col]) => {
+      if (v >= vMaxHist) return;
+      const x = hX + (v / vMaxHist) * hW;
+      ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+      ctx.beginPath(); ctx.moveTo(x, hY + hH); ctx.lineTo(x, hY + 4); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = col; ctx.font = '10px system-ui';
+      ctx.fillText(lbl, x - 8, hY + hH + 14);
+    });
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(hX, hY + hH); ctx.lineTo(hX + hW, hY + hH); ctx.stroke();
+
+    ctx.fillStyle = '#ffcc00'; ctx.font = '10px system-ui';
+    ctx.fillText('— MB theory', hX + 4, hY + 13);
+    ctx.fillStyle = 'rgba(200,200,200,0.45)';
+    ctx.fillText('speed →', hX + hW - 48, hY + hH + 14);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
