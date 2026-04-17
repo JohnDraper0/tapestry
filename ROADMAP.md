@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 61 (50 known, 11 frontier). Domains: 14. Sims: 19. Analogous
+- Nodes: 62 (51 known, 11 frontier). Domains: 14. Sims: 19. Analogous
   cross-links populated: 11. Images mirrored locally: 0.
 - Last updated: 2026-04-17.
 
@@ -31,7 +31,7 @@ points, not quotas.
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   4   |    7   | Wien displacement, Carnot, chemical potential             |
 | em              |   3   |    5   | Snell's law, Poynting vector, plasma                      |
-| relativity      |   2   |    4   | equivalence principle, Schwarzschild, gravitational waves |
+| relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
 | quantum         |   5   |    7   | entanglement, decoherence, spin-statistics                |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
@@ -91,7 +91,7 @@ equation, and valid `deps`:
 9. **Central limit theorem** (math/probability) — why bell curves everywhere.
 10. **Kolmogorov complexity** (info) — the absolute information of a string.
 11. **Self-organised criticality** (emergence) — Bak's sandpile universality.
-12. **Gravitational waves** (relativity) — Einstein's 1916 prediction, 2015 found.
+12. ~~**Gravitational waves** (relativity)~~ — added 2026-04-17.
 13. **Entanglement** (quantum) — "spooky action" and Bell's theorem.
 14. **Neuron action potential** (neuro) — how a cell fires a signal.
 15. **Entropy–information link / Landauer** (thermo-info bridge node).

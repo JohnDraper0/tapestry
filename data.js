@@ -342,6 +342,18 @@ const LAWS = [
     history: `Einstein worked on GR for a decade, aided crucially by his friend Marcel Grossmann on differential geometry. He presented the final field equations to the Prussian Academy in November 1915, just days before Hilbert independently reached the same equations. Eddington's 1919 eclipse expedition confirmed gravitational light-bending and made Einstein a global celebrity.`,
   },
 
+  {
+    id: 'grav_waves', name: 'Gravitational Waves', domain: 'relativity', symbol: '≋',
+    tagline: "Einstein's 1916 prediction arrived in 2015 as a 0.2-second chirp.",
+    equation: 'h \\sim \\dfrac{4G}{c^4}\\,\\dfrac{\\ddot{Q}}{r}',
+    deps: ['general'], sim: null,
+    eli5: `Throw a rock into still water and ripples spread outward. Now imagine the water is space itself. Two black holes spiralling into each other shake space so violently that ripples — gravitational waves — race outward at light speed. When one of these ripples washes through a detector on Earth, it stretches and squeezes the whole building. How much? Less than one-thousandth the width of a single proton. In 2015, scientists built a laser ruler precise enough to catch exactly this shiver — and heard two black holes that collided a billion light-years away.`,
+    intermediate: `General relativity predicts that accelerating masses radiate gravitational waves — ripples in spacetime curvature that travel at light speed. The waves have two polarisations (+ and ×), each stretching space along perpendicular axes as they pass. The strain h = ΔL/L measures the fractional arm-length change. The first direct detection, GW150914 on September 14 2015, showed h ≈ 10⁻²¹: LIGO's 4-km arms stretched and compressed by roughly 10⁻¹⁸ m — one-thousandth the diameter of a proton. The source was two merging black holes (~36 and ~29 solar masses) some 1.3 billion light-years away. In those final moments the power radiated in gravitational waves exceeded the combined luminosity of every star in the observable universe. In 2017 the neutron-star merger GW170817 was watched simultaneously in gravitational waves and across the whole electromagnetic spectrum, launching multi-messenger astronomy.`,
+    expert: `In linearised GR (|h_μν| ≪ 1), the trace-reversed perturbation \\bar{h}_μν satisfies ☐\\bar{h}_μν = −16πG/c⁴ T_μν; solutions are transverse traceless plane waves with + and × polarisations. Radiated power is given by Einstein's quadrupole formula P = (G/5c⁵)⟨\\dddot{Q}_{ij}\\dddot{Q}^{ij}⟩, where Q_{ij} = ∫ρ(x_i x_j − ⅓r²δ_{ij}) d³x. For two equal masses M in circular orbit of radius r: P = (32/5)(G⁴M⁵/c⁵r⁵), driving inspiral on timescale τ ∝ r⁴. The Hulse–Taylor binary pulsar (1974) showed orbital decay matching GR to 0.2%, earning the 1993 Nobel Prize — indirect evidence. LIGO uses differential Michelson interferometry; 4-km Fabry–Pérot cavities with finesse ≈ 450 achieve effective optical path lengths ~1,800 km. Shot-noise–limited sensitivity at 100 Hz reaches ~10⁻²³ Hz^{−½} in O4. Matched-filter searches sweep templates across parameter space (masses, spins, sky location). Current O4 event rates exceed one compact-object merger per week. Space-based LISA (~2037) targets 10⁻⁴–10⁻¹ Hz, capturing supermassive black-hole mergers and verification binaries years before coalescence. Pulsar timing arrays (NANOGrav, PPTA) have recently reported evidence for a stochastic gravitational-wave background at nanohertz frequencies — possibly from the cosmic population of supermassive binary black holes.`,
+    surprise: `In the fraction of a second when GW150914's two black holes merged, they radiated more energy as gravitational waves than every star in the observable universe emits as light during that same instant — roughly three solar masses converted to pure spacetime ripple. The displacement this caused in LIGO's mirrors was one-thousandth the diameter of a proton.`,
+    history: `Einstein predicted gravitational waves in 1916 but later doubted their reality: in 1936 he and Nathan Rosen submitted a paper claiming they cannot exist. The referee (later identified as Howard Robertson) found the error; Einstein corrected the paper without ever learning who caught it. Joseph Weber claimed detection in the 1960s — later discredited. Rainer Weiss, Kip Thorne, and Barry Barish built LIGO across four decades. On September 14 2015, at 09:50:45 UTC, both detectors simultaneously registered a 0.2-second chirp from two merging black holes 1.3 billion light-years away. Weiss, Thorne, and Barish shared the 2017 Nobel Prize in Physics.`,
+  },
+
   // ───────────────────────────── QUANTUM ────────────────────────────────────
 
   {
@@ -850,6 +862,8 @@ const IMAGES = {
                    caption: 'Einstein, 1921 — E = mc²' },
   general:       { image: WM('Black_hole_-_Messier_87_crop_max_res.jpg'),
                    caption: 'M87* — first-ever image of a black hole (EHT, 2019)' },
+  grav_waves:    { image: WM('LIGO_Hanford_aerial_photo_(2014).jpg'),
+                   caption: 'LIGO Hanford Observatory — one of two L-shaped detectors that first caught a gravitational wave' },
   quantum:       { image: WM('Solvay_conference_1927.jpg'),
                    caption: '1927 Solvay Conference — 17 Nobel laureates debating quanta' },
   uncertainty:   { image: WM('Bundesarchiv_Bild183-R57262,_Werner_Heisenberg.jpg'),
