@@ -1521,6 +1521,123 @@ SIMS.statmech = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── UNCERTAINTY ─────────────────────────────
+SIMS.uncertainty = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf, t = 0;
+  const N = 300;
+  const pad = 18;
+  const mid = w / 2;
+  const cy = h * 0.60;
+  const ampMax = h * 0.44;
+  const xRange = 3.0, pRange = 3.0;
+
+  function draw() {
+    t += 0.018;
+    // σ_x breathes between 0.5 and 1.2 (~7 s period)
+    const sigma  = 0.5 + 0.7 * (1 - Math.cos(t * 0.8)) / 2;
+    const sigmaP = 0.5 / sigma; // Δx · Δp = ℏ/2 (minimum uncertainty state)
+
+    ctx.fillStyle = '#0a0e1e';
+    ctx.fillRect(0, 0, w, h);
+
+    // ── LEFT PANEL: position space ──────────────────────────────────
+    function xToPx(x) { return pad + ((x + xRange) / (2 * xRange)) * (mid - 2 * pad); }
+
+    // filled envelope
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(79,195,247,0.12)';
+    ctx.moveTo(xToPx(-xRange), cy);
+    for (let i = 0; i <= N; i++) {
+      const x = -xRange + (i / N) * 2 * xRange;
+      ctx.lineTo(xToPx(x), cy - Math.exp(-x * x / (2 * sigma * sigma)) * ampMax);
+    }
+    ctx.lineTo(xToPx(xRange), cy);
+    ctx.closePath(); ctx.fill();
+
+    // oscillating real part of ψ inside the envelope
+    ctx.beginPath(); ctx.strokeStyle = '#4fc3f7'; ctx.lineWidth = 1.8;
+    for (let i = 0; i <= N; i++) {
+      const x = -xRange + (i / N) * 2 * xRange;
+      const amp = Math.exp(-x * x / (4 * sigma * sigma)) * Math.cos(5 * x - t * 2.5);
+      i === 0 ? ctx.moveTo(xToPx(x), cy - amp * ampMax)
+              : ctx.lineTo(xToPx(x), cy - amp * ampMax);
+    }
+    ctx.stroke();
+
+    // baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad, cy); ctx.lineTo(mid - pad, cy); ctx.stroke();
+
+    // ±σ dashed markers (at 1/e half-height of |ψ|²)
+    ctx.strokeStyle = 'rgba(79,195,247,0.55)'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+    [-sigma, sigma].forEach(s => {
+      const px = xToPx(s);
+      ctx.beginPath(); ctx.moveTo(px, cy); ctx.lineTo(px, cy - Math.exp(-0.5) * ampMax); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#4fc3f7'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Position  |ψ(x)|²', pad + 2, 18);
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '12px system-ui';
+    ctx.fillText(`Δx = ${sigma.toFixed(3)}`, pad + 2, 36);
+
+    // ── RIGHT PANEL: momentum space ─────────────────────────────────
+    function pToPx(p) { return mid + pad + ((p + pRange) / (2 * pRange)) * (mid - 2 * pad); }
+
+    // filled envelope
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(239,154,154,0.12)';
+    ctx.moveTo(pToPx(-pRange), cy);
+    for (let i = 0; i <= N; i++) {
+      const p = -pRange + (i / N) * 2 * pRange;
+      ctx.lineTo(pToPx(p), cy - Math.exp(-p * p / (2 * sigmaP * sigmaP)) * ampMax);
+    }
+    ctx.lineTo(pToPx(pRange), cy);
+    ctx.closePath(); ctx.fill();
+
+    // curve
+    ctx.beginPath(); ctx.strokeStyle = '#ef9a9a'; ctx.lineWidth = 1.8;
+    for (let i = 0; i <= N; i++) {
+      const p = -pRange + (i / N) * 2 * pRange;
+      const env = Math.exp(-p * p / (2 * sigmaP * sigmaP));
+      i === 0 ? ctx.moveTo(pToPx(p), cy - env * ampMax)
+              : ctx.lineTo(pToPx(p), cy - env * ampMax);
+    }
+    ctx.stroke();
+
+    // baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(mid + pad, cy); ctx.lineTo(w - pad, cy); ctx.stroke();
+
+    // ±σ_p dashed markers
+    ctx.strokeStyle = 'rgba(239,154,154,0.55)'; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+    [-sigmaP, sigmaP].forEach(s => {
+      const px = pToPx(s);
+      ctx.beginPath(); ctx.moveTo(px, cy); ctx.lineTo(px, cy - Math.exp(-0.5) * ampMax); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#ef9a9a'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Momentum  |φ(p)|²', mid + pad + 2, 18);
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '12px system-ui';
+    ctx.fillText(`Δp = ${sigmaP.toFixed(3)}`, mid + pad + 2, 36);
+
+    // centre divider
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(mid, 0); ctx.lineTo(mid, h); ctx.stroke();
+
+    // product label (saturates bound — squeeze one, stretch the other)
+    ctx.fillStyle = '#b9f6ca'; ctx.font = 'bold 13px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText(`Δx · Δp = ${(sigma * sigmaP).toFixed(3)} = ℏ/2`, mid, h - 8);
+    ctx.textAlign = 'left';
+
+    raf = requestAnimationFrame(draw);
+  }
+  draw();
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
