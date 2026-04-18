@@ -429,6 +429,18 @@ const LAWS = [
   },
 
   {
+    id: 'entanglement', name: 'Quantum Entanglement', domain: 'quantum', symbol: '⊗',
+    tagline: 'Two particles share one fate, across any distance.',
+    equation: '|\\Phi^+\\rangle = \\tfrac{1}{\\sqrt{2}}\\bigl(|00\\rangle + |11\\rangle\\bigr)',
+    deps: ['quantum'], sim: null,
+    eli5: `Imagine two magic coins. Before you look, neither has decided if it's heads or tails — both are genuinely undecided. But they are linked: the moment you look at one, the other instantly "knows" it must show the opposite, even if it's on the far side of the galaxy. That's quantum entanglement. Two particles can weave together into a single shared fate, so that what happens to one immediately fixes what you'll find when you measure the other, no matter how far apart they are. Einstein despised this idea and called it "spooky action at a distance." He was right about the spookiness. He was wrong that it couldn't be real.`,
+    intermediate: `When two quantum particles interact, they can become entangled — their wave functions weave into a single inseparable state. Measuring one particle immediately determines the correlated result for its partner, regardless of the distance between them. In 1935, Einstein, Podolsky, and Rosen argued this proved quantum mechanics must be incomplete: results must have been decided in advance by hidden information. In 1964, John Bell showed this was testable — he derived an inequality that any "hidden variables" theory must satisfy. Experiments by Alain Aspect in 1982, and definitively by three independent loophole-free tests in 2015, violated Bell's inequality exactly as quantum mechanics predicts. No local realist theory can explain what we observe. Entanglement is real, and it powers quantum cryptography, quantum teleportation, and quantum computing.`,
+    expert: `Two qubits are entangled when their joint state cannot be written as a product |ψ_A⟩⊗|ψ_B⟩. The four maximally entangled Bell states are |Φ±⟩ = (|00⟩ ± |11⟩)/√2 and |Ψ±⟩ = (|01⟩ ± |10⟩)/√2. Entanglement is quantified by entanglement entropy S = −Tr(ρ_A log ρ_A) for the reduced density matrix ρ_A = Tr_B|ψ⟩⟨ψ|; maximally entangled pairs give S = log 2 (one ebit). For any bipartite pure state, the Schmidt decomposition |ψ⟩ = Σᵢ cᵢ |aᵢ⟩|bᵢ⟩ gives the Schmidt rank as the entanglement witness. The CHSH inequality constrains local hidden-variable theories: |⟨A₁B₁⟩ + ⟨A₁B₂⟩ + ⟨A₂B₁⟩ − ⟨A₂B₂⟩| ≤ 2. Quantum mechanics allows up to 2√2 (the Tsirelson bound, achieved at optimal angles 0°, 45°, 22.5°, 67.5°); the Popescu–Rohrlich box bound of 4 is excluded only by no-signalling, not by quantum theory alone. Loophole-free Bell tests (Hensen et al., Giustina et al., Shalm et al. — all 2015) closed both the locality and detection loopholes simultaneously. Quantum teleportation (Bennett et al. 1993) transfers an arbitrary unknown qubit using one Bell pair + two classical bits, destroying the original (no-cloning consistent). The no-communication theorem ensures marginal probabilities are independent of the distant party's measurement setting, forbidding faster-than-light signalling despite non-local correlations. Entanglement has been demonstrated over 1,200 km via the Micius satellite (Pan et al. 2017); entanglement swapping extends correlations through untrusted intermediary nodes, the basis of quantum repeaters for global quantum networks.`,
+    surprise: `John Bell derived his theorem in 1964 as a side project — he was a particle physicist at CERN and treated quantum foundations as a hobby, publishing in a journal so new and obscure the paper went nearly unread for years. He spent the rest of his life watching experiments inch toward confirmation, never receiving a Nobel Prize. He died of a stroke in 1990, twenty-five years before three independent groups simultaneously ran the first loophole-free Bell tests in 2015. The prize eventually went to Clauser, Aspect, and Zeilinger in 2022 — fifty-eight years after Bell's paper.`,
+    history: `Einstein, Podolsky, and Rosen published their challenge to quantum completeness in 1935; Bohr replied the same year, but the debate lay dormant for decades. John Bell found his testable inequality in 1964 while on sabbatical. John Clauser made the first experimental test in 1972. Alain Aspect's 1982 Paris experiments closed the locality loophole with fast optical switching. Anton Zeilinger's Vienna group demonstrated quantum teleportation (1997) and entanglement swapping (1998), then beamed entangled photons 144 km between the Canary Islands (2007) and 1,200 km to the Micius satellite (2017). Clauser, Aspect, and Zeilinger shared the 2022 Nobel Prize in Physics.`,
+  },
+
+  {
     id: 'qft', name: 'Quantum Field Theory', domain: 'quantum', symbol: 'φ̂(x)',
     tagline: 'Particles are ripples in fields.',
     equation: '\\mathcal{L} = \\bar{\\psi}(i\\gamma^\\mu\\partial_\\mu - m)\\psi',
@@ -898,9 +910,11 @@ const IMAGES = {
                    caption: 'Werner Heisenberg — you can\'t know both where and how fast' },
   pauli:         { image: WM('Pauli.jpg'),
                    caption: 'Wolfgang Pauli — no two electrons alike' },
-  photoelectric: { image: WM('Photoelectric_effect.svg'),
-                   caption: 'Photoelectric effect: photons strike metal, ejecting electrons' },
-  qft:           { image: WM('RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg'),
+  photoelectric:  { image: WM('Photoelectric_effect.svg'),
+                    caption: 'Photoelectric effect: photons strike metal, ejecting electrons' },
+  entanglement:   { image: WM('SPDC_figure.png'),
+                    caption: 'Entangled photon pairs from spontaneous parametric down-conversion' },
+  qft:            { image: WM('RichardFeynman-PaineMansionWoods1984_copyrightTamikoThiel_bw.jpg'),
                    caption: 'Richard Feynman — diagrams that tamed quantum fields' },
   standard:      { image: WM('CERN_LHC_Tunnel1.jpg'),
                    caption: 'The LHC tunnel at CERN — where particles meet' },
@@ -997,6 +1011,8 @@ const ANALOGIES = [
   ['action',         'quantum',       'Feynman path integral: quantum amplitude sums exp(iS/ℏ) over every classical path'],
   ['pauli',          'chandrasekhar', 'electron degeneracy pressure (Pauli exclusion) is what holds up a white dwarf — until 1.44 M☉'],
   ['fourier',        'uncertainty',   'Heisenberg uncertainty is the Fourier bandwidth–duration inequality, transplanted to matter waves'],
+  ['entanglement',   'measurement',   'decoherence — entanglement with the environment — is how measurement and apparent wavefunction collapse arise'],
+  ['entanglement',   'information',   'one Bell pair = one ebit: entanglement is the fundamental unit of quantum information'],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {

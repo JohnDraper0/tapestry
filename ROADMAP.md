@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 64 (53 known, 11 frontier). Domains: 14. Sims: 20. Analogous
-  cross-links populated: 15. Images mirrored locally: 0.
-- Last updated: 2026-04-17.
+- Nodes: 65 (54 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+  cross-links populated: 17. Images mirrored locally: 0.
+- Last updated: 2026-04-18.
 
 ## The atlas we want (inventory)
 
@@ -32,7 +32,7 @@ points, not quotas.
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
 | em              |   3   |    5   | Snell's law, Poynting vector, plasma                      |
 | relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
-| quantum         |   5   |    7   | entanglement, decoherence, spin-statistics                |
+| quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
 | biology         |   5   |    9   | ATP, Hodgkin–Huxley, immunity, development                |
@@ -92,7 +92,7 @@ equation, and valid `deps`:
 10. **Kolmogorov complexity** (info) — the absolute information of a string.
 11. **Self-organised criticality** (emergence) — Bak's sandpile universality.
 12. ~~**Gravitational waves** (relativity)~~ — added 2026-04-17.
-13. **Entanglement** (quantum) — "spooky action" and Bell's theorem.
+13. ~~**Entanglement** (quantum) — "spooky action" and Bell's theorem.~~ — added 2026-04-18.
 14. **Neuron action potential** (neuro) — how a cell fires a signal.
 15. **Entropy–information link / Landauer** (thermo-info bridge node).
 
