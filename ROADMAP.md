@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 65 (54 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+- Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 17. Images mirrored locally: 0.
-- Last updated: 2026-04-18.
+- Last updated: 2026-04-21.
 
 ## The atlas we want (inventory)
 
@@ -35,7 +35,7 @@ points, not quotas.
 | quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
-| biology         |   5   |    9   | ATP, Hodgkin–Huxley, immunity, development                |
+| biology         |   6   |    9   | Hodgkin–Huxley, immunity, development                     |
 | info            |   2   |    5   | Kolmogorov complexity, channel coding, error correction   |
 | emergence       |   4   |    7   | self-organised criticality, Zipf, networks, cellular auto |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
@@ -84,7 +84,7 @@ equation, and valid `deps`:
 2. ~~**Faraday's law of induction** (em)~~ — added 2026-04-17.
 3. ~~**Hardy–Weinberg equilibrium** (biology) — the null model of evolution.~~ — added 2026-04-17.
 4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
-5. **ATP / chemiosmosis** (biology) — life's universal energy currency.
+5. ~~**ATP / chemiosmosis** (biology) — life's universal energy currency.~~ — added 2026-04-21.
 6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
 7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
 8. **Plate tectonics** (earth) — the Earth as a slow, convecting engine.

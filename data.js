@@ -519,6 +519,18 @@ const LAWS = [
   // ───────────────────────────── BIOLOGY ────────────────────────────────────
 
   {
+    id: 'atp', name: 'ATP & Chemiosmosis', domain: 'biology', symbol: 'ATP',
+    tagline: "Life's rechargeable battery, spun back up by a rotary motor.",
+    equation: '\\text{ATP} + \\text{H}_2\\text{O} \\to \\text{ADP} + \\text{P}_i,\\quad \\Delta G^{\\circ\\prime} = -30.5 \\text{ kJ/mol}',
+    deps: ['bonding', 'thermo'], sim: null,
+    eli5: `Every cell in your body has trillions of tiny rechargeable batteries called ATP. When a muscle flexes, a neuron fires, or an enzyme stitches a molecule together, it snaps the tip off an ATP and spends the released energy. The spent battery (ADP) gets handed back to a molecular machine the size of a pollen grain that spins like a turbine — and bolts the tip back on. Right now, inside you, billions of these turbines are whirring.`,
+    intermediate: `Every living thing on Earth — bacterium, archaeon, oak, octopus, human — runs on the same currency: adenosine triphosphate. ATP stores energy in two high-energy phosphate bonds that are easy to break. But where does the energy to build ATP come from? Peter Mitchell's shocking 1961 answer: cells pump protons across a membrane, building an electrical and chemical voltage like a tiny battery. That proton gradient drives a rotary enzyme, ATP synthase — a genuine molecular motor that spins at around 100 revolutions per second and stamps out three ATPs per turn. Photosynthesis does the same trick in chloroplasts, powered by sunlight instead of food. This single mechanism — chemiosmosis — is how nearly all the usable energy in the biosphere flows.`,
+    expert: `Oxidative phosphorylation couples exergonic electron transport (NADH / FADH₂ → O₂) through Complexes I–IV to proton translocation across the inner mitochondrial membrane, building a proton-motive force Δp = ΔΨ − (2.303 RT/F) ΔpH ≈ −200 mV. ATP synthase (F₁F₀-ATPase) uses this gradient to rotate its c-ring, driving conformational cycling of the β-subunits through Boyer's three-state binding-change mechanism: open → loose → tight. Stoichiometry is species-dependent — the c-ring has 8 subunits in mammals, 15 in chloroplasts — yielding ~2.7–3.3 ATP per 10 H⁺; full aerobic oxidation of one glucose delivers ~30–32 ATP. The cellular ΔG of hydrolysis (≈ −57 kJ/mol) is more negative than the textbook standard ΔG°′ (−30.5 kJ/mol) because [ATP] / [ADP][P_i] is held far from equilibrium. ATP synthase is reversible: hydrolysing ATP will run the motor backwards and pump protons, a mode exploited by some bacteria. Noji, Yasuda, Yoshida and Kinosita observed the rotation directly in 1997 by tethering a fluorescent actin filament to the γ-subunit. The universality of chemiosmosis across all three domains of life is strong evidence that LUCA's metabolism was already powered by a geochemical proton gradient — most likely at alkaline hydrothermal vents (Russell, Martin, Lane).`,
+    surprise: `You recycle roughly your own body weight in ATP every single day. A 70-kg adult synthesises about 50 kg of it between dawn and dawn, each molecule charged and discharged on the order of a thousand times. Your steady-state stockpile at any instant is only a few grams.`,
+    history: `Fritz Lipmann proposed ATP as the universal energy carrier in 1941. For two decades nobody could explain how cells actually made it. Peter Mitchell at Edinburgh published the chemiosmotic hypothesis in 1961 and was met with ridicule — energy, the textbooks said, flowed through a chemical intermediate, not a voltage across a membrane. Mitchell resigned over poor health in 1963, restored a derelict Cornish manor with his own money, and spent the next two decades proving himself right from a private lab. He received the Nobel Prize in Chemistry alone in 1978. Paul Boyer worked out the rotary binding-change mechanism; John Walker solved the atomic structure of F₁-ATPase. They shared the 1997 Nobel.`,
+  },
+
+  {
     id: 'selfrep', name: 'Self-Replication', domain: 'biology', symbol: '⟳ DNA',
     tagline: 'Molecules that copy themselves.',
     equation: 'DNA → 2×DNA',
@@ -926,6 +938,8 @@ const IMAGES = {
                    caption: 'Dmitri Mendeleev — predicted elements before they were found' },
   bonding:       { image: WM('Water_molecule_dimensions.svg'),
                    caption: 'Water — two hydrogens sharing with one oxygen' },
+  atp:           { image: WM('ATP-xtal-3D-balls.png'),
+                   caption: 'Adenosine triphosphate — the universal energy currency of every cell on Earth' },
   selfrep:       { image: WM('DNA_Structure%2BKey%2BLabelled.pn_NoBB.png'),
                    caption: 'DNA double helix — the molecule that copies itself' },
   centraldogma:  { image: WM('Francis_Crick.png'),
