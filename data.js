@@ -457,7 +457,7 @@ const LAWS = [
   {
     id: 'standard', name: 'Standard Model', domain: 'forces', symbol: 'u d c s t b',
     tagline: 'The periodic table of everything.',
-    equation: 'SU(3) × SU(2) × U(1)',
+    equation: '\\mathrm{SU}(3)_c \\times \\mathrm{SU}(2)_L \\times \\mathrm{U}(1)_Y',
     deps: ['qft', 'pauli'], sim: null,
     eli5: `Zoom all the way down and everything is made of just a few kinds of tiny things. Quarks (which clump into protons and neutrons), electrons (and their cousins), and force carriers (photons, gluons, the W and Z bosons) that let particles push and pull each other. There's also the Higgs, which gives other particles their weight. That's the complete kit — every stone, every star, every cell, every you is built from it.`,
     intermediate: `The Standard Model organises elementary particles into three generations of matter (six quarks, six leptons), four force carriers (photon, gluon, W, Z), and the Higgs boson. It describes three of the four fundamental forces — electromagnetism, the weak nuclear force, the strong nuclear force — in the framework of quantum field theory. It's spectacularly successful: nearly every measurement in particle physics matches its predictions to many decimal places. It's also known to be incomplete: it doesn't include gravity, dark matter, neutrino masses (in the minimal version) or why the constants have their values.`,
