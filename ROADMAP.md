@@ -16,7 +16,7 @@ architecture in their head and know which rungs hold which weight.
 
 - Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 17. Images mirrored locally: 0.
-- Last updated: 2026-04-21.
+- Last updated: 2026-04-24.
 
 ## The atlas we want (inventory)
 
@@ -51,16 +51,18 @@ ones.
 
 Each run picks ONE category. Rough target ratio over 10 consecutive runs:
 
-| Category                          | Frequency |
-|-----------------------------------|-----------|
-| A. Deepen existing content        | 3 in 10   |
-| B. Add a new node                 | 3 in 10   |
-| C. New or better simulation       | 2 in 10   |
-| D. Imagery / offline verification | 1 in 10   |
-| E. Cross-links / visual polish    | 1 in 10   |
+| Category                               | Frequency |
+|----------------------------------------|-----------|
+| A. Deepen existing content             | 3 in 10   |
+| B. Add a new node                      | 2 in 10   |
+| C. New or better simulation            | 2 in 10   |
+| D. Imagery / offline verification      | 1 in 10   |
+| E. Cross-links / copy polish           | 1 in 10   |
+| F. UI, mobile, aesthetics, a11y polish | 1 in 10   |
 
 Read `git log --oneline -20` at the start of every run. If the last 5 runs
 were all Bs, do an A or C. If sims haven't been touched in a week, pick C.
+If the presentation layer hasn't moved in two weeks, pick F.
 
 ## Per-run workflow (tight)
 
@@ -120,6 +122,100 @@ pattern at the bottom of `LAWS[]`):**
 - `action` ↔ `quantum` — Feynman path integral as classical limit.
 - `emergence` ↔ `complexity` ↔ `life sim`.
 - `pauli` ↔ `chandrasekhar` — exclusion pressure as stellar brake.
+
+## UI, mobile, aesthetics — the presentation layer
+
+The content is most of the value, but the vessel matters. Tapestry should
+feel like a **planetarium crossed with an Edward Tufte poster** — calm,
+dense, readable, never frantic. Today the desktop experience delivers that
+on cosmos/paper/blueprint themes, but the **phone experience is thin** and
+several small aesthetic details undersell the work.
+
+Treat this list as a backlog: each bullet is a single-run-sized task.
+One bullet per F-category run. Order is roughly priority.
+
+### Mobile & touch (biggest gap)
+1. **Panel becomes a bottom sheet on narrow viewports.** Below ~640 px the
+   560 px side drawer swallows the map; switch to a bottom sheet that
+   covers ~85 vh with a drag handle and a visible "close" affordance.
+2. **Touch pan + pinch-zoom on the SVG map.** Today drag/scroll are
+   mouse-only; add pointer-event handlers (or hammer-like pinch detection
+   in <50 lines) so phones can navigate the tower natively.
+3. **Collapse the 7-button header behind an overflow `⋯` menu on phones.**
+   Keep search, theme, and reset in the header; move tour, 3D, iceberg,
+   print, mute, help into the overflow.
+4. **Tap targets ≥44 × 44 px everywhere.** Theme buttons and top-buttons
+   currently shrink to ~28 px on mobile — below the Apple/WCAG minimum.
+5. **Depth tabs respond to horizontal swipe** on the open panel, so a
+   reader can thumb through ELI5 → intermediate → expert without
+   hunting for small tab buttons.
+6. **Hero image responsive widths.** Pass `WM(file, 480)` on phones and
+   `WM(file, 900)` on desktop; saves ~75% of image bytes over cellular.
+7. **Compress the intro overlay on mobile.** The three-paragraph body
+   often exceeds the fold on a 6-inch phone; collapse into a single
+   "what is this?" teaser with an expandable "tell me more".
+
+### Readability
+8. **Cap KaTeX line width to the panel and enable horizontal scroll.**
+   Long equations like Navier–Stokes overflow the panel on 360 px screens.
+   Wrap each `.panel-eq` in `overflow-x: auto` with a soft fade edge.
+9. **Audit every equation for unicode characters.** LaTeX-ify stray `·`,
+   `→`, `×`, `−`, `↔`, `#`, `∅`, `∞` into `\cdot`, `\to`, `\times`, `-`,
+   `\leftrightarrow`, `\#`, `\emptyset`, `\infty`. KaTeX renders these
+   cleanly; raw unicode looks slightly sloppy.
+10. **Base type scale pass.** Body text is 15 px on desktop, 15 px on
+    mobile — bump mobile body to 16 px and line-height to 1.55 for
+    phone readability. Cap panel line-length at ~72 ch.
+11. **Contrast audit per theme.** `ink-dim` on `paper` theme is close to
+    WCAG AA borderline; use a contrast checker on every `--ink*` token
+    in each theme.
+12. **Italicise emphasis, not colour alone.** A couple of panel copies
+    lean on colour to highlight terms — add italic or weight shift so
+    colour-blind readers still see emphasis.
+
+### Aesthetics
+13. **Consistent icon set.** The header currently mixes Unicode symbols
+    (◐ ◧ ◨ ▶ ◎ 🧊 ⎙ ♪ ⌂ ?) which render inconsistently across OSes —
+    especially 🧊 on Linux. Replace with a cohesive inline-SVG icon set
+    (~10 icons, <2 KB total).
+14. **Soften the hero-card gradient fallback.** When an image 404s the
+    gradient is abrupt; use a theme-tinted radial gradient so the gap
+    reads as intentional rather than missing.
+15. **Depth-tab transition polish.** Cross-fade the body between depth
+    levels instead of hard-swap; 180 ms fade is enough.
+16. **Accent-glow subtlety on `paper` theme.** The cosmos-style glow
+    filter leaks into paper/blueprint as a faint blue aura; scope
+    `filter: url(#glow)` per theme.
+17. **Legend polish.** The domain legend in the corner uses coloured
+    circles; add a 1-line description per domain on hover / tap so
+    visitors learn the taxonomy without opening every node.
+
+### Accessibility
+18. **Keyboard navigation across the graph.** Arrow keys move focus
+    between nodes along dependency edges; Enter opens the panel.
+19. **ARIA landmarks + live regions.** `<main>`, `<nav>`, `<aside>`
+    annotated; announce panel opens via `aria-live="polite"`.
+20. **`prefers-reduced-motion`.** Halt the background canvas drift, the
+    tour auto-pan, the camera ease-out, and the intro glow when the
+    viewer has asked for reduced motion.
+21. **Skip-to-content link.** Lets screen-reader users bypass the map.
+22. **Colour-blind-safe theme variant.** A fourth theme (or a toggle on
+    cosmos) that uses shape + pattern in addition to hue for domain
+    differentiation.
+
+### Performance
+23. **Lazy-load KaTeX only when a panel first opens.** Saves ~300 KB on
+    first paint for the ~50% of visitors who never open a panel.
+24. **Defer three.js until the 3D button is pressed.** Currently
+    lazy-loaded — verify and document.
+25. **`content-visibility: auto` on off-screen panel sections** once the
+    panel is very long (multi-depth content).
+
+### Theme-system niceties
+26. **Honour `prefers-color-scheme: light`** as the initial theme on
+    first visit (paper), while still persisting a user override.
+27. **Theme transition** — animate CSS variable changes (~250 ms) so
+    switching themes feels curated, not jarring.
 
 ## Features to build (when content has room to breathe)
 

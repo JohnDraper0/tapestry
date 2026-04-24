@@ -54,14 +54,30 @@ Theme is persisted in `localStorage.tapestry-theme`. The bg canvas hook
 - SVG colors that need to adapt to themes are set via `style="fill: var(...)"`
   rather than `fill="..."` attributes — attributes override CSS.
 
+## Presentation layer (rotate this in, don't skip it)
+The content is most of the value, but the *vessel* matters too. Today the
+desktop experience is good; **the phone experience is thin** and several
+small aesthetic details undersell the work. Every ~10 runs, one should be
+a focused UI / mobile / accessibility / aesthetic polish task picked from
+the prioritised backlog in `ROADMAP.md` → "UI, mobile, aesthetics — the
+presentation layer". Scope rules apply: one bullet per run, no sweeps.
+
+Quick self-checks for any visual change:
+- Open `index.html` mentally at ~360 px wide (iPhone SE). Does the thing
+  you changed still fit, still read, still have 44 px tap targets?
+- Does it still look right in all three themes (cosmos / paper / blueprint)?
+- Honour `prefers-reduced-motion` if you add or change animation.
+- No new external dependencies (KaTeX + three.js remain the only CDNs).
+
 ## Recurring improvement trigger
-A remote trigger runs every 30 minutes and iterates on this project:
-refining explanations, checking image links, adding laws, polishing sims.
-See `RemoteTrigger({list})` for the exact config. If you're that trigger
-reading this file: focus on **content quality over adding new features**.
+A remote trigger runs every hour and iterates on this project:
+refining explanations, checking image links, adding laws, polishing sims,
+and occasionally polishing the UI / mobile / a11y layer. If you're that
+trigger reading this file: focus on **quality over adding new features**.
 One small, solid improvement per run beats ten rough ones.
 
 See `ROADMAP.md` for the long-arc plan: the atlas we're aiming at, the
-category rotation policy, the ranked gap list, and features to build once
-content has room to breathe. Read it each run. Occasionally edit it —
-refresh the snapshot line, tick off filled gaps, add new ones you notice.
+category rotation policy (A–F), the ranked gap list, the UI/mobile/a11y
+backlog, and features to build once content has room to breathe. Read it
+each run. Occasionally edit it — refresh the snapshot line, tick off
+filled gaps, add new ones you notice.
