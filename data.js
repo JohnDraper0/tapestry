@@ -195,7 +195,7 @@ const LAWS = [
   {
     id: 'newton', name: "Newton's Laws of Motion", domain: 'mechanics', symbol: 'F = ma',
     tagline: 'How stuff moves when pushed.',
-    equation: 'F = m·a',
+    equation: '\\mathbf{F} = m\\mathbf{a}',
     deps: ['calculus', 'conservation', 'action'], sim: 'newton',
     eli5: `Three simple rules. One: things keep doing what they're doing unless something pushes them — a hockey puck on perfect ice slides forever. Two: how fast something speeds up depends on how hard you push and how heavy it is. Three: if you push something, it pushes you back just as hard. That's why rockets work — they shove gas out the back and the gas shoves the rocket forward.`,
     intermediate: `Newton published his three laws in 1687 in the *Principia Mathematica*: inertia, F = ma, and action–reaction. Together with his law of universal gravitation they explained falling apples, orbiting planets, tides, and comets in a single unified theory. For 200 years Newton's mechanics *was* physics. Even today, for anything slow compared to light and big compared to atoms — which is most of engineering — Newton is still the right answer.`,
