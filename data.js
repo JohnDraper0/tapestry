@@ -483,7 +483,7 @@ const LAWS = [
   {
     id: 'atoms', name: 'Atomic Structure', domain: 'chemistry', symbol: '⚛',
     tagline: 'Tiny solar systems of charge.',
-    equation: 'Z = # protons',
+    equation: 'Z = \\text{protons},\\quad A = Z + N',
     deps: ['quantum', 'standard'], sim: null,
     eli5: `An atom is a nucleus — a tiny ball of protons and neutrons — surrounded by a fuzzy cloud of electrons. The number of protons decides what kind of atom it is: one is hydrogen, six is carbon, eight is oxygen, 79 is gold. The electrons arrange themselves in shells, like seats in a theatre, and how they fill those seats decides how the atom will play with others.`,
     intermediate: `Atoms consist of a dense nucleus of positively charged protons and neutral neutrons, bound by the strong nuclear force and surrounded by orbitals — quantum clouds — of negatively charged electrons. Orbital shapes and energies are set by the Schrödinger equation. Elements are ordered by atomic number (proton count), and their chemical behaviour depends on how many electrons sit in the outermost shell. The patterns of the periodic table — metals on the left, noble gases on the right — are a direct consequence of electron shell quantum mechanics.`,
