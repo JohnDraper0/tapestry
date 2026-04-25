@@ -545,7 +545,7 @@ const LAWS = [
   {
     id: 'centraldogma', name: 'Central Dogma of Biology', domain: 'biology', symbol: 'DNA→RNA→🧬',
     tagline: 'Information flows one way.',
-    equation: 'DNA → RNA → Protein',
+    equation: '\\text{DNA} \\xrightarrow{\\text{transcription}} \\text{RNA} \\xrightarrow{\\text{translation}} \\text{protein}',
     deps: ['selfrep'], sim: null,
     eli5: `DNA is a recipe book locked inside every cell. The cell makes a working copy of a recipe (that's RNA), carries it to a tiny kitchen (a ribosome), and follows the recipe to cook up a protein — the molecule that actually does the job. DNA writes the instructions, RNA delivers them, proteins do the work. That's the entire basis of life on Earth.`,
     intermediate: `Francis Crick's "central dogma" (1957) states that biological information flows DNA → RNA → protein. Transcription copies a DNA gene into messenger RNA; translation reads that mRNA at the ribosome and strings together amino acids into a protein. The genetic code — triplets of bases spelling out amino acids — is nearly universal across all life, strong evidence of common ancestry. Proteins then do essentially all the active work in a cell: catalysing reactions, transporting molecules, building structures, sensing the environment.`,
