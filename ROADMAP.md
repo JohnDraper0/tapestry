@@ -16,7 +16,7 @@ architecture in their head and know which rungs hold which weight.
 
 - Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 17. Images mirrored locally: 0.
-- Last updated: 2026-04-24.
+- Last updated: 2026-04-26.
 
 ## The atlas we want (inventory)
 
@@ -156,9 +156,10 @@ One bullet per F-category run. Order is roughly priority.
    "what is this?" teaser with an expandable "tell me more".
 
 ### Readability
-8. **Cap KaTeX line width to the panel and enable horizontal scroll.**
-   Long equations like Navier–Stokes overflow the panel on 360 px screens.
-   Wrap each `.panel-eq` in `overflow-x: auto` with a soft fade edge.
+8. ~~**Cap KaTeX line width to the panel and enable horizontal scroll.**~~
+   — done 2026-04-26. `.panel-eq` is now `overflow-x: auto` with a thin
+   accent-tinted scrollbar; long equations (Navier–Stokes, EFE) scroll
+   horizontally instead of overflowing the panel.
 9. **Audit every equation for unicode characters.** LaTeX-ify stray `·`,
    `→`, `×`, `−`, `↔`, `#`, `∅`, `∞` into `\cdot`, `\to`, `\times`, `-`,
    `\leftrightarrow`, `\#`, `\emptyset`, `\infty`. KaTeX renders these

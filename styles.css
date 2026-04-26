@@ -435,6 +435,20 @@ header * { pointer-events: auto; }
   text-align: center;
   letter-spacing: 0.02em;
   text-shadow: 0 0 12px currentColor;
+  /* let long equations (Navier–Stokes, Maxwell, EFE) scroll on narrow viewports
+     instead of overflowing the panel. KaTeX's .katex-display has no overflow
+     of its own, so .panel-eq is the single scroll container — no nesting. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
+}
+.panel-eq::-webkit-scrollbar { height: 6px; }
+.panel-eq::-webkit-scrollbar-track { background: transparent; }
+.panel-eq::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 3px;
 }
 .panel-sim {
   width: 100%;
