@@ -1781,6 +1781,192 @@ SIMS.pauli = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── STEFAN–BOLTZMANN ────────────────────────────
+// Auto-cycles a blackbody from 1500 K to 10000 K. The Planck spectrum
+// rescales massively (P ∝ T⁴) and slides toward shorter λ (Wien's law),
+// while a side bar tracks total radiated flux σT⁴ and a glowing disk
+// shows the emitter's apparent colour.
+SIMS.stefan_boltzmann = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const h_p   = 6.62607015e-34;
+  const c_l   = 2.998e8;
+  const k_B   = 1.380649e-23;
+  const sigma = 5.670374e-8;            // W·m⁻²·K⁻⁴
+
+  const LAM_MIN = 80e-9, LAM_MAX = 3000e-9;
+  const N = 220;
+  const T_MIN = 1500, T_MAX = 10000;
+
+  const padL = 38, padR = 6, padT = 16, padB = 30;
+  const sideRes = 92;
+  const plotL = padL;
+  const plotR = w - padR - sideRes;
+  const plotT = padT;
+  const plotB = h - padB;
+  const plotW = plotR - plotL;
+  const plotH = plotB - plotT;
+  const sideX = plotR + 8;
+  const sideW = w - sideX - padR;
+
+  function planck(lam, T) {
+    const a = 2 * h_p * c_l * c_l / Math.pow(lam, 5);
+    const x = h_p * c_l / (lam * k_B * T);
+    return a / Math.expm1(x);
+  }
+  const lamPeakAtMax = 2.8978e-3 / T_MAX;
+  const Bmax = planck(Math.max(lamPeakAtMax, LAM_MIN), T_MAX);
+
+  // Tanner Helland blackbody-RGB approximation (clamped 0–255)
+  function bbColor(T) {
+    const Th = Math.max(1000, Math.min(40000, T)) / 100;
+    let r, g, b;
+    r = Th <= 66 ? 255 : 329.7 * Math.pow(Th - 60, -0.1332);
+    g = Th <= 66 ? 99.47 * Math.log(Th) - 161.12
+                 : 288.12 * Math.pow(Th - 60, -0.0755);
+    b = Th >= 66 ? 255
+        : (Th <= 19 ? 0 : 138.52 * Math.log(Th - 10) - 305.0448);
+    const cl = v => Math.max(0, Math.min(255, v | 0));
+    return { r: cl(r), g: cl(g), b: cl(b) };
+  }
+
+  function lamToPx(lam) {
+    return plotL + (lam - LAM_MIN) / (LAM_MAX - LAM_MIN) * plotW;
+  }
+  function bToPx(B) {
+    return plotB - Math.min(1, B / Bmax) * plotH;
+  }
+
+  let raf, t0 = performance.now();
+
+  function draw(now) {
+    const phase = ((now - t0) / 5500) % (Math.PI * 2);
+    const u = (1 - Math.cos(phase)) / 2;          // 0 → 1 → 0 ease
+    const T = T_MIN + (T_MAX - T_MIN) * u;
+    const lamPeak = 2.8978e-3 / T;
+    const P    = sigma * Math.pow(T, 4);
+    const Pmax = sigma * Math.pow(T_MAX, 4);
+    const c1 = bbColor(T);
+    const colStr  = `rgb(${c1.r},${c1.g},${c1.b})`;
+    const colSoft = `rgba(${c1.r},${c1.g},${c1.b},0.18)`;
+    const colHalo = `rgba(${c1.r},${c1.g},${c1.b},0.45)`;
+    const colNone = `rgba(${c1.r},${c1.g},${c1.b},0)`;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.20)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotT); ctx.lineTo(plotL, plotB); ctx.lineTo(plotR, plotB);
+    ctx.stroke();
+
+    // λ ticks (nm)
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'center';
+    [500, 1000, 1500, 2000, 2500].forEach(nm => {
+      const x = lamToPx(nm * 1e-9);
+      ctx.beginPath(); ctx.moveTo(x, plotB); ctx.lineTo(x, plotB + 4); ctx.stroke();
+      ctx.fillText(String(nm), x, plotB + 15);
+    });
+    ctx.fillText('λ (nm)', (plotL + plotR) / 2, plotB + 27);
+
+    // visible-spectrum band along the floor (380–750 nm)
+    {
+      const xmin = lamToPx(380e-9), xmax = lamToPx(750e-9);
+      const grd = ctx.createLinearGradient(xmin, 0, xmax, 0);
+      grd.addColorStop(0.00, '#7a4eff');
+      grd.addColorStop(0.18, '#3a64ff');
+      grd.addColorStop(0.38, '#1fc7ff');
+      grd.addColorStop(0.55, '#3cd86d');
+      grd.addColorStop(0.72, '#fff04a');
+      grd.addColorStop(0.86, '#ff8a3c');
+      grd.addColorStop(1.00, '#ff3434');
+      ctx.fillStyle = grd;
+      ctx.fillRect(xmin, plotB - 5, xmax - xmin, 5);
+    }
+
+    // Planck curve — filled
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotB);
+    for (let i = 0; i <= N; i++) {
+      const lam = LAM_MIN + (i / N) * (LAM_MAX - LAM_MIN);
+      ctx.lineTo(lamToPx(lam), bToPx(planck(lam, T)));
+    }
+    ctx.lineTo(plotR, plotB);
+    ctx.closePath();
+    ctx.fillStyle = colSoft;
+    ctx.fill();
+
+    // Planck curve — outline
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const lam = LAM_MIN + (i / N) * (LAM_MAX - LAM_MIN);
+      const px = lamToPx(lam), py = bToPx(planck(lam, T));
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.strokeStyle = colStr; ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    // Wien peak marker (vertical guide)
+    if (lamPeak > LAM_MIN && lamPeak < LAM_MAX) {
+      const xPk = lamToPx(lamPeak);
+      const yPk = bToPx(planck(lamPeak, T));
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+      ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(xPk, plotB); ctx.lineTo(xPk, yPk); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Header labels
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Blackbody  Bλ(T)', plotL + 4, plotT + 12);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.fillText(`T = ${T.toFixed(0)} K`, plotL + 4, plotT + 28);
+    ctx.fillText(`λpeak = ${(lamPeak * 1e9).toFixed(0)} nm`, plotL + 4, plotT + 44);
+
+    // ── RIGHT COLUMN: glowing disk + power bar ─────────────────────────
+    const cx = sideX + sideW * 0.5;
+    const cy = plotT + 30;
+    const rad = Math.min(22, sideW * 0.30);
+
+    // halo
+    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad * 2.6);
+    halo.addColorStop(0, colStr);
+    halo.addColorStop(0.45, colHalo);
+    halo.addColorStop(1, colNone);
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(cx, cy, rad * 2.6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = colStr;
+    ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2); ctx.fill();
+
+    // power bar
+    const barX = sideX + 14;
+    const barW = sideW - 28;
+    const barTop = cy + rad + 18;
+    const barBot = plotB - 2;
+    const barH   = barBot - barTop;
+    ctx.strokeStyle = 'rgba(255,255,255,0.30)'; ctx.lineWidth = 1;
+    ctx.strokeRect(barX + 0.5, barTop + 0.5, barW, barH);
+    const fillH = barH * (P / Pmax);
+    const grd = ctx.createLinearGradient(0, barBot, 0, barTop);
+    grd.addColorStop(0, '#ff5a3c');
+    grd.addColorStop(0.5, '#ffb547');
+    grd.addColorStop(1, '#dff7ff');
+    ctx.fillStyle = grd;
+    ctx.fillRect(barX + 1, barBot - fillH, barW - 1, fillH);
+
+    // bar labels
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('P ∝ T⁴', sideX + sideW * 0.5, barTop - 6);
+    ctx.fillStyle = '#ffd166'; ctx.font = 'bold 10px system-ui';
+    ctx.fillText(`${(P / 1e6).toFixed(1)} MW/m²`, sideX + sideW * 0.5, barBot + 14);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
