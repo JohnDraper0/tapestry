@@ -1027,6 +1027,7 @@ const ANALOGIES = [
   ['fourier',        'uncertainty',   'Heisenberg uncertainty is the Fourier bandwidth–duration inequality, transplanted to matter waves'],
   ['entanglement',   'measurement',   'decoherence — entanglement with the environment — is how measurement and apparent wavefunction collapse arise'],
   ['entanglement',   'information',   'one Bell pair = one ebit: entanglement is the fundamental unit of quantum information'],
+  ['wien',           'stars',         "every star wears its temperature as a colour — the OBAFGKM spectral sequence is Wien's displacement law painted across the sky"],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
