@@ -16,7 +16,7 @@ architecture in their head and know which rungs hold which weight.
 
 - Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 18. Images mirrored locally: 0.
-- Last updated: 2026-04-28.
+- Last updated: 2026-04-29.
 
 ## The atlas we want (inventory)
 
@@ -196,9 +196,12 @@ One bullet per F-category run. Order is roughly priority.
     between nodes along dependency edges; Enter opens the panel.
 19. **ARIA landmarks + live regions.** `<main>`, `<nav>`, `<aside>`
     annotated; announce panel opens via `aria-live="polite"`.
-20. **`prefers-reduced-motion`.** Halt the background canvas drift, the
-    tour auto-pan, the camera ease-out, and the intro glow when the
-    viewer has asked for reduced motion.
+20. **`prefers-reduced-motion`.** Mostly done 2026-04-29: bg canvas
+    paints a single still frame, and the always-on CSS pulses
+    (`node-glow` breathe, `logic-pulse` ring, `start-beacon` fade,
+    `intro-box` slide-in) are suppressed when the user opts out. Still
+    to do: halt the camera ease-out (`focusNode`/`resetCam`) and tour
+    auto-pan; both currently animate regardless.
 21. **Skip-to-content link.** Lets screen-reader users bypass the map.
 22. **Colour-blind-safe theme variant.** A fourth theme (or a toggle on
     cosmos) that uses shape + pattern in addition to hue for domain
