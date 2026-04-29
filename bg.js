@@ -10,6 +10,11 @@
   let W, H, dpr;
   let theme = 'cosmos';
   let stars = [], nebulae = [], shooters = [], dust = [];
+  // Honour prefers-reduced-motion: paint a single still frame instead of looping.
+  const reduceMotionMQ = window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)')
+    : { matches: false };
+  let reduceMotion = reduceMotionMQ.matches;
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
@@ -210,20 +215,48 @@
     }
   }
 
-  function frame() {
+  function drawTheme() {
     if      (theme === 'cosmos')    drawCosmos();
     else if (theme === 'paper')     drawPaper();
     else if (theme === 'blueprint') drawBlueprint();
-    requestAnimationFrame(frame);
+  }
+  function paintStill() {
+    // Cosmos fades the canvas with a 28%-black overlay each frame, so a single
+    // call would look washed out. Lay down opaque space first, then draw.
+    if (theme === 'cosmos') {
+      ctx.fillStyle = 'rgb(5, 7, 15)';
+      ctx.fillRect(0, 0, W, H);
+    }
+    drawTheme();
+  }
+  function frame() {
+    drawTheme();
+    if (!reduceMotion) requestAnimationFrame(frame);
   }
 
   window.__bgSetTheme = function (t) {
     theme = t;
     if (theme === 'cosmos') initCosmos();
+    if (reduceMotion) paintStill();
   };
 
-  window.addEventListener('resize', () => { resize(); initCosmos(); });
+  window.addEventListener('resize', () => {
+    resize();
+    initCosmos();
+    if (reduceMotion) paintStill();
+  });
+  // React to live changes of the user's motion preference.
+  if (reduceMotionMQ.addEventListener) {
+    reduceMotionMQ.addEventListener('change', e => {
+      const wasReduced = reduceMotion;
+      reduceMotion = e.matches;
+      if (wasReduced && !reduceMotion) frame();         // resume looping
+      else if (!wasReduced && reduceMotion) paintStill(); // settle on a still frame
+    });
+  }
+
   resize();
   initCosmos();
-  frame();
+  if (reduceMotion) paintStill();
+  else frame();
 })();

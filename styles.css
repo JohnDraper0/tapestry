@@ -902,3 +902,20 @@ header * { pointer-events: auto; }
   }
 }
 .print-header { display: none; }
+
+/* ── reduced motion ─────────────────────────────────
+   Quiet the always-on pulses (node halo breathe, Logic ring, beacon fade,
+   intro slide-up) for visitors who've asked for less movement. The bg
+   canvas honours the same media query in JS by painting a single still
+   frame; camera-ease and tour auto-pan are still motion (not yet halted). */
+@media (prefers-reduced-motion: reduce) {
+  .node-glow,
+  .logic-pulse,
+  .start-beacon,
+  .intro-box {
+    animation: none !important;
+  }
+  /* Still indicate the start-here ring and beacon, just statically. */
+  .logic-pulse  { opacity: 0.6; }
+  .start-beacon { opacity: 0.85; }
+}
