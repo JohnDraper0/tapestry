@@ -157,7 +157,7 @@ const LAWS = [
   {
     id: 'symmetry', name: 'Symmetry', domain: 'principle', symbol: '↺',
     tagline: 'Change without difference.',
-    equation: 'symmetry ↔ conservation',
+    equation: '\\text{symmetry} \\;\\Longleftrightarrow\\; \\text{conservation}',
     deps: ['algebra', 'geometry'], sim: null,
     eli5: `A circle looks the same no matter how you turn it. A starfish looks the same if you rotate it by a fifth. Symmetry is when something stays the same after you change it. The incredible thing is: the deepest laws of nature *are* symmetries. If the rules don't care what time it is, energy is conserved. If they don't care where you are, momentum is conserved. Symmetries *are* the laws.`,
     intermediate: `In 1915, Emmy Noether proved one of the most beautiful theorems in all of science: every continuous symmetry of the laws of physics gives rise to a conserved quantity. Time-translation symmetry → conservation of energy. Space-translation symmetry → conservation of momentum. Rotation symmetry → conservation of angular momentum. Gauge symmetries → conservation of charge. This one theorem welded geometry, algebra and physics together. Modern physics is largely a search for the symmetries of nature.`,
