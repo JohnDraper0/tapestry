@@ -181,7 +181,7 @@ const LAWS = [
   {
     id: 'conservation', name: 'Conservation Laws', domain: 'principle', symbol: 'ΔE = 0',
     tagline: 'Some things never change.',
-    equation: 'E, p, L, Q = const',
+    equation: '\\dfrac{d}{dt}\\bigl(E,\\; \\mathbf{p},\\; \\mathbf{L},\\; Q\\bigr) = 0',
     deps: ['symmetry', 'action'], sim: 'collision',
     eli5: `Some quantities in nature are like a magic bank balance — you can move them around, turn them into different forms, but the total never changes. Energy is like that. So is momentum (how hard things are moving). So is electric charge. No matter what happens, the universe's totals stay exactly the same.`,
     intermediate: `Conservation laws are the most reliable laws we have. By Noether's theorem, each one comes from a symmetry: energy from time-symmetry, momentum from space-symmetry, angular momentum from rotation, charge from a gauge symmetry. They let physicists solve problems without knowing the details — "whatever messy stuff happens, the totals before and after must match." That's why they're the first tool you reach for in any physics problem, from billiard balls to galaxy collisions.`,
