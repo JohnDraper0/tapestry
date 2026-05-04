@@ -35,7 +35,7 @@ const LAWS = [
   {
     id: 'logic', name: 'Logic', domain: 'math', symbol: '∧ ∨ ¬',
     tagline: 'The rules of thinking itself.',
-    equation: 'P → Q',
+    equation: '\\dfrac{P \\quad P \\to Q}{Q}',
     deps: [], sim: null,
     eli5: `Before anyone can know anything, we need a way to think straight. Logic is the game of "if this, then that." If all puppies are fluffy and Rex is a puppy, then Rex is fluffy. These rules work the same for everyone, everywhere — on Earth, on Mars, even for aliens we've never met. Logic is the ground floor of the whole building of knowledge.`,
     intermediate: `Classical logic stands on three laws: identity (A is A), non-contradiction (something can't be both A and not-A at once), and excluded middle (it's either A or not-A). From these, mathematicians build proofs, computers execute programs, and scientists test theories. "True" almost always means: assuming the premises, the conclusion follows by logical steps. Every other branch of human knowledge — from arithmetic to quantum field theory — has logic as its ultimate grammar.`,
