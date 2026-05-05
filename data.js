@@ -59,7 +59,7 @@ const LAWS = [
   {
     id: 'numbers', name: 'Numbers & Counting', domain: 'math', symbol: 'ℕ',
     tagline: 'The first act of abstraction.',
-    equation: '1, 2, 3, … ∞',
+    equation: '\\mathbb{N} \\subset \\mathbb{Z} \\subset \\mathbb{Q} \\subset \\mathbb{R} \\subset \\mathbb{C}',
     deps: ['logic', 'sets'], sim: null,
     eli5: `Numbers are what you get when you forget everything about a pile of stuff except how many things there are. Three apples, three rocks, three friends — they all share the idea of "three." Once we had numbers, we could count, trade, measure, and build everything made of maths.`,
     intermediate: `The natural numbers (1, 2, 3…) were humanity's first abstract objects. From them we build integers (add negatives), rationals (add fractions), reals (add limits like π and √2), and complex numbers (add i = √-1). Each extension solves a problem the previous set couldn't — integers let us subtract freely, reals let us take limits, complex numbers let us solve every polynomial equation. The whole tower of modern mathematics balances on this staircase of number systems.`,
