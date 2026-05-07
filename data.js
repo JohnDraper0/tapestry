@@ -495,7 +495,7 @@ const LAWS = [
   {
     id: 'periodic', name: 'Periodic Table', domain: 'chemistry', symbol: 'Fe Au',
     tagline: 'Chemistry by counting electrons.',
-    equation: 'Aufbau: 1s 2s 2p 3s 3p …',
+    equation: '\\text{fill: }(n+\\ell)\\nearrow,\\; n\\nearrow\\;\\text{(ties)}',
     deps: ['atoms', 'pauli'], sim: null,
     eli5: `All the stuff in the universe is made of just 118 different kinds of atoms. Line them up in order of how many protons they have and a magical pattern appears: every few steps, you come back to an atom that behaves just like a much smaller one in the row above. So chemistry repeats. That's why Mendeleev could line them up in a table — and predict ones nobody had ever seen yet.`,
     intermediate: `The periodic table arranges elements by atomic number. Its rows and columns are a direct consequence of how electrons fill atomic orbitals in order of increasing energy (1s, 2s, 2p, 3s, 3p, …). Elements in the same column have the same number of outer-shell electrons and so share chemical behaviour. The noble gases have full shells and barely react; alkali metals have one lonely outer electron they love to give away. Mendeleev, drawing the first table in 1869, left gaps for elements he predicted must exist — and they were found exactly where he said.`,
