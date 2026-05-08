@@ -201,20 +201,26 @@
   // Dashed, fainter than dependencies. Each analogy rendered once.
   const seenPairs = new Set();
   LAWS.forEach(l => {
-    (l.analogous || []).forEach(({ id: otherId }) => {
+    (l.analogous || []).forEach(({ id: otherId, note }) => {
       const pair = [l.id, otherId].sort().join('|');
       if (seenPairs.has(pair)) return;
       seenPairs.add(pair);
       const other = byId.get(otherId);
       if (!other) return;
-      edgeLayer.appendChild(svgEl('line', {
+      const line = svgEl('line', {
         x1: l.pos.x, y1: l.pos.y,
         x2: other.pos.x, y2: other.pos.y,
         'stroke-width': 1,
         'stroke-dasharray': '3 6',
         class: 'edge-analog',
         style: 'stroke: var(--accent); opacity: 0.32',
-      }));
+      });
+      if (note) {
+        const t = svgEl('title');
+        t.textContent = `${l.name} ↔ ${other.name}: ${note}`;
+        line.appendChild(t);
+      }
+      edgeLayer.appendChild(line);
     });
   });
 
@@ -529,6 +535,16 @@
         ).join(' · ')
       : '<em style="opacity:.5">…the sky</em>';
 
+    const kindred = (l.analogous || [])
+      .map(({ id, note }) => {
+        const k = byId.get(id);
+        if (!k) return '';
+        return `<div class="kindred-row">
+            <a class="dep" data-go="${k.id}" style="color:${DOMAINS[k.domain].color}">${k.name}</a>
+            ${note ? `<span class="kindred-note">${note}</span>` : ''}
+          </div>`;
+      }).filter(Boolean).join('');
+
     const color = DOMAINS[l.domain].color;
     const heroImg = l.image
       ? `<img class="hero-photo" src="${l.image}" alt="${l.name}" onerror="this.style.display='none'">`
@@ -603,6 +619,12 @@
         <div class="panel-label">Leads to</div>
         <div class="panel-links">${leadsList}</div>
       </div>
+
+      ${kindred ? `
+      <div class="panel-section">
+        <div class="panel-label">Kindred ideas</div>
+        <div class="panel-kindred">${kindred}</div>
+      </div>` : ''}
     `;
     panel.classList.add('open');
     if (typeof Sound !== 'undefined') Sound.openPanel();

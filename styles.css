@@ -558,6 +558,22 @@ header * { pointer-events: auto; }
   text-shadow: 0 0 12px currentColor;
 }
 
+/* kindred (analogous) cross-links */
+.panel-kindred {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.kindred-row { margin-bottom: 10px; }
+.kindred-row:last-child { margin-bottom: 0; }
+.kindred-note {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--ink-dim);
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
 /* ── intro overlay ─────────────────────────────────── */
 #intro {
   position: fixed;
