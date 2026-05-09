@@ -616,6 +616,18 @@ const LAWS = [
     history: `Alan Turing published *On Computable Numbers, with an Application to the Entscheidungsproblem* in 1936 at age 24. His wartime work at Bletchley Park shortened WWII by an estimated two years. He was prosecuted in 1952 for homosexuality and died in 1954. The UK government formally apologised in 2009; he received a posthumous royal pardon in 2013.`,
   },
 
+  {
+    id: 'kolmogorov', name: 'Kolmogorov Complexity', domain: 'info', symbol: 'K(x)',
+    tagline: 'The shortest description that builds you back.',
+    equation: 'K(x) = \\min\\,\\{\\,|p|\\,:\\,U(p)=x\\,\\}',
+    deps: ['information', 'computation'], sim: null,
+    eli5: `Imagine the shortest possible recipe that, when followed, would re-create some object exactly. The string "0101010101…" a million letters long has a tiny recipe — *write 01 a million times*. But a million coin flips written down has no shorter recipe than the list itself; the only way to re-create it is to repeat every single flip. The shortest recipe is how much real *stuff* a thing contains. That's Kolmogorov complexity. Most things in the universe — most strings, most numbers, most pictures of nothing — have no shorter description than themselves.`,
+    intermediate: `Kolmogorov complexity K(x) of a string x is the length, in bits, of the shortest computer program that prints x and halts, on a fixed universal machine. The choice of programming language only changes K by an additive constant — the size of an interpreter — so K is well-defined "up to a translator." A pattern is *compressible* exactly when there is a much shorter program that generates it; truly random data is *incompressible*, so its shortest description is itself. A simple counting argument shows almost every string of length n has K(x) ≈ n: there just aren't enough short programs to go around. Most surprisingly, K is **uncomputable** — no algorithm, no matter how clever, can take a string and tell you the length of its shortest description. The same impossibility powers Gödel's incompleteness theorem and Turing's halting problem.`,
+    expert: `Define K_U(x) = min{|p| : U(p) = x} for a fixed universal Turing machine U. **Invariance theorem** (Solomonoff 1960; Kolmogorov 1965; Chaitin 1966): for any other universal V, |K_U(x) − K_V(x)| ≤ c_{UV}, with c_{UV} the size of the shortest U-program that simulates V. By a counting argument, at most 2ⁿ − 1 binary strings can have K(x) < n, so for any constant c, the fraction of n-bit strings with K(x) ≥ n − c is at least 1 − 2⁻ᶜ — *almost all* finite binary strings are essentially incompressible. K is uncomputable: were it computable, Berry's paradox ("the smallest integer not nameable in fewer than k bits") would yield a contradiction, mirroring the halting problem. The prefix-free version (Levin–Chaitin) satisfies Σₓ 2^{−K(x)} ≤ 1 (Kraft inequality) and grounds Solomonoff's universal prior m(x) ∝ 2^{−K(x)}, the formal core of Bayesian inductive inference. **Algorithmic randomness** (Martin-Löf 1966) is equivalent to incompressibility for infinite sequences. Chaitin's halting probability Ω = Σ_{p halts} 2^{−|p|} is a definable real in (0, 1), normal, and provably uncomputable; its first n bits determine all halting programs of length ≤ n − O(1), and therefore the truth of every theorem provable in any axiom system of bounded information content. Kolmogorov complexity provides a substrate-independent definition of "information," "structure," and "randomness" — and proves that mathematics cannot, even in principle, see all the way down.`,
+    surprise: `There is a single real number, between 0 and 1, called Chaitin's constant Ω. It is perfectly definable. Knowing its first 10 000 binary digits would settle every theorem in mathematics that any 10 000-bit axiom system could ever decide — the Riemann hypothesis, Goldbach's conjecture, the consistency of arithmetic, the lot. Ω is also provably *uncomputable*: no algorithm, computer, or god-like oracle constrained by mathematics can ever output its digits. The answer to almost every open question lies inside a single number we cannot compute.`,
+    history: `Ray Solomonoff defined the idea first, in 1960, buried in a long technical report on inductive inference; almost no one read it. Andrey Kolmogorov rediscovered it independently in 1963 — already a giant of probability and turbulence — and gave it a clean mathematical home in his 1965 *Problems of Information Transmission* paper. Gregory Chaitin, then 18 and a student at the Bronx High School of Science, found it again in 1966 in his first published paper. The triple discovery is now called Kolmogorov–Chaitin–Solomonoff complexity. The three founders never met as a group.`,
+  },
+
   // ───────────────────────────── EMERGENCE & COMPLEXITY ─────────────────────
 
   {
@@ -954,6 +966,8 @@ const IMAGES = {
                    caption: 'Claude Shannon — invented the bit' },
   computation:   { image: WM('Alan_Turing_Aged_16.jpg'),
                    caption: 'Alan Turing — the universal machine' },
+  kolmogorov:    { image: WM('Kolmogorov.png'),
+                   caption: 'Andrey Kolmogorov — the absolute information of a string' },
   emergence:     { image: WM('Sturnus_vulgaris_-starling_murmuration_-_geograph.org.uk_-_124697.jpg'),
                    caption: 'A starling murmuration — no leader, pure emergence' },
   complexity:    { image: WM('Mandel_zoom_00_mandelbrot_set.jpg'),
