@@ -210,20 +210,57 @@
     }
   }
 
-  function frame() {
+  function drawOnce() {
     if      (theme === 'cosmos')    drawCosmos();
     else if (theme === 'paper')     drawPaper();
     else if (theme === 'blueprint') drawBlueprint();
-    requestAnimationFrame(frame);
+  }
+
+  // Honour prefers-reduced-motion: render a settled frame and stop the loop.
+  // Cosmos's drawCosmos() leans on translucent overdraw to build up nebula
+  // glow; on a transparent canvas a single pass looks washed out, so we
+  // prime it with an opaque backdrop and let the draw layer star/nebula on
+  // top.
+  const reduceMotionMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let rafId = null;
+  function frame() {
+    drawOnce();
+    rafId = requestAnimationFrame(frame);
+  }
+  function renderStatic() {
+    if (theme === 'cosmos') {
+      ctx.fillStyle = 'rgb(5, 7, 15)';
+      ctx.fillRect(0, 0, W, H);
+    }
+    drawOnce();
+  }
+  function start() {
+    if (rafId !== null) return;
+    if (reduceMotionMQ.matches) { renderStatic(); return; }
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   }
 
   window.__bgSetTheme = function (t) {
     theme = t;
     if (theme === 'cosmos') initCosmos();
+    if (reduceMotionMQ.matches) { stop(); start(); }
   };
 
-  window.addEventListener('resize', () => { resize(); initCosmos(); });
+  window.addEventListener('resize', () => {
+    resize();
+    initCosmos();
+    if (reduceMotionMQ.matches) { stop(); start(); }
+  });
+
+  // React to the user toggling the OS preference live.
+  const onMQChange = () => { stop(); start(); };
+  if (reduceMotionMQ.addEventListener) reduceMotionMQ.addEventListener('change', onMQChange);
+  else if (reduceMotionMQ.addListener)  reduceMotionMQ.addListener(onMQChange);
+
   resize();
   initCosmos();
-  frame();
+  start();
 })();
