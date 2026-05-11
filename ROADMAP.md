@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
-  cross-links populated: 18. Images mirrored locally: 0.
-- Last updated: 2026-04-28.
+- Nodes: 67 (56 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+  cross-links populated: 19. Images mirrored locally: 0.
+- Last updated: 2026-05-11.
 
 ## The atlas we want (inventory)
 
@@ -30,7 +30,7 @@ points, not quotas.
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
-| em              |   3   |    5   | Snell's law, Poynting vector, plasma                      |
+| em              |   4   |    5   | Poynting vector, plasma                                   |
 | relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
 | quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |

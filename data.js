@@ -340,6 +340,18 @@ const LAWS = [
     history: `Georg Ohm deduced his law in 1827 from painstaking galvanometer measurements on wires of different gauges and lengths. The Prussian education minister dismissed the paper as "a tissue of naked fancies" and Ohm was forced to resign his teaching post in humiliation. A decade later the Royal Society awarded him the Copley Medal — one of science's highest honours — and named the unit of resistance after him. He died in 1854, the same year the unit "ohm" was officially adopted.`,
   },
 
+  {
+    id: 'snell', name: "Snell's Law", domain: 'em', symbol: 'n sinθ',
+    tagline: 'Light bends — at a precise, predictable angle.',
+    equation: 'n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2',
+    deps: ['maxwell', 'geometry'], sim: null,
+    eli5: `Dip a pencil halfway into a glass of water and it looks bent. The pencil is fine — light is the thing that bent. When light crosses into water it slows down, and slowing down at an angle makes it kink, like a marching band wheeling around a corner. Every magnifying glass, every pair of spectacles, every camera, every dewdrop on a leaf relies on this kink. A rainbow is the kink done seven times in a row.`,
+    intermediate: `Snell's law says n₁ sin θ₁ = n₂ sin θ₂. The angles are measured from the line perpendicular to the surface; the n's are "refractive indices" — how much slower light moves in each material than in vacuum. Air is about 1.0, water 1.33, glass 1.5, diamond 2.42. Going into a denser medium, light bends *toward* the perpendicular; leaving it, *away*. If light tries to leave too steeply, it can't escape at all: above a critical angle it is *totally internally reflected* — and that is how a thread of glass carries the whole internet across an ocean. Lenses, prisms, fibre optics, and the unchanging 42° geometry of every rainbow all fall out of this single equation.`,
+    expert: `Snell's law is a phase-matching condition at the interface: the tangential component of the wavevector is continuous, so k₁ sin θ₁ = k₂ sin θ₂, and with |k| = nω/c the n sin θ form follows. The full boundary-value problem (Fresnel equations) also fixes amplitudes — distinct transmission/reflection coefficients for s- and p-polarisations, and a Brewster angle θ_B = arctan(n₂/n₁) at which r_p = 0 (the origin of polarising sunglasses and the glare reduction over horizontal water). Total internal reflection occurs above θ_c = arcsin(n₂/n₁) when n₁ > n₂, leaving only an exponentially decaying evanescent wave outside with penetration depth ∼ λ — exploited in TIRF microscopy and frustrated-TIR couplers. Equivalently, Fermat's principle (1662) demands the optical path length ∫ n ds be stationary; Snell falls out as the Euler–Lagrange equation, prefiguring the action principle of all of physics. Veselago's negative-index metamaterials (1968; experimentally realised 2000) reverse the sign of refraction, focus light with flat slabs, and underlie invisibility-cloak prototypes. The frequency dependence n(ω) — chromatic dispersion — splits white light into a spectrum and is the original meaning of "spectroscopy."`,
+    surprise: `The first known statement of Snell's law isn't from Willebrord Snell in 1621 — it's from Ibn Sahl, a mathematician in Baghdad, who wrote it in 984 CE while designing parabolic burning lenses. The diagram in his manuscript is geometrically identical to the one in modern physics textbooks. Europe spent six centuries rediscovering what was already sitting in a Persian library.`,
+    history: `Ibn Sahl derived the sine ratio geometrically in *On Burning Instruments* (Baghdad, c. 984). The text fragmented and was effectively lost outside the Islamic world until Roshdi Rashed reconstructed it from manuscripts in Damascus and Tehran in 1990. Thomas Harriot rediscovered the law independently around 1602 but never published; Willebrord Snellius derived it in 1621 in Leiden and also left it in unpublished notes. Descartes published an algebraic form in *La Dioptrique* (1637), claiming originality and igniting a long priority dispute with Fermat — who answered in 1662 by proving Snell's law follows from minimising travel time, planting the seed of the variational principles that would later remake all of physics.`,
+  },
+
   // ───────────────────────────── RELATIVITY ─────────────────────────────────
 
   {
@@ -910,6 +922,8 @@ const IMAGES = {
                    caption: 'Michael Faraday, portrait by Thomas Phillips, c. 1841' },
   ohms_law:      { image: WM('Georg_Simon_Ohm3.jpg'),
                    caption: 'Georg Ohm — vindicated a decade after his law was called "naked fancies"' },
+  snell:         { image: WM('Snells_law.svg'),
+                   caption: "Snell's law — refraction at a planar interface" },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
                    caption: 'Einstein, 1921 — E = mc²' },
   general:       { image: WM('Black_hole_-_Messier_87_crop_max_res.jpg'),
@@ -1028,6 +1042,7 @@ const ANALOGIES = [
   ['entanglement',   'measurement',   'decoherence — entanglement with the environment — is how measurement and apparent wavefunction collapse arise'],
   ['entanglement',   'information',   'one Bell pair = one ebit: entanglement is the fundamental unit of quantum information'],
   ['wien',           'stars',         "every star wears its temperature as a colour — the OBAFGKM spectral sequence is Wien's displacement law painted across the sky"],
+  ['snell',          'action',        "Fermat's principle: light refracts along the path that minimises travel time — Snell's law is the first variational principle in physics"],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
