@@ -616,6 +616,18 @@ const LAWS = [
     history: `Alan Turing published *On Computable Numbers, with an Application to the Entscheidungsproblem* in 1936 at age 24. His wartime work at Bletchley Park shortened WWII by an estimated two years. He was prosecuted in 1952 for homosexuality and died in 1954. The UK government formally apologised in 2009; he received a posthumous royal pardon in 2013.`,
   },
 
+  {
+    id: 'kolmogorov', name: 'Kolmogorov Complexity', domain: 'info', symbol: 'K(x)',
+    tagline: 'The shortest program that prints it — and nothing shorter.',
+    equation: 'K(x) = \\min_{p\\,:\\,U(p)\\,=\\,x}\\,|p|',
+    deps: ['information', 'computation'], sim: null,
+    eli5: `Pick any string of letters and ask: what is the shortest recipe that prints exactly this? "A thousand zeros" — eleven letters — describes a thousand-character string, far shorter than the string itself. But a truly scrambled, patternless string of a thousand letters has no shortcut: the shortest description is the string itself, letter for letter. That irreducible length is its Kolmogorov complexity — the size of the smallest possible recipe. The simpler the pattern, the shorter the recipe. The closer to pure noise, the longer.`,
+    intermediate: `Andrey Kolmogorov, Ray Solomonoff and Gregory Chaitin independently asked: what is the *intrinsic* information content of a single object? Their answer: K(x) is the length, in bits, of the shortest computer program that outputs x and halts. A string of a million zeros: a program saying "print 0 a million times" — a few dozen bits. A million bits of fair-coin-flip noise: no program is shorter than the bits themselves. A string is **algorithmically random** exactly when its Kolmogorov complexity equals its length. Beautifully, the definition is almost language-independent: switch programming languages and K changes only by a constant. The catch: K itself is uncomputable. There is no algorithm that, given x, returns K(x). The notion is well-defined, but the true compressibility of any particular string is forever out of formal reach.`,
+    expert: `Fix a universal prefix Turing machine U. Then K_U(x) = min{|p| : U(p) = x}. The invariance theorem (Solomonoff–Kolmogorov) states that for any other universal machine V, |K_U(x) − K_V(x)| ≤ c_{U,V}; the choice of language adds only a constant overhead, so one writes K(x) and ignores U. K is upper-semicomputable — dovetail all programs and watch which halt with output x, lowering the bound — but not computable (a recursive K would resolve the halting problem). By counting, fewer than 2^{n−c} of the 2^n binary strings of length n admit a program shorter than n − c, so almost every string is incompressible (Martin-Löf random). Chaitin's incompleteness theorem: for any consistent, sufficiently expressive formal system F, there is a constant L_F such that F cannot prove "K(x) > L_F" for any specific x — a system can only ever certify finitely many lower bounds on complexity. Chaitin's halting probability Ω = Σ_{p halts} 2^{−|p|} is itself algorithmically random and encodes the halting problem in its bits. Solomonoff's universal prior M(x) ∝ Σ_{U(p)=x*} 2^{−|p|} turns Occam's razor into a theorem: Bayesian induction with this prior dominates every computable predictor up to a multiplicative constant. Bennett's logical depth refines K by also counting the *time* the shortest program needs to run, distinguishing complicated-but-shallow noise from structures that are short to describe yet expensive to compute.`,
+    surprise: `Almost every string of bits is incompressible — there are not enough short programs to go around. Of all 1024-bit strings, fewer than one in a million can be described by a program shorter than 1004 bits. The world looks pattern-rich only because patterned strings are the ones we notice; the *typical* string is pure noise, by the pigeonhole alone.`,
+    history: `Ray Solomonoff laid out algorithmic information in 1960 in a Zator Company technical report, aiming at a formal theory of inductive inference. Andrey Kolmogorov — who had already founded modern probability theory in his 1933 *Grundbegriffe* — independently arrived at K in his 1965 paper "Three approaches to the quantitative definition of information," and graciously acknowledged Solomonoff's priority once he learned of it. Gregory Chaitin, then a teenage undergraduate at City College of New York, published the same idea in 1966 in his first paper. Chaitin then spent the next four decades drawing out the consequences: Berry's paradox formalised, the Ω constant, and the incompleteness theorem that bears his name.`,
+  },
+
   // ───────────────────────────── EMERGENCE & COMPLEXITY ─────────────────────
 
   {
@@ -954,6 +966,8 @@ const IMAGES = {
                    caption: 'Claude Shannon — invented the bit' },
   computation:   { image: WM('Alan_Turing_Aged_16.jpg'),
                    caption: 'Alan Turing — the universal machine' },
+  kolmogorov:    { image: WM('Andrey_Kolmogorov.jpg'),
+                   caption: 'Andrey Kolmogorov — measure-theoretic probability, turbulence, and the absolute information of a string' },
   emergence:     { image: WM('Sturnus_vulgaris_-starling_murmuration_-_geograph.org.uk_-_124697.jpg'),
                    caption: 'A starling murmuration — no leader, pure emergence' },
   complexity:    { image: WM('Mandel_zoom_00_mandelbrot_set.jpg'),

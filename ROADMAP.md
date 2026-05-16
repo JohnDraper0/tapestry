@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 66 (55 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+- Nodes: 67 (56 known, 11 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 18. Images mirrored locally: 0.
-- Last updated: 2026-04-28.
+- Last updated: 2026-05-16.
 
 ## The atlas we want (inventory)
 
@@ -36,7 +36,7 @@ points, not quotas.
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
 | biology         |   6   |    9   | Hodgkin–Huxley, immunity, development                     |
-| info            |   2   |    5   | Kolmogorov complexity, channel coding, error correction   |
+| info            |   3   |    5   | channel coding, error correction, Landauer bridge         |
 | emergence       |   4   |    7   | self-organised criticality, Zipf, networks, cellular auto |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
@@ -91,7 +91,7 @@ equation, and valid `deps`:
 7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
 8. **Plate tectonics** (earth) — the Earth as a slow, convecting engine.
 9. ~~**Central limit theorem** (math/probability)~~ — added 2026-04-17.
-10. **Kolmogorov complexity** (info) — the absolute information of a string.
+10. ~~**Kolmogorov complexity** (info)~~ — added 2026-05-16.
 11. **Self-organised criticality** (emergence) — Bak's sandpile universality.
 12. ~~**Gravitational waves** (relativity)~~ — added 2026-04-17.
 13. ~~**Entanglement** (quantum) — "spooky action" and Bell's theorem.~~ — added 2026-04-18.
