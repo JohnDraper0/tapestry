@@ -835,7 +835,20 @@
   // ── ICEBERG MODAL ────────────────────────────────────────────────
   const icebergBtn = document.getElementById('icebergBtn');
   const icebergModal = document.getElementById('iceberg-modal');
-  icebergBtn.addEventListener('click', () => icebergModal.classList.add('open'));
+  function refreshIcebergCounts() {
+    const known = LAWS.filter(l => l.known !== false).length;
+    const frontier = LAWS.length - known;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('iceberg-known-num', known);
+    set('iceberg-frontier-num', frontier);
+    set('iceberg-known-prose', known);
+    set('iceberg-frontier-prose', frontier);
+  }
+  refreshIcebergCounts();
+  icebergBtn.addEventListener('click', () => {
+    refreshIcebergCounts();
+    icebergModal.classList.add('open');
+  });
   icebergModal.addEventListener('click', (e) => {
     if (e.target === icebergModal || e.target.dataset.close === 'iceberg') {
       icebergModal.classList.remove('open');
