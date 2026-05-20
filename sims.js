@@ -1967,6 +1967,149 @@ SIMS.stefan_boltzmann = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── OHM'S LAW ───────────────────────────────
+SIMS.ohms_law = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const sideW = 92;
+  const m = 26;
+  const L = m, Rt = w - sideW - m, T = m, B = h - m;
+
+  // closed loop, walked clockwise: bottom-left → top-left → top-right → bottom-right
+  const corners = [
+    { x: L, y: B }, { x: L, y: T }, { x: Rt, y: T }, { x: Rt, y: B },
+  ];
+  const segs = [];
+  let perim = 0;
+  for (let i = 0; i < corners.length; i++) {
+    const a = corners[i], b = corners[(i + 1) % corners.length];
+    const len = Math.hypot(b.x - a.x, b.y - a.y);
+    segs.push({ a, b, len, start: perim });
+    perim += len;
+  }
+  function pointAt(d) {
+    d = ((d % perim) + perim) % perim;
+    for (const s of segs) {
+      if (d <= s.start + s.len) {
+        const t = (d - s.start) / s.len;
+        return { x: s.a.x + (s.b.x - s.a.x) * t, y: s.a.y + (s.b.y - s.a.y) * t };
+      }
+    }
+    return corners[0];
+  }
+
+  const Rohm = 4;                            // fixed resistance, Ω
+  const V_MIN = 1.5, V_MAX = 12;             // swept supply voltage, V
+  const Pmax = V_MAX * V_MAX / Rohm;         // for the heat-glow scale
+  const NDOT = 46;
+  const topMidX = (L + Rt) / 2, topY = T;    // resistor sits here
+  const botMidX = (L + Rt) / 2, botY = B;    // battery sits here
+  const resHalf = 46;                        // resistor half-width
+
+  let raf, t0 = performance.now(), last = t0, phase = 0;
+
+  function lerpCol(t, a, b) {
+    const c = i => Math.round(a[i] + (b[i] - a[i]) * t);
+    return `rgb(${c(0)},${c(1)},${c(2)})`;
+  }
+
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const u = (1 - Math.cos((now - t0) / 4200)) / 2;   // 0 → 1 → 0 ease
+    const V = V_MIN + (V_MAX - V_MIN) * u;
+    const I = V / Rohm;
+    const P = V * I;                                   // = I²R = V²/R
+    phase += dt * I * 30;                              // drift speed ∝ current
+    const heat = Math.min(1, P / Pmax);
+    const resCol = lerpCol(heat, [108, 196, 255], [255, 92, 44]);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // ── wire loop, with gaps where the battery and resistor sit ──
+    ctx.strokeStyle = 'rgba(255,255,255,0.30)'; ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(L, B); ctx.lineTo(L, T);                 // left
+    ctx.lineTo(topMidX - resHalf, T);                   // top, up to resistor
+    ctx.moveTo(topMidX + resHalf, T); ctx.lineTo(Rt, T);// top, after resistor
+    ctx.lineTo(Rt, B);                                  // right
+    ctx.lineTo(botMidX + 16, B);                        // bottom, up to battery
+    ctx.moveTo(botMidX - 16, B); ctx.lineTo(L, B);      // bottom, after battery
+    ctx.stroke();
+
+    // ── flowing charge (current) ──
+    for (let i = 0; i < NDOT; i++) {
+      const p = pointAt(phase + i * (perim / NDOT));
+      // skip dots that fall inside the component gaps
+      const inRes = Math.abs(p.y - T) < 4 && Math.abs(p.x - topMidX) < resHalf;
+      const inBat = Math.abs(p.y - B) < 4 && Math.abs(p.x - botMidX) < 18;
+      if (inRes || inBat) continue;
+      ctx.fillStyle = '#64ffda';
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // ── resistor (zigzag), glowing with Joule heat ──
+    const halo = ctx.createRadialGradient(topMidX, topY, 2, topMidX, topY, resHalf + 18);
+    halo.addColorStop(0, `rgba(255,120,60,${0.40 * heat})`);
+    halo.addColorStop(1, 'rgba(255,120,60,0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(topMidX - resHalf - 18, topY - 22, 2 * (resHalf + 18), 44);
+    ctx.strokeStyle = resCol; ctx.lineWidth = 3; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    const zz = 6, dx = (2 * resHalf) / zz;
+    ctx.moveTo(topMidX - resHalf, topY);
+    for (let i = 0; i < zz; i++) {
+      ctx.lineTo(topMidX - resHalf + dx * (i + 0.5), topY + (i % 2 ? 9 : -9));
+    }
+    ctx.lineTo(topMidX + resHalf, topY);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '11px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(`R = ${Rohm} Ω`, topMidX, topY - 16);
+
+    // ── battery (long plate = +, short plate = −) ──
+    ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(botMidX + 7, botY - 11); ctx.lineTo(botMidX + 7, botY + 11); ctx.stroke();
+    ctx.lineWidth = 6;
+    ctx.beginPath(); ctx.moveTo(botMidX - 7, botY - 6);  ctx.lineTo(botMidX - 7, botY + 6);  ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '11px system-ui';
+    ctx.fillText(`V = ${V.toFixed(1)} V`, botMidX, botY + 18);
+
+    // ── current direction arrow (mid-left wire) ──
+    const ay = (T + B) / 2;
+    ctx.strokeStyle = 'rgba(100,255,218,0.8)'; ctx.fillStyle = 'rgba(100,255,218,0.8)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(L, ay + 9); ctx.lineTo(L, ay - 9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(L - 4, ay - 4); ctx.lineTo(L, ay - 10); ctx.lineTo(L + 4, ay - 4); ctx.closePath(); ctx.fill();
+    ctx.fillText('I', L + 12, ay - 2);
+
+    // ── right column: V = I·R readout + current bar ──
+    const sx = Rt + 14;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui';
+    ctx.fillText('V = I · R', sx, T + 12);
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = '#ffd166'; ctx.fillText(`${V.toFixed(1)} V`, sx, T + 32);
+    ctx.fillStyle = '#64ffda'; ctx.fillText(`I = ${I.toFixed(2)} A`, sx, T + 50);
+    ctx.fillStyle = resCol;    ctx.fillText(`P = ${P.toFixed(1)} W`, sx, T + 68);
+
+    const barX = sx, barW = sideW - 28, barTop = T + 84, barBot = B - 4;
+    const barH = barBot - barTop;
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1;
+    ctx.strokeRect(barX + 0.5, barTop + 0.5, barW, barH);
+    const fillH = barH * (I / (V_MAX / Rohm));
+    ctx.fillStyle = '#64ffda';
+    ctx.fillRect(barX + 1, barBot - fillH, barW - 1, fillH);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '9px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('current', barX + barW / 2, barTop - 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
