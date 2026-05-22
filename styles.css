@@ -702,7 +702,15 @@ header * { pointer-events: auto; }
   .hint { display: none; }
   header { padding: 14px 14px; flex-wrap: wrap; }
   .header-centre { order: 3; width: 100%; max-width: none; margin-top: 10px; }
-  .theme-switcher .theme-btn { padding: 7px 10px; font-size: 10px; }
+  /* Touch targets: ≥44px on phones (Apple HIG / WCAG 2.5.5). */
+  .top-btn, .theme-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .top-btn { padding: 10px 16px; }
+  .theme-switcher .theme-btn { padding: 10px 14px; font-size: 11px; }
 }
 
 /* ── node visual states driven by classes ───────────── */
