@@ -1967,6 +1967,141 @@ SIMS.stefan_boltzmann = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── PHOTOELECTRIC ───────────────────────────
+SIMS.photoelectric = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const h_eV = 4.135667e-15;          // Planck constant in eV·s
+  const c_l  = 2.998e8;               // m/s
+  const PHI  = 2.28;                  // eV — sodium work function
+  const nu0  = PHI / h_eV;            // threshold frequency
+
+  // sweep wavelength 720 nm (red, below threshold) → 290 nm (UV, above)
+  const LAM_HI = 720e-9, LAM_LO = 290e-9;
+  const nuMin = c_l / LAM_HI, nuMax = c_l / LAM_LO;
+  const KE_AXIS = 2.0;                // eV, plot ceiling
+
+  const plateX = w * 0.20;
+
+  // inset plot box (top-right)
+  const iw = Math.max(150, w * 0.42), ih = Math.max(90, h * 0.42);
+  const ix = w - iw - 8, iy = 8;
+
+  // visible-spectrum wavelength → CSS colour (Bruton-style approximation)
+  function nmToRGB(wl) {
+    let r = 0, g = 0, b = 0;
+    if (wl < 380)      { r = .5; g = .2; b = 1; }
+    else if (wl < 440) { r = -(wl - 440) / 60; b = 1; }
+    else if (wl < 490) { g = (wl - 440) / 50; b = 1; }
+    else if (wl < 510) { g = 1; b = -(wl - 510) / 20; }
+    else if (wl < 580) { r = (wl - 510) / 70; g = 1; }
+    else if (wl < 645) { r = 1; g = -(wl - 645) / 65; }
+    else               { r = 1; }
+    const f = wl < 420 ? .3 + .7 * (wl - 380) / 40
+            : wl > 700 ? .3 + .7 * (780 - wl) / 80 : 1;
+    const q = v => Math.round(255 * Math.pow(Math.max(0, v) * f, 0.8));
+    return `rgb(${q(r)},${q(g)},${q(b)})`;
+  }
+
+  const photons = [], electrons = [];
+  let raf, t0 = performance.now(), lastSpawn = 0;
+
+  function draw(now) {
+    const u   = (1 - Math.cos(((now - t0) / 8000) % (Math.PI * 2))) / 2;
+    const nu  = nuMin + (nuMax - nuMin) * u;
+    const lam = c_l / nu;
+    const KE  = Math.max(0, h_eV * (nu - nu0));    // eV
+    const above = nu >= nu0;
+    const col = nmToRGB(lam * 1e9);
+
+    if (now - lastSpawn > 90) {
+      lastSpawn = now;
+      photons.push({ x: w + 6, y: h * 0.18 + Math.random() * h * 0.64, col });
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // beam-coloured glow from the source on the right
+    const gg = ctx.createLinearGradient(w - 46, 0, w, 0);
+    gg.addColorStop(0, 'rgba(0,0,0,0)'); gg.addColorStop(1, col);
+    ctx.globalAlpha = 0.22; ctx.fillStyle = gg; ctx.fillRect(w - 46, 0, 46, h);
+    ctx.globalAlpha = 1;
+
+    // metal plate
+    ctx.fillStyle = 'rgba(150,160,180,0.9)';
+    ctx.fillRect(plateX - 14, h * 0.12, 14, h * 0.76);
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.fillRect(plateX - 2, h * 0.12, 2, h * 0.76);
+
+    // photons stream leftward into the plate
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.x -= 4.2;
+      ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, 6.283); ctx.fill();
+      if (p.x <= plateX) {
+        photons.splice(i, 1);
+        if (above) {
+          const v = 1.4 + 3.4 * Math.sqrt(KE / KE_AXIS);
+          const a = -0.6 + Math.random() * 1.2;       // cone to the right
+          electrons.push({ x: plateX, y: p.y, vx: v * Math.cos(a), vy: v * Math.sin(a) });
+        }
+      }
+    }
+
+    // ejected electrons
+    ctx.fillStyle = '#7cf';
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.x += e.vx; e.y += e.vy;
+      if (e.x > w || e.y < 0 || e.y > h) { electrons.splice(i, 1); continue; }
+      ctx.beginPath(); ctx.arc(e.x, e.y, 2.4, 0, 6.283); ctx.fill();
+    }
+
+    // ── readout (top-left) ──
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui';
+    ctx.fillText('Photoelectric effect', 12, 20);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.fillText(`metal Na · φ = ${PHI} eV`, 12, 38);
+    ctx.fillText(`λ = ${(lam * 1e9).toFixed(0)} nm   ν = ${(nu / 1e14).toFixed(1)}×10¹⁴ Hz`, 12, 54);
+    ctx.fillStyle = above ? '#7cf' : 'rgba(255,120,120,0.95)';
+    ctx.fillText(above ? `Kmax = ${KE.toFixed(2)} eV — electrons ejected`
+                       : 'hν < φ — nothing comes out', 12, 70);
+
+    // ── inset: Kmax vs ν (slope reveals h) ──
+    ctx.fillStyle = 'rgba(10,14,24,0.82)'; ctx.fillRect(ix, iy, iw, ih);
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.strokeRect(ix + .5, iy + .5, iw, ih);
+    const gx0 = ix + 24, gx1 = ix + iw - 8, gy0 = iy + 18, gy1 = iy + ih - 18;
+    const nx = f => gx0 + (f - nuMin) / (nuMax - nuMin) * (gx1 - gx0);
+    const ky = k => gy1 - (k / KE_AXIS) * (gy1 - gy0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath(); ctx.moveTo(gx0, gy0); ctx.lineTo(gx0, gy1); ctx.lineTo(gx1, gy1); ctx.stroke();
+    const keHi = h_eV * (nuMax - nu0);
+    ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(nx(nuMin), ky(0)); ctx.lineTo(nx(nu0), ky(0)); ctx.lineTo(nx(nuMax), ky(keHi));
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(nx(nu0), gy0); ctx.lineTo(nx(nu0), gy1); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(nx(nu), ky(KE), 4, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '10px system-ui';
+    ctx.fillText('Kmax', ix + 4, iy + 13);
+    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillText('ν₀', nx(nu0), gy1 + 13);
+    ctx.fillStyle = '#ffd166'; ctx.textAlign = 'left';
+    ctx.fillText('slope = h', nx(nu0) + 6, ky(keHi) + 13);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
