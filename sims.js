@@ -1967,6 +1967,122 @@ SIMS.stefan_boltzmann = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ───────────────────── CENTRAL LIMIT THEOREM ─────────────────────────
+// Galton board: each ball is a sum of independent left/right bounces.
+// One bounce is wildly non-normal (a coin flip); their sum piles into
+// a binomial that the overlaid bell curve fits ever better.
+SIMS.clt = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const ROWS = 12;                       // bounces per ball → 13 bins
+  const BINS = ROWS + 1;
+  const mean = ROWS / 2;
+  const sd   = Math.sqrt(ROWS) / 2;      // Binomial(n,½): σ = √n / 2
+
+  const padT = 18, padB = 26, padX = 14;
+  const pegTop = padT + 8;
+  const dx = Math.min((w - 2 * padX) / (ROWS + 1), 26);
+  const dy = 13;
+  const pegBot = pegTop + ROWS * dy;
+  const binTop = pegBot + 14;
+  const binBot = h - padB;
+  const binAreaH = binBot - binTop;
+  const R = Math.max(2.2, dx * 0.16);
+
+  const pegX = (row, s) => w / 2 + (s - row / 2) * dx;
+  const binX = b => w / 2 + (b - ROWS / 2) * dx;
+
+  // theoretical binomial peak fraction, for a stable vertical scale
+  function choose(n, k) { let c = 1; for (let i = 0; i < k; i++) c = c * (n - i) / (i + 1); return c; }
+  const peakProb = choose(ROWS, ROWS / 2) / Math.pow(2, ROWS);
+
+  const counts = new Array(BINS).fill(0);
+  let total = 0;
+
+  function makeBall(offset) {
+    const path = [];
+    let s = 0;
+    for (let r = 0; r < ROWS; r++) { const right = Math.random() < 0.5; if (right) s++; path.push(right); }
+    return { path, bin: s, t: -offset };
+  }
+  const balls = [makeBall(0), makeBall(3.4), makeBall(6.8)];
+  const SPEED = 0.14;
+
+  function ballXY(ball) {
+    const t = Math.max(0, ball.t);
+    const r = Math.min(ROWS, Math.floor(t));
+    const frac = t - Math.floor(t);
+    let s = 0; for (let i = 0; i < r; i++) if (ball.path[i]) s++;
+    if (r >= ROWS) return { x: binX(ball.bin), y: binTop + 6, done: true };
+    const x0 = pegX(r, s);
+    const x1 = pegX(r + 1, s + (ball.path[r] ? 1 : 0));
+    const y0 = pegTop + r * dy, y1 = pegTop + (r + 1) * dy;
+    return { x: x0 + (x1 - x0) * frac, y: y0 + (y1 - y0) * frac, done: false };
+  }
+
+  let raf;
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    // pegs
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    for (let r = 0; r <= ROWS; r++)
+      for (let s = 0; s <= r; s++) {
+        ctx.beginPath(); ctx.arc(pegX(r, s), pegTop + r * dy, 1.4, 0, Math.PI * 2); ctx.fill();
+      }
+
+    // advance balls
+    balls.forEach((ball, i) => {
+      ball.t += SPEED;
+      if (ball.t >= ROWS + 1) { counts[ball.bin]++; total++; balls[i] = makeBall(0); }
+    });
+
+    // vertical scale: expected peak count fills ~88% of the bin area
+    const scale = (binAreaH * 0.88) / Math.max(1, total * peakProb);
+
+    // histogram bars
+    ctx.fillStyle = 'rgba(100,255,218,0.45)';
+    for (let b = 0; b < BINS; b++) {
+      const barH = Math.min(binAreaH, counts[b] * scale);
+      ctx.fillRect(binX(b) - dx * 0.42, binBot - barH, dx * 0.84, barH);
+    }
+
+    // ideal normal curve N(μ, σ²) scaled to the same counts
+    ctx.beginPath();
+    for (let px = 0; px <= 120; px++) {
+      const b = (px / 120) * ROWS;
+      const f = Math.exp(-((b - mean) ** 2) / (2 * sd * sd)) / (sd * Math.sqrt(2 * Math.PI));
+      const x = binX(b), y = binBot - Math.min(binAreaH, total * f * scale);
+      px === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(255,128,171,0.95)'; ctx.lineWidth = 2; ctx.stroke();
+
+    // baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.20)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padX, binBot + 0.5); ctx.lineTo(w - padX, binBot + 0.5); ctx.stroke();
+
+    // falling balls
+    balls.forEach(ball => {
+      if (ball.t < 0) return;
+      const p = ballXY(ball);
+      ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffb74d'; ctx.fill();
+    });
+
+    // labels
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Galton board — sum of 12 coin flips', padX, padT - 2);
+    ctx.fillStyle = 'rgba(255,128,171,0.95)'; ctx.font = '11px system-ui';
+    ctx.fillText('N(μ, σ²)', w - padX - 56, padT - 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '10px system-ui'; ctx.textAlign = 'right';
+    ctx.fillText(`${total} balls`, w - padX, binBot + 16);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
