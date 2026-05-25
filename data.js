@@ -830,6 +830,18 @@ const LAWS = [
   },
 
   {
+    id: 'riemann', name: 'Riemann Hypothesis', domain: 'unknown', symbol: 'ζ(½+it)',
+    tagline: 'Are the primes as orderly as they can be?',
+    equation: '\\zeta(s)=\\sum_{n=1}^{\\infty}\\frac{1}{n^{s}},\\qquad \\zeta(\\rho)=0 \\Rightarrow \\operatorname{Re}(\\rho)=\\tfrac{1}{2}',
+    deps: ['numbers', 'calculus'], known: false, sim: null,
+    eli5: `The primes — 2, 3, 5, 7, 11 — are the building blocks every other whole number is made of, yet they're scattered along the number line with no obvious rhythm. In 1859 Riemann found a single curve hidden inside the numbers that seems to govern exactly how the primes are sprinkled, and he noticed all its special "zero" points line up on one perfectly straight line. If they truly all sit on that line, the primes are as evenly spread as they can possibly be. Nobody has ever proved it. It is the most famous unsolved problem in all of mathematics.`,
+    intermediate: `Riemann showed that the count of primes below any number can be written *exactly* in terms of the zeros of the zeta function ζ(s), a function living on the complex plane. ζ has "trivial" zeros at the negative even integers; the interesting "nontrivial" zeros all appear to lie on the critical line where the real part equals ½. The Riemann Hypothesis is the claim that *every* nontrivial zero sits exactly on that line — which is equivalent to the tightest imaginable bound on how irregularly the primes are distributed. Hundreds of published theorems begin "assuming the Riemann Hypothesis…"; if it turned out false, a large part of number theory would have to be rebuilt.`,
+    expert: `ζ(s) = Σ n⁻ˢ converges for Re(s) > 1 and continues analytically to ℂ∖{1}, satisfying the functional equation ξ(s) = ξ(1−s) for the completed zeta ξ. The nontrivial zeros lie in the critical strip 0 < Re(s) < 1; RH asserts they all have Re(s) = ½. It is equivalent to the sharpest possible error term in the prime number theorem, π(x) = Li(x) + O(√x · log x). Hardy (1914) proved infinitely many zeros lie on the critical line; over 10¹³ have since been computed, every one of them on it. The Montgomery–Odlyzko law shows the zero spacings obey the eigenvalue statistics of the Gaussian Unitary Ensemble, motivating the Hilbert–Pólya conjecture that the zeros are the spectrum of some self-adjoint operator. Generalisations — GRH for Dirichlet L-functions, and the function-field analogue proved by Deligne via the Weil conjectures — frame it as a special case of a vast pattern. It is one of the seven Clay Millennium Prize Problems and Hilbert's eighth.`,
+    surprise: `The spacings between the zeta zeros match the spacings between the energy levels of a heavy atomic nucleus. A number theorist and a physicist discovered this comparing notes over afternoon tea at Princeton in 1972 — the primes, it turns out, hum to the same statistics as the quantum vibrations of uranium. Nobody fully understands why.`,
+    history: `Bernhard Riemann stated the hypothesis in 1859, almost in passing, in the only paper he ever wrote on number theory — an eight-page memoir on the distribution of primes that he could not fully prove and set aside. David Hilbert made it the eighth of his 23 problems in 1900, reportedly saying that if he awoke after a thousand years his first question would be whether it had been solved. G. H. Hardy, before a stormy North Sea crossing, once mailed a postcard claiming he had proved it — gambling that God would not let him drown with the false glory unclaimed. The Clay Mathematics Institute attached a $1 million prize in 2000. Still open in 2026.`,
+  },
+
+  {
     id: 'missing_unknowns', name: 'What We Don\'t Know We Don\'t Know', domain: 'unknown', symbol: '??',
     tagline: 'The unknown unknowns.',
     equation: '∅',
@@ -1008,6 +1020,8 @@ const IMAGES = {
                         caption: 'An asymmetry we cannot yet explain' },
   p_vs_np:            { image: WM('Complexity_classes.svg'),
                         caption: 'Complexity classes — is P really inside NP?' },
+  riemann:            { image: WM('Georg_Friedrich_Bernhard_Riemann.jpeg'),
+                        caption: 'Bernhard Riemann — one short paper, the deepest question about primes' },
   missing_unknowns:   { image: WM('Iceberg_in_the_Arctic_with_its_underside_exposed.jpg'),
                         caption: 'What we see vs what is below the waterline' },
 };
