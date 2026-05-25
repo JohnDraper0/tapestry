@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 67 (56 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+- Nodes: 68 (56 known, 12 frontier). Domains: 14. Sims: 20. Analogous
   cross-links populated: 18. Images mirrored locally: 0.
-- Last updated: 2026-05-16.
+- Last updated: 2026-05-25.
 
 ## The atlas we want (inventory)
 
@@ -41,7 +41,7 @@ points, not quotas.
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
 | earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
-| unknown         |  11   |   15   | strong CP, hierarchy, Riemann, turbulence, pre-BB state   |
+| unknown         |  12   |   15   | strong CP, hierarchy, turbulence, pre-BB state, Fermi     |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
 **Quality always beats quantity.** One excellent node per run beats three thin
@@ -99,7 +99,7 @@ equation, and valid `deps`:
 15. **Entropy–information link / Landauer** (thermo-info bridge node).
 
 **Frontier (known: false) additions worth having:**
-Riemann hypothesis · Yang–Mills mass gap · turbulence · strong CP problem ·
+~~Riemann hypothesis~~ (added 2026-05-25) · Yang–Mills mass gap · turbulence · strong CP problem ·
 hierarchy problem · nature of time · hard problem of consciousness
 (strengthen) · pre-Big-Bang state · Fermi paradox.
 
