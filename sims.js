@@ -1967,6 +1967,156 @@ SIMS.stefan_boltzmann = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── PHOTOELECTRIC ───────────────────────────
+SIMS.photoelectric = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const PHI = 2.28;                       // sodium work function, eV
+  const LAM_MIN = 380, LAM_MAX = 700;     // visible band, nm
+  const LAM0 = 1240 / PHI;                // threshold wavelength ≈ 544 nm
+  const Emax = 1240 / LAM_MIN;            // photon energy at violet end
+  const Kmax = Emax - PHI;
+
+  let lam = 450;                          // current wavelength, nm
+
+  const slabX  = w * 0.30;
+  const sTop   = 54, sBot = h - 48;
+  const slX = 46, slR = w - 16, slY = h - 24;
+
+  function wlColor(wl) {
+    let r, g, b;
+    if (wl < 440)      { r = -(wl - 440) / 60; g = 0; b = 1; }
+    else if (wl < 490) { r = 0; g = (wl - 440) / 50; b = 1; }
+    else if (wl < 510) { r = 0; g = 1; b = -(wl - 510) / 20; }
+    else if (wl < 580) { r = (wl - 510) / 70; g = 1; b = 0; }
+    else if (wl < 645) { r = 1; g = -(wl - 645) / 65; b = 0; }
+    else               { r = 1; g = 0; b = 0; }
+    let f = 1;
+    if (wl < 420)      f = 0.3 + 0.7 * (wl - 380) / 40;
+    else if (wl > 700) f = 0.3 + 0.7 * (780 - wl) / 80;
+    const ch = v => Math.round(255 * Math.pow(Math.max(0, v) * f, 0.8));
+    return `rgb(${ch(r)},${ch(g)},${ch(b)})`;
+  }
+  const lamToSl = l => slX + (l - LAM_MIN) / (LAM_MAX - LAM_MIN) * (slR - slX);
+
+  const photons = [], electrons = [];
+  let acc = 0, raf, last = performance.now();
+
+  function step(dt) {
+    acc += dt;
+    const interval = 0.10;
+    while (acc > interval) {
+      acc -= interval;
+      photons.push({ x: 0, y: sTop + 12 + Math.random() * (sBot - sTop - 24) });
+    }
+    const E = 1240 / lam, K = E - PHI;
+    const v = 150;
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.x += v * dt;
+      if (p.x >= slabX) {
+        if (K > 0) {
+          const speed = 60 + 240 * Math.sqrt(K / Kmax);
+          electrons.push({ x: slabX, y: p.y, vx: speed, vy: (Math.random() - 0.5) * 40, a: 1 });
+        }
+        photons.splice(i, 1);
+      }
+    }
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.x += e.vx * dt; e.y += e.vy * dt;
+      if (e.x > w || e.y < sTop || e.y > sBot) electrons.splice(i, 1);
+    }
+  }
+
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    step(dt);
+    const E = 1240 / lam, K = E - PHI, col = wlColor(lam), ejecting = K > 0;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // metal slab
+    const grd = ctx.createLinearGradient(slabX - 14, 0, slabX, 0);
+    grd.addColorStop(0, '#5b6470'); grd.addColorStop(1, '#aeb8c4');
+    ctx.fillStyle = grd;
+    ctx.fillRect(slabX - 14, sTop, 14, sBot - sTop);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'center';
+    ctx.save(); ctx.translate(slabX - 24, (sTop + sBot) / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('metal  (φ = 2.28 eV)', 0, 0); ctx.restore();
+
+    // photons
+    photons.forEach(p => {
+      ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // ejected electrons
+    electrons.forEach(e => {
+      ctx.fillStyle = 'rgba(120,220,255,0.95)';
+      ctx.beginPath(); ctx.arc(e.x, e.y, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(120,220,255,0.25)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(e.x - 9, e.y); ctx.lineTo(e.x, e.y); ctx.stroke();
+    });
+
+    // header readout
+    ctx.textAlign = 'left'; ctx.font = 'bold 12px system-ui'; ctx.fillStyle = '#eee';
+    ctx.fillText('Photoelectric effect', 8, 16);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.82)';
+    ctx.fillText(`λ = ${lam.toFixed(0)} nm    hν = ${E.toFixed(2)} eV`, 8, 32);
+    ctx.fillStyle = ejecting ? '#7adcff' : 'rgba(255,120,120,0.95)';
+    ctx.fillText(ejecting
+      ? `K_max = hν − φ = ${K.toFixed(2)} eV  → electrons ejected`
+      : `hν < φ  → no electrons (brighter won't help)`, 8, 48);
+
+    // spectrum slider
+    const bar = ctx.createLinearGradient(slX, 0, slR, 0);
+    for (let s = 0; s <= 10; s++) bar.addColorStop(s / 10, wlColor(LAM_MIN + s / 10 * (LAM_MAX - LAM_MIN)));
+    ctx.fillStyle = bar;
+    ctx.fillRect(slX, slY - 4, slR - slX, 8);
+    // threshold tick
+    const xT = lamToSl(LAM0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.setLineDash([2, 2]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(xT, slY - 9); ctx.lineTo(xT, slY + 9); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '9px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('threshold', xT, slY + 18);
+    // knob
+    const xK = lamToSl(lam);
+    ctx.fillStyle = col; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(xK, slY, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '9px system-ui';
+    ctx.textAlign = 'left';  ctx.fillText('violet', slX, slY - 10);
+    ctx.textAlign = 'right'; ctx.fillText('red', slR, slY - 10);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  let dragging = false;
+  const setFromX = (clientX) => {
+    const r = canvas.getBoundingClientRect();
+    const t = (clientX - r.left - slX) / (slR - slX);
+    lam = Math.max(LAM_MIN, Math.min(LAM_MAX, LAM_MIN + t * (LAM_MAX - LAM_MIN)));
+  };
+  const down = (e) => { dragging = true; setFromX(e.clientX); };
+  const move = (e) => { if (dragging) setFromX(e.clientX); };
+  const up = () => { dragging = false; };
+  canvas.addEventListener('mousedown', down);
+  window.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', up);
+
+  raf = requestAnimationFrame(draw);
+  return {
+    stop() {
+      cancelAnimationFrame(raf);
+      canvas.removeEventListener('mousedown', down);
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    }
+  };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
