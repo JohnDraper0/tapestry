@@ -655,6 +655,18 @@ const LAWS = [
   },
 
   {
+    id: 'soc', name: 'Self-Organised Criticality', domain: 'emergence', symbol: '▲',
+    tagline: 'Why nature keeps parking itself on a knife-edge.',
+    equation: 'P(s) \\sim s^{-\\tau}',
+    deps: ['complexity', 'statmech'], sim: null,
+    eli5: `Drip sand onto a table, one grain at a time. The pile grows steeper and steeper until — somewhere — it's as steep as sand can get. Now every new grain is a gamble. Most just sit there. But once in a while a single grain sets off an avalanche, and you can never tell how big it will be: three grains might slide, or half the pile. Nobody set the slope; the pile found that knife-edge all by itself, and it stays there. Lots of things in nature do this — they drift to the edge of a cliff and live there.`,
+    intermediate: `Ordinary critical points — water boiling, a magnet losing its magnetism — only appear when you fine-tune a knob like temperature to exactly the right value. Self-organised criticality (SOC) is the surprise that some systems tune *themselves* to that razor's edge with no knob at all. The toy model is a sandpile: drive it slowly (add grains), let it relax quickly (avalanches), and it relaxes to a state where avalanches come in every size at once. Plot how many avalanches there are of each size and you get a straight line on a log-log graph — a power law, with no "typical" size. Bak, Tang and Wiesenfeld proposed in 1987 that this explains the ubiquitous power laws of nature: earthquake magnitudes (the Gutenberg–Richter law), the size of forest fires, extinction events in the fossil record, the crackle of 1/f noise, and the cascades of firing in a brain. Catastrophe, in this picture, needs no special trigger — the big event and the small one obey identical rules.`,
+    expert: `The Bak–Tang–Wiesenfeld cellular automaton: on a lattice, each site holds a slope z_i; when z_i reaches a threshold z_c (= 4 on the 2D square lattice) the site topples, z_i → z_i − 4 and each neighbour gains one, possibly triggering further topplings. Slow drive plus fast, conservative relaxation, with dissipation only at the boundary, drives the system to an attractor that *is* the critical point — no parameter tuning required. Avalanche observables are power-law distributed, P(s) ∼ s^{−τ}, cut off only by system size (finite-size scaling). A critical branching process gives the mean-field exponent τ = 3/2; in two dimensions the behaviour is multiscaling and the apparent exponent is subtler, τ ≈ 1.2–1.3. Dhar (1990) showed the model is *abelian* — the final stable configuration is independent of toppling order — endowing the recurrent configurations with a finite abelian-group structure whose identity element is a striking fractal. SOC sits in the universality class of absorbing-state phase transitions (the Manna/fixed-energy sandpile, conserved directed percolation); Vespignani and Zapperi mapped the self-organisation onto tuning to an absorbing transition via the slow drive. The Olami–Feder–Christensen model adapts the idea to earthquakes. Whether real systems are *genuinely* critical, or merely near-critical / "self-organised quasi-critical," remains debated.`,
+    surprise: `Leave a sliver of living cortex to idle and it crackles with cascades of firing whose sizes follow a −3/2 power law — the exact signature of a critical branching process (Beggs & Plenz, 2003). The brain seems to park itself on the knife-edge between silence and seizure, because that critical point is where it can sense the widest range of inputs and hold the most information at once. Your thoughts may run on a perpetual, self-tuned avalanche.`,
+    history: `Per Bak, Chao Tang and Kurt Wiesenfeld introduced the idea at Brookhaven in a 1987 paper bluntly titled "Self-organized criticality: an explanation of 1/f noise." Bak — a brash, evangelical Dane — spent the rest of his career arguing it explained nearly everything, and titled his 1996 book *How Nature Works* with no apparent irony. Deepak Dhar proved in 1990 that the sandpile is exactly solvable, uncovering the hidden abelian group whose identity configuration is a startling, self-similar mosaic.`,
+  },
+
+  {
     id: 'gametheory', name: 'Game Theory', domain: 'emergence', symbol: '♟',
     tagline: 'The maths of strategy.',
     equation: 'u_i(s^*) \\geq u_i(s_i,\\, s^*_{-i})',
@@ -972,6 +984,8 @@ const IMAGES = {
                    caption: 'A starling murmuration — no leader, pure emergence' },
   complexity:    { image: WM('Mandel_zoom_00_mandelbrot_set.jpg'),
                    caption: 'The Mandelbrot set — a single rule, endless detail' },
+  soc:           { image: WM('Sandpile_identity_640.png'),
+                   caption: 'Identity element of the abelian sandpile group — order hidden in an avalanche machine' },
   gametheory:    { image: WM('John_Forbes_Nash%2C_Jr._by_Peter_Badge.jpg'),
                    caption: 'John Nash — equilibria where nobody gains by deviating' },
   lotka_volterra:{ image: WM('Lotka-Volterra.svg'),
