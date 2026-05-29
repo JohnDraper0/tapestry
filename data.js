@@ -93,6 +93,18 @@ const LAWS = [
   },
 
   {
+    id: 'group_theory', name: 'Group Theory', domain: 'math', symbol: '∘',
+    tagline: 'The grammar of symmetry.',
+    equation: '\\forall\\,a,b,c\\in G:\\;\\; a\\cdot b\\in G,\\;\\; (a\\cdot b)\\cdot c = a\\cdot(b\\cdot c),\\;\\; e\\cdot a = a,\\;\\; a^{-1}\\cdot a = e',
+    deps: ['algebra', 'sets'], sim: null,
+    eli5: `Think of all the ways you can move a square so it lands back exactly on top of itself: leave it alone, spin it a quarter-turn, a half, three-quarters, or flip it over. Do any two of those in a row and you always end up on a move you could have reached in a single step. There's always a "do nothing" move, and every move can be undone by another one. A bundle of moves that fit together like this is called a group. The astonishing part: the very same rules describe shuffling a deck of cards, solving a Rubik's cube, and the deepest symmetries of the universe.`,
+    intermediate: `A group is the mathematician's distilled idea of symmetry. It is a set of things — call them moves, or transformations — together with one way of combining them, obeying just four rules: combining two moves always lands you on another move in the set (closure), it doesn't matter how you bracket a chain of them (associativity), there is a do-nothing move (the identity), and every move has an undo (an inverse). That is the whole definition. From those four lines spill the symmetries of crystals, which equations can be solved by a formula, the structure of the Rubik's cube, and — through continuous "Lie" groups — the symmetries of the laws of physics themselves. Whenever two systems share the same group, they share a hidden skeleton, however different they look on the surface.`,
+    expert: `A group (G, ·) satisfies closure, associativity, a unique identity e, and inverses. Lagrange's theorem: the order of any subgroup divides |G|. Homomorphisms and normal subgroups yield quotient groups G/N and the isomorphism theorems; Cayley's theorem embeds every group as a subgroup of a symmetric group. Continuous symmetries are Lie groups — smooth manifolds carrying a compatible group structure — whose tangent space at the identity is a Lie algebra with bracket [X, Y] encoding infinitesimal generators; the Standard Model's gauge group is SU(3) × SU(2) × U(1). Representation theory, the study of homomorphisms G → GL(V), is how groups act on quantum state spaces and classify particles by spin and charge. The crowning result is the Classification of Finite Simple Groups (the "enormous theorem"): every finite simple group is cyclic of prime order, an alternating group, of Lie type, or one of exactly 26 sporadic exceptions — the largest being the Monster, of order ≈ 8.08 × 10⁵³.`,
+    surprise: `The largest of the 26 "sporadic" symmetry groups is called the Monster, and it has about 8 × 10⁵³ elements — more than the number of atoms in a thousand Earths. In the 1970s mathematicians noticed its numbers turning up, unbidden, in a completely unrelated branch of mathematics about modular functions. John Conway named the coincidence "monstrous moonshine" because it looked like pure lunacy — and a Fields Medal was awarded in 1998 for proving the moonshine was real.`,
+    history: `Évariste Galois coined the word "group" (groupe) around 1832 while working out which equations can be cracked by a formula. Arthur Cayley gave the first fully abstract definition in 1854, freeing the idea from any particular set of objects. Felix Klein's 1872 Erlangen Program then recast all of geometry as the study of the symmetry group that leaves a space unchanged. The complete classification of the finite simple groups — tens of thousands of pages written by over a hundred mathematicians — was not declared finished until 2004.`,
+  },
+
+  {
     id: 'euler', name: "Euler's Identity", domain: 'math', symbol: 'eⁱᵖ',
     tagline: 'Five constants, one equation.',
     equation: 'e^{i\\pi} + 1 = 0',
@@ -884,6 +896,8 @@ const IMAGES = {
                    caption: "Papyrus fragment of Euclid's Elements (P. Oxy. 29)" },
   algebra:       { image: WM('Image-Al-Kit%C4%81b_al-mu%E1%B8%ABta%E1%B9%A3ar_f%C4%AB_%E1%B8%A5is%C4%81b_al-%C4%9Fabr_wa-l-muq%C4%81bala.jpg'),
                    caption: "Al-Khwārizmī's Algebra, c. 820 CE" },
+  group_theory:  { image: WM('Evariste_galois.jpg'),
+                   caption: "Évariste Galois — founder of group theory, dead in a duel at twenty" },
   euler:         { image: WM('Leonhard_Euler.jpg'),
                    caption: 'Leonhard Euler — most prolific mathematician in history' },
   calculus:      { image: WM('Newtons_waste_book.jpg'),
@@ -1025,6 +1039,7 @@ LAWS.forEach(l => {
 // "these ideas rhyme even though one doesn't build on the other."
 const ANALOGIES = [
   ['symmetry',    'conservation', 'Noether: each symmetry is a conservation law'],
+  ['group_theory', 'symmetry',    "the symmetries of any object form a group — physics' continuous (Lie) groups are exactly this idea made smooth"],
   ['information', 'thermo',       'Shannon entropy ≈ physical entropy (Landauer)'],
   ['euler',       'quantum',      'complex exponentials = quantum waves'],
   ['probability', 'quantum',      'Born rule: probabilities from amplitudes'],
