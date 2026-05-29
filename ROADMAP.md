@@ -14,9 +14,9 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 67 (56 known, 11 frontier). Domains: 14. Sims: 20. Analogous
-  cross-links populated: 18. Images mirrored locally: 0.
-- Last updated: 2026-05-16.
+- Nodes: 68 (57 known, 11 frontier). Domains: 14. Sims: 20. Analogous
+  cross-links populated: 19. Images mirrored locally: 0.
+- Last updated: 2026-05-29.
 
 ## The atlas we want (inventory)
 
@@ -26,7 +26,7 @@ points, not quotas.
 
 | Domain          | Today | Target | Gaps worth filling next                                   |
 |-----------------|------:|-------:|-----------------------------------------------------------|
-| math            |  10   |   14   | topology, group theory, Gödel's theorems, graph theory    |
+| math            |  11   |   14   | topology, Gödel's theorems, graph theory                  |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
