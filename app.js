@@ -98,24 +98,33 @@
 
   // Horizontal "shelves" — one faint line per layer, with a label on the left
   const shelves = svgEl('g', { class: 'shelves' });
+  // Altitude labels, one per dependency layer (0 = bottom). These must track
+  // the ACTUAL contents of each layer: if the graph's depths shift (a new node
+  // lengthening a dependency chain can renumber layers), re-check them against
+  // layerOf(). Any layer past this list falls back to a bare "Layer N", so keep
+  // it complete — today there are maxLayer + 1 = 21 layers.
   const LAYER_LABELS = [
-    'Foundations',
-    'Counting & Shapes',
-    'Form & Change',
-    'Deep Principles',
-    'Classical World',
-    'Heat & Light',
-    'Relativity & Waves',
-    'Quantum Realm',
-    'Fundamental Forces',
-    'Matter',
-    'Chemistry',
-    'Life',
-    'Evolution',
-    'Ecology & Mind',
-    'Emergence',
-    'Complexity',
-    'The Cosmos',
+    'Foundations',                // 0  logic
+    'Sets & Structure',           // 1  set theory
+    'Number',                     // 2  numbers & counting
+    'Shape & Symbol',             // 3  geometry, algebra
+    'Change & Chance',            // 4  calculus, probability, symmetry
+    'Deep Principles',            // 5  Euler, central limit theorem, least action
+    'Waves & Conservation',       // 6  Fourier, conservation laws
+    'Classical Motion',           // 7  Newton's laws
+    'Fields, Orbits & Heat',      // 8  Maxwell, Kepler, Navier–Stokes, thermodynamics
+    'Relativity & the Quantum',   // 9  special relativity, quantum mechanics, gravity, statistical mechanics
+    'Quantum Fields & Spacetime', // 10 uncertainty, Pauli, photoelectric, QFT, general relativity, ideal gas
+    'Fundamental Forces',         // 11 Standard Model, gravitational waves, Wien
+    'Matter & Origins',           // 12 atomic structure, Big Bang, Higgs
+    'Stars & the Elements',       // 13 periodic table, dark matter, stars
+    'Chemistry & Stellar Ends',   // 14 chemical bonds, Chandrasekhar limit
+    "Life's First Machinery",     // 15 ATP & chemiosmosis, self-replication
+    'The Living Code',            // 16 central dogma, origin of life
+    'Natural Selection',          // 17 evolution
+    'Living Systems',             // 18 ecosystems, Hardy–Weinberg, emergence
+    'Complexity & Mind',          // 19 complex systems, game theory, Lotka–Volterra, consciousness
+    'The Edge of Knowledge',      // 20 the unknown unknowns
   ];
   const towerLeft  = -COL_W * 5;
   const towerRight =  COL_W * 5;
@@ -554,12 +563,18 @@
       : '';
     const heroBg = `background: linear-gradient(135deg, ${color}33, ${color}08 60%, transparent), radial-gradient(ellipse at top, ${color}44, transparent 75%);`;
 
-    // gather depth levels (backward-compat if only eli5/deeper)
-    const eli5 = l.eli5 || '';
-    const intermediate = l.intermediate || l.deeper || '';
-    const expert = l.expert || '';
-    const surprise = l.surprise || '';
-    const history = l.history || '';
+    // gather depth levels (backward-compat if only eli5/deeper).
+    // Render simple *markdown emphasis* as italics — the content uses it for
+    // book titles (*Principia*) and stressed words; without this the asterisks
+    // would show literally. Requires a matched pair, so stray * stays untouched.
+    const em = (s) => (s || '')
+      .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    const eli5 = em(l.eli5);
+    const intermediate = em(l.intermediate || l.deeper);
+    const expert = em(l.expert);
+    const surprise = em(l.surprise);
+    const history = em(l.history);
 
     panelBody.innerHTML = `
       <div class="panel-hero" style="${heroBg}">
@@ -841,6 +856,18 @@
       icebergModal.classList.remove('open');
     }
   });
+
+  // Keep the iceberg tallies honest: derive them from the data itself so the
+  // "known laws" and "frontier gaps" counts can never drift out of sync as
+  // nodes are added or promoted from frontier to known.
+  (function syncIcebergCounts() {
+    const known    = LAWS.filter(l => l.known !== false).length;
+    const frontier = LAWS.filter(l => l.known === false).length;
+    const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
+    set('ice-known', known);
+    set('ice-frontier', frontier);
+    set('ice-known-essay', known);
+  })();
 
   // ── PRINT VIEW ───────────────────────────────────────────────────
   document.getElementById('printBtn').addEventListener('click', () => {

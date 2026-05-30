@@ -53,6 +53,18 @@ Theme is persisted in `localStorage.tapestry-theme`. The bg canvas hook
   button. Don't move the init call away from there.
 - SVG colors that need to adapt to themes are set via `style="fill: var(...)"`
   rather than `fill="..."` attributes — attributes override CSS.
+- 3D mode: `three3d.js` is injected as a `type="module"` script, so its
+  top-level `const Tapestry3D` is module-scoped. It MUST end with
+  `window.Tapestry3D = Tapestry3D;` or the 3D button silently does nothing
+  (app.js is a classic script and reaches it only through `window`).
+- `.panel-sim` must keep a dark background in every theme — the canvas sims
+  draw with hardcoded light ink, so a themed light background washes them out.
+  Don't tie it back to `--bg`.
+- The iceberg modal's known/frontier counts are written from `LAWS` at load
+  (`syncIcebergCounts` in app.js); don't hardcode them in `index.html`.
+- Panel prose supports `*italic*` and `**bold**` via a small converter in
+  `openPanel`. A lone `*` (e.g. a convolution `f * g`) is left untouched, so
+  it stays safe for inline math.
 
 ## Presentation layer (rotate this in, don't skip it)
 The content is most of the value, but the *vessel* matters too. Today the

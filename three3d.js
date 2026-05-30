@@ -5,7 +5,7 @@
 const Tapestry3D = (function () {
   let THREE, renderer, scene, camera, active = false, canvas;
   let nodes3d = [];
-  let raycaster, mouse, onClickHandler;
+  let raycaster, mouse, onClickHandler, onResize;
   let angleOffset = 0;
 
   async function loadThree() {
@@ -79,6 +79,18 @@ const Tapestry3D = (function () {
       camDist = Math.max(30, Math.min(220, camDist + e.deltaY * 0.1));
       e.preventDefault();
     }, { passive: false });
+
+    // Keep the 3D view matched to the window. Also recovers the case where
+    // enter() ran before layout settled (innerWidth 0 → a 0×0 canvas that
+    // renders nothing): the first resize event re-sizes it correctly.
+    onResize = () => {
+      const w = window.innerWidth, h = window.innerHeight;
+      if (!w || !h) return;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+    window.addEventListener('resize', onResize);
 
     active = true;
     function animate() {
@@ -156,6 +168,7 @@ const Tapestry3D = (function () {
   function exit() {
     if (!active) return;
     active = false;
+    window.removeEventListener('resize', onResize);
     canvas.removeEventListener('click', onClickHandler);
     renderer.dispose();
     canvas.remove();
@@ -164,3 +177,8 @@ const Tapestry3D = (function () {
 
   return { enter, exit, isActive: () => active };
 })();
+
+// Expose globally. three3d.js is injected as a module, so its top-level
+// `const Tapestry3D` is module-scoped — app.js (a classic script) can only
+// reach it via window. Without this line the 3D button silently does nothing.
+window.Tapestry3D = Tapestry3D;

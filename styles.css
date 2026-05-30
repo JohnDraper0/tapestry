@@ -453,7 +453,10 @@ header * { pointer-events: auto; }
 .panel-sim {
   width: 100%;
   height: 240px;
-  background: color-mix(in srgb, var(--bg) 80%, black);
+  /* Fixed dark "instrument screen": the canvas sims draw with hardcoded
+     light ink, so this must stay dark in every theme (in paper theme a
+     themed background turned it parchment-pale and washed the sims out). */
+  background: #0a0e1c;
   border-radius: 12px;
   border: 1px solid var(--border);
   margin-bottom: 28px;
