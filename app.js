@@ -747,7 +747,9 @@
         window.renderMathInElement(root, {
           delimiters: [
             { left: '$$', right: '$$', display: true },
-            { left: '$',  right: '$',  display: false },
+            // No single-'$' inline delimiter on purpose: the content uses \( \)
+            // for inline math, and a lone '$' would let KaTeX swallow currency
+            // like "$1 million" and render it as garbled math.
             { left: '\\(', right: '\\)', display: false },
             { left: '\\[', right: '\\]', display: true },
           ],

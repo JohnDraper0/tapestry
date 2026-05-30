@@ -6,6 +6,37 @@ See `~/Code/METHODOLOGY.md` for the full session lifecycle.
 
 ---
 
+## 2026-05-31 — Grueling deep-pass (every node, sim & interaction, live)
+
+**Goal:** "Leave no stone unturned" — verify what's actually on screen matches
+what should be there, node by node, assuming nothing.
+
+**Changed:**
+- `data.js` grav_waves: raw LaTeX (`\bar{h}`, `\dddot{Q}`) was leaking into the
+  expert prose as literal backslash text → Unicode (h̄, d³Q/dt³).
+- `data.js` kolmogorov: hero was a turbulence-spectrum *diagram*, not a portrait
+  (its caption names the man) → swapped to a photo of Kolmogorov lecturing. Also
+  the Kleene star `x*` collided with `*time*` emphasis in the markdown converter,
+  stranding an asterisk → `x∗` (Unicode).
+- `data.js` fourier / hardy_weinberg: bare math asterisks (`f * g`, `q*`) → Unicode
+  `∗`, so ASCII `*` is now exclusively markdown emphasis and em() is provably safe.
+- `app.js`: removed KaTeX's single-`$` inline delimiter (no content uses it; it
+  risked rendering currency like "$1 million" as garbled math).
+
+**Result:** Objective sweep across all 67 nodes is clean — every equation renders
+(0 KaTeX errors, 0 leaked LaTeX, 0 stray asterisks), 67/67 hero images load. All
+24 sims screenshotted and judged correct (several numerically exact: Wien λ_peak,
+γ at 0.55c, Δx·Δp = ℏ/2, Stefan–Boltzmann 0.3 MW/m²). Every interaction verified:
+dep-link nav, search incl. no-results, tour (Escape stops), narrate, print, mute,
+hover dependency-highlight, zoom, theme persistence, iceberg, 3D enter/exit. The
+two newer nodes (entanglement, ATP) read accurately and well.
+
+**Open:** Mobile one-column layout still pending (unchanged from prior entry).
+
+**Lessons:** A "verified" filename from an API search is not a verified *subject* —
+the Kolmogorov image existed and loaded fine but depicted the wrong thing (a
+diagram, not the man). Look at the pixels, not just the HTTP status.
+
 ## 2026-05-31 — Overnight QA + polish pass (full app, live in browser)
 
 **Goal:** Step through every square inch of the app in a real browser, find
