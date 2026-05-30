@@ -1967,6 +1967,162 @@ SIMS.stefan_boltzmann = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ──────────────────── LOGISTIC-MAP BIFURCATION ───────────────────────
+// For the `complexity` node: visualises x → r·x(1−x) as r sweeps,
+// drawing the bifurcation diagram on the left and a live cobweb on
+// the right. Period-doubling cascade, onset of chaos near r ≈ 3.5699,
+// and the famous period-3 window near r ≈ 3.83 all appear naturally.
+SIMS.complexity = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const R_MIN = 2.5, R_MAX = 4.0;
+  const padL = 32, padR = 10, padT = 22, padB = 22;
+
+  // Split: bifurcation diagram on the left (~62%), cobweb on the right.
+  const splitX = Math.max(w * 0.58, w - 200);
+  const bL = padL, bR = splitX - 10;
+  const bT = padT, bB = h - padB;
+  const bW = bR - bL, bH = bB - bT;
+
+  const cL = splitX + 4, cR = w - padR;
+  const cT = padT, cB = h - padB;
+  const cSide = Math.min(cR - cL, cB - cT);
+  const cX = cL, cY = cT + (cB - cT - cSide) / 2;
+
+  function rToPx(r) { return bL + (r - R_MIN) / (R_MAX - R_MIN) * bW; }
+
+  // Precompute bifurcation diagram into an offscreen canvas, one column
+  // per draw call so the page stays smooth.
+  const COLS = Math.max(160, Math.floor(bW * 1.5));
+  const off  = document.createElement('canvas');
+  off.width  = Math.max(2, Math.floor(bW));
+  off.height = Math.max(2, Math.floor(bH));
+  const octx = off.getContext('2d');
+  octx.fillStyle = 'rgba(150, 210, 255, 0.55)';
+  let computed = 0;
+
+  function computeColumn(col) {
+    const r = R_MIN + (col / (COLS - 1)) * (R_MAX - R_MIN);
+    const px = (col / (COLS - 1)) * (off.width - 1);
+    let x = 0.5;
+    for (let i = 0; i < 240; i++) x = r * x * (1 - x);          // burn-in
+    for (let i = 0; i < 160; i++) {
+      x = r * x * (1 - x);
+      octx.fillRect(px, (1 - x) * (off.height - 1), 1, 1);
+    }
+  }
+
+  // r oscillates slowly across its range with an ease so milestones linger.
+  const SWEEP_MS = 18000;
+  let raf, t0 = performance.now();
+
+  function periodLabel(r) {
+    if (r < 3)            return 'fixed point';
+    if (r < 3.4495)       return 'period 2';
+    if (r < 3.5441)       return 'period 4';
+    if (r < 3.5644)       return 'period 8';
+    if (r < 3.5699)       return 'cascade';
+    if (r > 3.828 && r < 3.857) return 'period 3 window';
+    return 'chaos';
+  }
+
+  function draw(now) {
+    if (computed < COLS) {
+      const batch = Math.min(12, COLS - computed);
+      for (let k = 0; k < batch; k++) computeColumn(computed++);
+    }
+
+    const phase = ((now - t0) / SWEEP_MS) % 1;
+    const u = (1 - Math.cos(phase * Math.PI * 2)) / 2;
+    const r = R_MIN + (R_MAX - R_MIN) * u;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Bifurcation diagram (scaled blit)
+    ctx.drawImage(off, bL, bT, bW, bH);
+
+    // Frame + r-axis ticks
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(bL, bT); ctx.lineTo(bL, bB); ctx.lineTo(bR, bB);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    [2.5, 3.0, 3.5, 4.0].forEach(rt => {
+      const x = rToPx(rt);
+      ctx.beginPath(); ctx.moveTo(x, bB); ctx.lineTo(x, bB + 3); ctx.stroke();
+      ctx.fillText(rt.toFixed(1), x, bB + 13);
+    });
+
+    // Period-3 window marker (the famous Sarkovskii surprise)
+    {
+      const x = rToPx(3.83);
+      ctx.strokeStyle = 'rgba(255,210,120,0.35)';
+      ctx.setLineDash([2, 3]); ctx.beginPath();
+      ctx.moveTo(x, bT); ctx.lineTo(x, bB); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Current-r vertical guide
+    const xCur = rToPx(r);
+    ctx.strokeStyle = 'rgba(255,201,89,0.85)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(xCur, bT - 3); ctx.lineTo(xCur, bB + 3); ctx.stroke();
+
+    // Title + readout
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('x ← r · x (1 − x)', bL + 2, bT - 7);
+    ctx.fillStyle = '#ffd166'; ctx.font = 'bold 11px system-ui';
+    ctx.fillText(`r = ${r.toFixed(3)}`, bL + 4, bT + 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '10px system-ui';
+    ctx.fillText(periodLabel(r), bL + 4, bT + 25);
+
+    // ── Cobweb plot ────────────────────────────────────────────────────
+    function px(xx) { return cX + xx * cSide; }
+    function py(xx) { return cY + (1 - xx) * cSide; }
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.20)';
+    ctx.strokeRect(cX + 0.5, cY + 0.5, cSide, cSide);
+
+    // y = x diagonal
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(px(0), py(0)); ctx.lineTo(px(1), py(1)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Parabola y = r·x(1−x)
+    ctx.strokeStyle = 'rgba(130,207,255,0.9)'; ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let i = 0; i <= 64; i++) {
+      const xx = i / 64;
+      const yy = r * xx * (1 - xx);
+      i === 0 ? ctx.moveTo(px(xx), py(yy)) : ctx.lineTo(px(xx), py(yy));
+    }
+    ctx.stroke();
+
+    // Cobweb trace — burn in then draw a few dozen steps
+    let x0 = 0.15;
+    for (let i = 0; i < 60; i++) x0 = r * x0 * (1 - x0);
+    ctx.strokeStyle = 'rgba(255,201,89,0.75)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px(x0), py(x0));
+    for (let i = 0; i < 90; i++) {
+      const xn = r * x0 * (1 - x0);
+      ctx.lineTo(px(x0), py(xn));
+      ctx.lineTo(px(xn), py(xn));
+      x0 = xn;
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('cobweb', cX + 4, cY + 11);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
