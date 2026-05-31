@@ -14,7 +14,7 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 67 (56 known, 11 frontier). Domains: 14. Sims: 24. Analogous
+- Nodes: 68 (57 known, 11 frontier). Domains: 14. Sims: 24. Analogous
   cross-links populated: 19. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
 - Last updated: 2026-05-31.
@@ -31,7 +31,7 @@ points, not quotas.
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
-| em              |   3   |    5   | Snell's law, Poynting vector, plasma                      |
+| em              |   4   |    5   | Poynting vector, plasma                                   |
 | relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
 | quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |

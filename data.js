@@ -340,6 +340,18 @@ const LAWS = [
     history: `Georg Ohm deduced his law in 1827 from painstaking galvanometer measurements on wires of different gauges and lengths. The Prussian education minister dismissed the paper as "a tissue of naked fancies" and Ohm was forced to resign his teaching post in humiliation. A decade later the Royal Society awarded him the Copley Medal — one of science's highest honours — and named the unit of resistance after him. He died in 1854, the same year the unit "ohm" was officially adopted.`,
   },
 
+  {
+    id: 'snells_law', name: "Snell's Law", domain: 'em', symbol: 'n sin θ',
+    tagline: 'Light bends when its speed changes.',
+    equation: 'n_1\\sin\\theta_1 = n_2\\sin\\theta_2',
+    deps: ['maxwell', 'action'], sim: null,
+    eli5: `Dip a straw into a glass of water and look from the side: the straw looks broken at the surface. The straw is fine — light is what bent. Light moves a little slower through water than through air, and whenever a ray crosses from one to the other at an angle, it kinks. The bigger the speed change between the two materials, the sharper the kink. From this one rule come spectacles, microscopes, telescopes, every camera lens, the rainbow, the shimmer of a mirage on hot tarmac, and the glass fibres that carry the internet under every ocean.`,
+    intermediate: `Light travels at different speeds in different transparent materials — about 1.33 times slower in water than in vacuum, 1.5 times slower in glass, 2.4 times slower in diamond. That slowdown factor is the *refractive index* n. When a ray meets the boundary between two media at an angle, it changes direction so that n₁ sin θ₁ = n₂ sin θ₂, where the angles are measured from the line perpendicular to the surface. Going into a slower medium, the ray bends *toward* that perpendicular; going out, it bends *away*. Past a certain critical angle, a ray trying to exit a slower medium can't escape at all — it reflects entirely back inside. This *total internal reflection* is what keeps light trapped inside the glass thread of a fibre-optic cable as it loops the planet without spilling a photon.`,
+    expert: `Snell's law is the boundary condition forced by continuity of the wave's phase across an interface: matching the tangential component of the wavevector, k_∥, gives n₁ sin θ₁ = n₂ sin θ₂ with n = c/v_phase = √(ε_r μ_r). Equivalently it is the stationary condition for Fermat's optical path length: \\(\\delta\\!\\int n\\, d\\ell = 0\\). For dispersive media n = n(ω), separating wavelengths (the prism, the rainbow's 42° primary arc and 51° secondary). Total internal reflection occurs for n₁ > n₂ at sin θ_c = n₂/n₁; beyond that angle the transmitted field decays evanescently as \\(e^{-\\kappa z}\\) with \\(\\kappa = (\\omega/c)\\sqrt{n_1^2\\sin^2\\theta - n_2^2}\\), enabling frustrated TIR, prism couplers, and TIRF microscopy. The full reflection/transmission coefficients are the Fresnel equations, which split incident light into s- and p-polarisations and yield Brewster's angle tan θ_B = n₂/n₁, at which the reflected p-component vanishes — the principle behind polarised sunglasses and laser windows. Engineered metamaterials (Pendry 2000, building on Veselago 1968) realise negative effective index, refracting rays to the *same* side of the normal as the incident ray and enabling sub-wavelength imaging.`,
+    surprise: `Light's trick for obeying Snell's law is to try every path at once. In Feynman's path-integral picture, the photon takes a weighted sum over every conceivable route between source and detector; at a refracting interface, almost every wildly bent path cancels against a neighbour by destructive interference. The only paths that survive are the ones clustered around Fermat's least-time geodesic — and Snell's law falls out as the angle at which that cancellation fails to cancel. Every glint of light off a wet road is a quantum sum doing arithmetic in real time.`,
+    history: `Ibn Sahl wrote down the geometric refraction relation in Baghdad around 984 CE, six centuries before Europe rediscovered it — his manuscript on burning lenses gives the law in exactly the modern ratio form. Willebrord Snellius (Leiden) re-derived it in 1621 but never published. Descartes printed an algebraic version in his 1637 *Dioptrique* without crediting Snell. Fermat re-derived it in 1662 from his least-time principle; Huygens derived it from his wave theory in 1690. Newton, holding to corpuscles, derived a competing version that demanded light should *speed up* in water — a prediction finally falsified by Léon Foucault's 1850 direct measurement of the speed of light in water, which clocked it slower exactly as the wave theory required.`,
+  },
+
   // ───────────────────────────── RELATIVITY ─────────────────────────────────
 
   {
@@ -922,6 +934,8 @@ const IMAGES = {
                    caption: 'Michael Faraday, portrait by Thomas Phillips, c. 1841' },
   ohms_law:      { image: WM('Georg_Simon_Ohm3.jpg'),
                    caption: 'Georg Ohm — vindicated a decade after his law was called "naked fancies"' },
+  snells_law:    { image: WM('Snells_law2.svg'),
+                   caption: "Snell's law: a ray bends toward the normal entering a slower medium, away from it on the way out" },
   special:       { image: WM('Einstein_1921_by_F_Schmutzer_-_restoration.jpg'),
                    caption: 'Einstein, 1921 — E = mc²' },
   general:       { image: WM('Black_hole_-_Messier_87_crop_max_res.jpg'),
