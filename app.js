@@ -14,6 +14,12 @@
   const resetBtn = document.getElementById('resetBtn');
   const helpBtn  = document.getElementById('helpBtn');
 
+  // Honour OS-level "reduce motion": freeze the edge-particle flow and
+  // skip the camera easing on focus/reset. Background canvas and CSS
+  // keyframes are silenced separately (bg.js, styles.css media query).
+  const reduceMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ── 1. compute layer (dependency depth) for each node ───────────
   const byId = new Map(LAWS.map(l => [l.id, l]));
   const layerCache = new Map();
@@ -195,14 +201,16 @@
 
   function animateParticles() {
     edges.forEach(e => {
-      e.t += e.speed;
-      if (e.t > 1) e.t = 0;
+      if (!reduceMotion) {
+        e.t += e.speed;
+        if (e.t > 1) e.t = 0;
+      }
       const x = e.from.x + (e.to.x - e.from.x) * e.t;
       const y = e.from.y + (e.to.y - e.from.y) * e.t;
       e.particle.setAttribute('cx', x);
       e.particle.setAttribute('cy', y);
     });
-    requestAnimationFrame(animateParticles);
+    if (!reduceMotion) requestAnimationFrame(animateParticles);
   }
   animateParticles();
 
@@ -480,6 +488,11 @@
   // ── 7. focus helper ──────────────────────────────────────────────
   function focusNode(l) {
     const target = { x: -l.pos.x * 1.8, y: -l.pos.y * 1.8, scale: 1.8 };
+    if (reduceMotion) {
+      cam.x = target.x; cam.y = target.y; cam.scale = target.scale;
+      applyCam();
+      return;
+    }
     const start = { ...cam };
     const t0 = performance.now();
     const dur = 500;
@@ -496,12 +509,17 @@
     requestAnimationFrame(tick);
   }
   function resetCam() {
-    const start = { ...cam };
     const target = {
       x: -startNode.pos.x * 0.8,
       y: -startNode.pos.y * 0.8 + 120,
       scale: 0.8,
     };
+    if (reduceMotion) {
+      cam.x = target.x; cam.y = target.y; cam.scale = target.scale;
+      applyCam();
+      return;
+    }
+    const start = { ...cam };
     const t0 = performance.now();
     function tick(now) {
       const t = Math.min(1, (now - t0) / 500);

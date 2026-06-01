@@ -921,3 +921,19 @@ header * { pointer-events: auto; }
   }
 }
 .print-header { display: none; }
+
+/* ── reduced motion ───────────────────────────────────
+   Honour the user's OS-level "reduce motion" preference. The CSS half
+   silences the breathing-glow / pulse-ring / start-beacon loops and
+   collapses every transition; the JS half (bg.js, app.js) freezes the
+   background canvas, the edge-particle flow, and the camera easing. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

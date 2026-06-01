@@ -10,6 +10,8 @@
   let W, H, dpr;
   let theme = 'cosmos';
   let stars = [], nebulae = [], shooters = [], dust = [];
+  const reduceMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
@@ -214,15 +216,20 @@
     if      (theme === 'cosmos')    drawCosmos();
     else if (theme === 'paper')     drawPaper();
     else if (theme === 'blueprint') drawBlueprint();
-    requestAnimationFrame(frame);
+    if (!reduceMotion) requestAnimationFrame(frame);
   }
 
   window.__bgSetTheme = function (t) {
     theme = t;
     if (theme === 'cosmos') initCosmos();
+    if (reduceMotion) frame();  // rAF loop is off; repaint once.
   };
 
-  window.addEventListener('resize', () => { resize(); initCosmos(); });
+  window.addEventListener('resize', () => {
+    resize();
+    initCosmos();
+    if (reduceMotion) frame();
+  });
   resize();
   initCosmos();
   frame();

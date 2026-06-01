@@ -197,9 +197,13 @@ One bullet per F-category run. Order is roughly priority.
     between nodes along dependency edges; Enter opens the panel.
 19. **ARIA landmarks + live regions.** `<main>`, `<nav>`, `<aside>`
     annotated; announce panel opens via `aria-live="polite"`.
-20. **`prefers-reduced-motion`.** Halt the background canvas drift, the
+20. ~~**`prefers-reduced-motion`.** Halt the background canvas drift, the
     tour auto-pan, the camera ease-out, and the intro glow when the
-    viewer has asked for reduced motion.
+    viewer has asked for reduced motion.~~ — done 2026-06-01. CSS media
+    query collapses all keyframes + transitions; `bg.js` skips its rAF
+    loop (one-shot repaint on theme/resize); `app.js` freezes the
+    edge-particle flow and snaps the camera instead of easing it. 3D
+    mode's auto-spin still ignores the preference — separate follow-up.
 21. **Skip-to-content link.** Lets screen-reader users bypass the map.
 22. **Colour-blind-safe theme variant.** A fourth theme (or a toggle on
     cosmos) that uses shape + pattern in addition to hue for domain
