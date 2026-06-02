@@ -2123,6 +2123,194 @@ SIMS.complexity = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ────────────────────── PHOTOELECTRIC EFFECT ─────────────────────────
+// For the `photoelectric` node: a sodium cathode is bombarded by photons
+// whose wavelength sweeps slowly through red → violet → UV. Photons with
+// hν below the work function bounce off; above threshold, each absorbed
+// photon ejects an electron with KE_max = hν − φ. The energy bar on the
+// right shows the photon's quantum stacked against φ + KE.
+SIMS.photoelectric = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const hc_eVnm = 1240;          // E[eV] = 1240 / λ[nm]
+  const phi     = 2.28;          // sodium work function (eV; Millikan / Hyperphysics)
+  const LAM_MIN = 200, LAM_MAX = 720;
+  const lam0    = hc_eVnm / phi; // ≈ 544 nm threshold
+  const SCALE   = 6.5;           // eV span on the right bar
+
+  const padT = 14, padB = 24;
+  const splitX = Math.max(w * 0.64, w - 170);
+  const expL = 12, expR = splitX - 12;
+  const expT = padT, expB = h - padB;
+  const expW = expR - expL;
+  const metalY = expB - 14;
+
+  const barX = splitX + 10;
+  const barW = 18;
+  const barT = padT + 12, barB = h - padB - 4;
+  const barH = barB - barT;
+  const eToPx = e => barB - Math.max(0, Math.min(SCALE, e)) / SCALE * barH;
+
+  // Bruton's visible-spectrum approximation, fading to dim red below 380 nm
+  // and to deep violet/UV-magenta for λ < 380 nm.
+  function lamColor(lam) {
+    let r = 0, g = 0, b = 0;
+    if (lam < 380) {
+      const t = Math.max(0, (lam - 200) / 180);  // 0 at deep UV → 1 at violet
+      r = 0.55 * (0.4 + 0.6 * t);
+      g = 0.10 * t;
+      b = 0.85;
+    } else if (lam < 440) { r = -(lam - 440) / 60;            g = 0;                       b = 1; }
+    else if (lam < 490)   { r = 0;                            g = (lam - 440) / 50;        b = 1; }
+    else if (lam < 510)   { r = 0;                            g = 1;                       b = -(lam - 510) / 20; }
+    else if (lam < 580)   { r = (lam - 510) / 70;             g = 1;                       b = 0; }
+    else if (lam < 645)   { r = 1;                            g = -(lam - 645) / 65;       b = 0; }
+    else if (lam <= 720)  { r = 1 - 0.3 * (lam - 645) / 75;   g = 0;                       b = 0; }
+    return `rgb(${Math.round(255*r)},${Math.round(255*g)},${Math.round(255*b)})`;
+  }
+
+  const photons = [];   // { x, y, vy, lam, col }
+  const electrons = []; // { x, y, vx, vy, life }
+
+  let raf, t0 = performance.now(), lastSpawn = 0, lastFrame = t0;
+
+  function draw(now) {
+    const dt = Math.min(40, now - lastFrame);
+    lastFrame = now;
+
+    const phase = ((now - t0) / 7800) % 1;
+    const u = (1 - Math.cos(phase * 2 * Math.PI)) / 2;   // 0 → 1 → 0
+    const lam = LAM_MAX - u * (LAM_MAX - LAM_MIN);
+    const E_ph = hc_eVnm / lam;
+    const above = E_ph > phi;
+    const KE = above ? E_ph - phi : 0;
+    const col = lamColor(lam);
+
+    ctx.fillStyle = '#0a0e1c';
+    ctx.fillRect(0, 0, w, h);
+
+    // metal cathode slab
+    const slabH = expB - metalY;
+    const grd = ctx.createLinearGradient(0, metalY, 0, expB);
+    grd.addColorStop(0, '#9aa2ad');
+    grd.addColorStop(1, '#3f4753');
+    ctx.fillStyle = grd;
+    ctx.fillRect(expL, metalY, expW, slabH);
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.strokeRect(expL + 0.5, metalY + 0.5, expW - 1, slabH - 1);
+
+    // spawn photons at a constant rate (brightness is constant by design —
+    // the whole point is that only frequency matters for ejection).
+    if (now - lastSpawn > 75) {
+      lastSpawn = now;
+      const n = 3;
+      for (let i = 0; i < n; i++) {
+        const x = expL + 8 + Math.random() * (expW - 16);
+        photons.push({ x, y: expT + 4, vy: 2.0, lam, col });
+      }
+    }
+
+    // photons fall and either eject an electron or vanish
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.y += p.vy * (dt / 16);
+      if (p.y >= metalY) {
+        const E = hc_eVnm / p.lam;
+        if (E > phi) {
+          const ke = E - phi;
+          const speed = 1.2 + 1.4 * Math.sqrt(ke / 4);   // visual only
+          electrons.push({
+            x: p.x, y: metalY - 1,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: -speed,
+            life: 0,
+          });
+        }
+        photons.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // electrons drift up and out
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.x += e.vx * (dt / 16);
+      e.y += e.vy * (dt / 16);
+      e.life += dt;
+      if (e.y < expT - 6 || e.life > 1800) { electrons.splice(i, 1); continue; }
+      ctx.strokeStyle = 'rgba(155,230,255,0.45)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(e.x, e.y);
+      ctx.lineTo(e.x - e.vx * 5, e.y - e.vy * 5);
+      ctx.stroke();
+      ctx.fillStyle = '#9be6ff';
+      ctx.beginPath(); ctx.arc(e.x, e.y, 2.3, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // headers
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Sodium cathode  φ = 2.28 eV', expL + 2, expT + 12);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.fillText(`λ = ${lam.toFixed(0)} nm   hν = ${E_ph.toFixed(2)} eV`, expL + 2, expT + 28);
+    ctx.font = 'bold 11px system-ui';
+    ctx.fillStyle = above ? '#b9f6ca' : '#ff8a80';
+    ctx.fillText(above
+      ? `electrons ejected — KE_max = ${KE.toFixed(2)} eV`
+      : `below threshold (λ₀ = ${lam0.toFixed(0)} nm) — no current`,
+      expL + 2, expT + 44);
+
+    // ── ENERGY BAR ─────────────────────────────────────────────────
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(barX - 5, barT); ctx.lineTo(barX - 5, barB);
+    ctx.lineTo(barX + barW + 18, barB);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = '10px system-ui'; ctx.textAlign = 'right';
+    for (let e = 0; e <= 6; e += 2) {
+      const y = eToPx(e);
+      ctx.beginPath(); ctx.moveTo(barX - 5, y); ctx.lineTo(barX - 8, y); ctx.stroke();
+      ctx.fillText(`${e}`, barX - 10, y + 3);
+    }
+
+    // φ band
+    const phiTop = eToPx(phi);
+    ctx.fillStyle = 'rgba(239,154,154,0.35)';
+    ctx.fillRect(barX, phiTop, barW, barB - phiTop);
+    ctx.strokeStyle = '#ef9a9a';
+    ctx.strokeRect(barX + 0.5, phiTop + 0.5, barW - 1, barB - phiTop - 1);
+
+    // KE band — stacked above φ
+    if (above) {
+      const top = eToPx(phi + KE);
+      ctx.fillStyle = 'rgba(185,246,202,0.55)';
+      ctx.fillRect(barX, top, barW, phiTop - top);
+      ctx.strokeStyle = '#b9f6ca';
+      ctx.strokeRect(barX + 0.5, top + 0.5, barW - 1, phiTop - top - 1);
+    }
+
+    // photon quantum tick — drawn beside the bar at height hν
+    const phY = eToPx(E_ph);
+    ctx.strokeStyle = col; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(barX + barW + 3, phY); ctx.lineTo(barX + barW + 14, phY); ctx.stroke();
+    ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.font = 'bold 10px system-ui';
+    ctx.fillText('hν', barX + barW + 17, phY + 3);
+
+    // legend
+    ctx.font = '10px system-ui'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#ef9a9a'; ctx.fillText('φ',  barX,       barT - 3);
+    ctx.fillStyle = '#b9f6ca'; ctx.fillText('KE', barX + 11,  barT - 3);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.textAlign = 'center';
+    ctx.fillText('eV', barX + barW / 2, barB + 13);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
