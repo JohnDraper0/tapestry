@@ -842,6 +842,18 @@ const LAWS = [
   },
 
   {
+    id: 'riemann_hypothesis', name: 'Riemann Hypothesis', domain: 'unknown', symbol: 'ζ(½+it)',
+    tagline: 'The deepest secret of the prime numbers.',
+    equation: '\\zeta(s) = 0,\\ 0 < \\operatorname{Re}(s) < 1 \\;\\Longrightarrow\\; \\operatorname{Re}(s) = \\tfrac{1}{2}',
+    deps: ['numbers', 'calculus'], known: false, sim: null,
+    eli5: `Primes — 2, 3, 5, 7, 11, 13, 17… — are the atoms of arithmetic, and they appear along the number line almost at random. Almost. In 1859 Bernhard Riemann found a hidden pattern: he showed the primes are governed by an infinite chorus of "waves," and guessed that the pitches of every single one of those waves lie on a single straight line. If he was right, the primes are as well-behaved as nature allows. If even one wave sits off the line, the primes are stranger than anyone has imagined. Nobody has been able to prove which it is, and a million-dollar prize sits unclaimed.`,
+    intermediate: `The Riemann zeta function ζ(s) = 1 + 1/2ˢ + 1/3ˢ + 1/4ˢ + … is, on the surface, an innocent sum. Riemann showed it can be extended to all complex numbers and that it secretly controls the distribution of primes: every "non-trivial zero" of ζ corresponds to a wave that nudges our estimate of how many primes lie below a given size. The Riemann hypothesis is the conjecture that every one of those zeros has real part exactly ½ — they all sit on a single vertical line in the complex plane. Hundreds of theorems in number theory begin "assuming the Riemann hypothesis…" because so much of what we know about primes hangs from this one nail. It is one of the seven Clay Millennium Prize Problems; a proof or a counter-example pays a million dollars.`,
+    expert: `Defined by ζ(s) = Σ_{n=1}^∞ n^{−s} for Re(s) > 1 and analytically continued via the functional equation ζ(s) = 2^s π^{s−1} sin(πs/2) Γ(1−s) ζ(1−s), the zeta function has trivial zeros at s = −2, −4, −6, … and non-trivial zeros confined to the critical strip 0 < Re(s) < 1. RH asserts every non-trivial zero lies on the critical line Re(s) = ½. Equivalent statements include the optimal prime-counting error bound π(x) = Li(x) + O(√x log x) and the Mertens-type sum M(x) = O(x^{½+ε}). Hardy (1914) proved infinitely many zeros lie on the line; Selberg (1942) that a positive proportion do; Conrey (1989) that more than 40% do. Platt & Trudgian (2021) verified that the first 12,363,153,437,138 zeros — all those below height 3 × 10¹² — are simple and on the critical line, empirical confirmation without proof. The Hilbert–Pólya conjecture proposes the zeros are eigenvalues of an unknown self-adjoint operator; Montgomery's pair-correlation conjecture (1973), tested numerically by Odlyzko, shows their spacings statistically match the eigenvalues of large random Hermitian matrices (GUE), tying primes to quantum chaos. Generalised forms (GRH, ERH) extend the conjecture to Dirichlet L-functions and automorphic representations, placing RH inside the Langlands programme — a web of conjectures whose truth would reshape number theory wholesale.`,
+    surprise: `The spacings between Riemann's zeros are statistically indistinguishable from the energy levels of a chaotic quantum system. The primes — the most arithmetic objects imaginable — appear to be vibrating at the frequencies of some unknown physical oscillator nobody has ever built.`,
+    history: `Bernhard Riemann stated the conjecture in 1859 in an eight-page memoir to the Berlin Academy — the only paper he ever wrote on number theory. He died of tuberculosis at 39 before he could pursue it, and his housekeeper burned much of his unpublished work. David Hilbert placed it eighth in his 1900 list of the century's great open problems and once said that if he awoke after 500 years asleep, his first question would be: has the Riemann hypothesis been proven? The Clay Mathematics Institute repeated the listing in 2000 with a $1 million prize. As of 2026, still open.`,
+  },
+
+  {
     id: 'missing_unknowns', name: 'What We Don\'t Know We Don\'t Know', domain: 'unknown', symbol: '??',
     tagline: 'The unknown unknowns.',
     equation: '∅',
@@ -1022,6 +1034,8 @@ const IMAGES = {
                         caption: 'An asymmetry we cannot yet explain' },
   p_vs_np:            { image: WM('Complexity_classes.svg'),
                         caption: 'Complexity classes — is P really inside NP?' },
+  riemann_hypothesis: { image: WM('Georg_Friedrich_Bernhard_Riemann.jpeg'),
+                        caption: 'Bernhard Riemann — guessed at age 32 that every zero sits on one line' },
   missing_unknowns:   { image: WM('Iceberg_in_the_Arctic_with_its_underside_exposed.jpg'),
                         caption: 'What we see vs what is below the waterline' },
 };
