@@ -2123,6 +2123,138 @@ SIMS.complexity = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ──────────────────────── SNELL'S LAW (REFRACTION + TIR) ─────────────
+// Glass below, air above. A beam starts in the glass and sweeps its
+// angle of incidence ±. The refracted ray bends away from the normal in
+// air, dimming as the reflected ray brightens (Fresnel R, unpolarised
+// average). Past the critical angle θc = asin(n_air/n_glass) ≈ 41.8°
+// the refracted ray vanishes entirely — total internal reflection, the
+// trick that keeps fibre-optic light trapped inside a glass thread.
+SIMS.snells_law = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const n1 = 1.50;   // glass (below interface)
+  const n2 = 1.00;   // air   (above)
+  const thetaC = Math.asin(n2 / n1);
+
+  const interfaceY = h * 0.42;
+  const sx = w * 0.5;
+  const sy = h * 0.88;
+  const d  = sy - interfaceY;
+
+  // Aim for 60° (well past θc to demonstrate TIR), but cap so the hit
+  // point never wanders off the canvas on narrow phones.
+  const safeMax = Math.atan((w * 0.42) / d);
+  const thetaMax = Math.min(60 * Math.PI / 180, safeMax);
+
+  function fresnelR(t1, t2) {
+    const c1 = Math.cos(t1), c2 = Math.cos(t2);
+    const rs = (n1 * c1 - n2 * c2) / (n1 * c1 + n2 * c2);
+    const rp = (n2 * c1 - n1 * c2) / (n2 * c1 + n1 * c2);
+    return 0.5 * (rs * rs + rp * rp);
+  }
+
+  let raf, t0 = performance.now();
+  function draw(now) {
+    const phase = ((now - t0) / 6500) * Math.PI * 2;
+    const theta1 = thetaMax * Math.sin(phase);
+    const sign = theta1 >= 0 ? 1 : -1;
+    const a = Math.abs(theta1);
+
+    const hx = sx + d * Math.tan(theta1);
+    const hy = interfaceY;
+
+    const s2 = (n1 / n2) * Math.sin(a);
+    const tir = s2 > 1;
+    const theta2 = tir ? Math.PI / 2 : Math.asin(s2);
+    const R = tir ? 1 : fresnelR(a, theta2);
+    const T = 1 - R;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Two media — subtle tint per side
+    ctx.fillStyle = 'rgba(135, 195, 255, 0.06)';
+    ctx.fillRect(0, 0, w, interfaceY);
+    ctx.fillStyle = 'rgba(255, 205, 145, 0.11)';
+    ctx.fillRect(0, interfaceY, w, h - interfaceY);
+
+    // Interface
+    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, interfaceY); ctx.lineTo(w, interfaceY); ctx.stroke();
+
+    // Normal (dashed vertical through the hit point)
+    ctx.strokeStyle = 'rgba(255,255,255,0.40)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(hx, 0); ctx.lineTo(hx, h); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Incident ray (source → hit point)
+    ctx.strokeStyle = '#ffd166';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(hx, hy); ctx.stroke();
+
+    // Refracted ray — bends away from normal in air
+    if (!tir) {
+      const L = (interfaceY + 30) / Math.max(Math.cos(theta2), 0.05);
+      const tx = hx + sign * L * Math.sin(theta2);
+      const ty = hy - L * Math.cos(theta2);
+      ctx.strokeStyle = `rgba(255, 220, 130, ${(0.30 + 0.65 * T).toFixed(3)})`;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(tx, ty); ctx.stroke();
+    }
+
+    // Reflected ray — same medium, mirror-flipped about the normal
+    const Lr = (h - interfaceY + 30) / Math.max(Math.cos(a), 0.05);
+    const rx = hx + sign * Lr * Math.sin(a);
+    const ry = hy + Lr * Math.cos(a);
+    ctx.strokeStyle = `rgba(255, 220, 130, ${(0.18 + 0.78 * R).toFixed(3)})`;
+    ctx.lineWidth = tir ? 2.2 : 1.3;
+    ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(rx, ry); ctx.stroke();
+
+    // Angle arcs (drawn only when angle is large enough to read)
+    if (a > 0.025) {
+      const arcR = Math.min(26, d * 0.22);
+      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(255, 209, 102, 0.75)';
+      ctx.beginPath();
+      if (sign > 0) ctx.arc(hx, hy, arcR, Math.PI / 2, Math.PI / 2 + a);
+      else          ctx.arc(hx, hy, arcR, Math.PI / 2 - a, Math.PI / 2);
+      ctx.stroke();
+      if (!tir) {
+        ctx.beginPath();
+        if (sign > 0) ctx.arc(hx, hy, arcR, -Math.PI / 2, -Math.PI / 2 + theta2);
+        else          ctx.arc(hx, hy, arcR, -Math.PI / 2 - theta2, -Math.PI / 2);
+        ctx.stroke();
+      }
+    }
+
+    // Medium labels
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('air      n₂ = 1.00', 8, 15);
+    ctx.fillText('glass  n₁ = 1.50', 8, h - 8);
+
+    // Live Snell readout
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui';
+    ctx.fillText('n₁ sin θ₁ = n₂ sin θ₂', w - 8, 16);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.80)';
+    const lhs = (n1 * Math.sin(a)).toFixed(3);
+    const rhs = tir ? '—' : (n2 * Math.sin(theta2)).toFixed(3);
+    ctx.fillText(`${lhs}  =  ${rhs}`, w - 8, 32);
+    ctx.fillStyle = tir ? '#ff9466' : 'rgba(255,255,255,0.60)';
+    ctx.fillText(tir ? `θ₁ > θc — total internal reflection`
+                     : `θc = ${(thetaC * 180 / Math.PI).toFixed(1)}°`,
+                 w - 8, 48);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
