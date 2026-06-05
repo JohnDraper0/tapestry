@@ -2123,6 +2123,146 @@ SIMS.complexity = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ──────────────────── SNELL'S LAW (REFRACTION + TIR) ─────────────────
+// For the `snells_law` node: a yellow ray strikes the interface between
+// two media; a green refracted ray emerges in the lower medium per
+// n₁ sin θ₁ = n₂ sin θ₂. Cycles through air→water, air→glass, glass→air,
+// and air→diamond. When going from denser to rarer past the critical
+// angle, the refracted ray vanishes and the reflected ray brightens —
+// total internal reflection in the act.
+SIMS.snells_law = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const intY = Math.round(h * 0.5);
+  const cx   = w * 0.5;
+
+  // (upper, lower) pairs to cycle through.
+  const PAIRS = [
+    { up: { n: 1.00, name: 'air'   }, lo: { n: 1.33, name: 'water'   }, tintLo: 'rgba(60,150,220,0.16)', tintUp: null },
+    { up: { n: 1.00, name: 'air'   }, lo: { n: 1.50, name: 'glass'   }, tintLo: 'rgba(140,210,230,0.16)', tintUp: null },
+    { up: { n: 1.50, name: 'glass' }, lo: { n: 1.00, name: 'air'     }, tintLo: null,                    tintUp: 'rgba(140,210,230,0.16)' },
+    { up: { n: 1.00, name: 'air'   }, lo: { n: 2.42, name: 'diamond' }, tintLo: 'rgba(220,205,255,0.20)', tintUp: null },
+  ];
+  const CYCLE_MS = 6500;
+
+  function arrow(x0, y0, x1, y1, col) {
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.strokeStyle = col; ctx.lineWidth = 2.2;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - 8 * Math.cos(a - 0.42), y1 - 8 * Math.sin(a - 0.42));
+    ctx.lineTo(x1 - 8 * Math.cos(a + 0.42), y1 - 8 * Math.sin(a + 0.42));
+    ctx.closePath(); ctx.fill();
+  }
+
+  function draw(now) {
+    const T = now - t0;
+    const idx = Math.floor(T / CYCLE_MS) % PAIRS.length;
+    const phase = (T % CYCLE_MS) / CYCLE_MS;        // 0 → 1
+    const p = PAIRS[idx];
+    const n1 = p.up.n, n2 = p.lo.n;
+
+    // ease angle 5° → max → 5° over one cycle
+    const u = (1 - Math.cos(phase * Math.PI * 2)) / 2;
+    const thetaMax = (n1 > n2) ? 78 : 75;            // push past critical for TIR pairs
+    const theta1 = ((5 + u * (thetaMax - 5)) * Math.PI) / 180;
+    const sinT2  = (n1 / n2) * Math.sin(theta1);
+    const tir    = sinT2 >= 1;
+    const theta2 = tir ? 0 : Math.asin(sinT2);
+    const critRad = (n1 > n2) ? Math.asin(n2 / n1) : null;
+
+    ctx.clearRect(0, 0, w, h);
+    if (p.tintUp) { ctx.fillStyle = p.tintUp; ctx.fillRect(0, 0, w, intY); }
+    if (p.tintLo) { ctx.fillStyle = p.tintLo; ctx.fillRect(0, intY, w, h - intY); }
+
+    // interface
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, intY); ctx.lineTo(w, intY); ctx.stroke();
+
+    // normal (dashed)
+    ctx.strokeStyle = 'rgba(255,255,255,0.30)';
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(cx, 14); ctx.lineTo(cx, h - 14); ctx.stroke();
+    ctx.setLineDash([]);
+
+    const L = Math.min(intY, h - intY) - 16;
+
+    // incident (upper-left → interface)
+    const iX = cx - Math.sin(theta1) * L;
+    const iY = intY - Math.cos(theta1) * L;
+    arrow(iX, iY, cx, intY, '#ffd166');
+
+    // reflected (mirror of incident, going up-right)
+    const flX = cx + Math.sin(theta1) * L;
+    const flY = intY - Math.cos(theta1) * L;
+    const reflCol = tir ? '#ffd166' : 'rgba(255,209,102,0.32)';
+    if (tir) {
+      arrow(cx, intY, flX, flY, reflCol);
+    } else {
+      ctx.strokeStyle = reflCol; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(cx, intY); ctx.lineTo(flX, flY); ctx.stroke();
+    }
+
+    // refracted (lower-right) — only if not TIR
+    if (!tir) {
+      const rX = cx + Math.sin(theta2) * L;
+      const rY = intY + Math.cos(theta2) * L;
+      arrow(cx, intY, rX, rY, '#69f0ae');
+    }
+
+    // angle arcs
+    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = '#ffd166';
+    ctx.beginPath(); ctx.arc(cx, intY, 26, -Math.PI / 2 - theta1, -Math.PI / 2); ctx.stroke();
+    if (!tir) {
+      ctx.strokeStyle = '#69f0ae';
+      ctx.beginPath(); ctx.arc(cx, intY, 26, Math.PI / 2 - theta2, Math.PI / 2); ctx.stroke();
+    }
+
+    // labels — media
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText(`n₁ = ${n1.toFixed(2)}  ${p.up.name}`, 10, 18);
+    ctx.fillText(`n₂ = ${n2.toFixed(2)}  ${p.lo.name}`, 10, h - 8);
+
+    // angles (live)
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = '#ffd166';
+    ctx.fillText(`θ₁ = ${(theta1 * 180 / Math.PI).toFixed(1)}°`, 10, intY - 8);
+    if (!tir) {
+      ctx.fillStyle = '#69f0ae';
+      ctx.fillText(`θ₂ = ${(theta2 * 180 / Math.PI).toFixed(1)}°`, 10, intY + 20);
+    } else {
+      ctx.fillStyle = '#ff8a65';
+      ctx.fillText('total internal reflection', 10, intY + 20);
+      if (critRad != null) {
+        ctx.fillStyle = 'rgba(255,255,255,0.55)';
+        ctx.fillText(`θc = ${(critRad * 180 / Math.PI).toFixed(1)}°`, 10, intY + 34);
+      }
+    }
+
+    // right-side Snell-ratio readout (skip on narrow canvases)
+    if (w > 360) {
+      ctx.textAlign = 'right';
+      ctx.fillStyle = 'rgba(255,255,255,0.68)';
+      ctx.font = '11px system-ui';
+      ctx.fillText(`n₁ sin θ₁ = ${(n1 * Math.sin(theta1)).toFixed(3)}`, w - 10, intY - 8);
+      if (!tir) {
+        ctx.fillText(`n₂ sin θ₂ = ${(n2 * sinT2).toFixed(3)}`, w - 10, intY + 20);
+      }
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
