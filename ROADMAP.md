@@ -199,11 +199,12 @@ One bullet per F-category run. Order is roughly priority.
     annotated; announce panel opens via `aria-live="polite"`.
 20. ~~**`prefers-reduced-motion`.** Halt the background canvas drift, the
     tour auto-pan, the camera ease-out, and the intro glow when the
-    viewer has asked for reduced motion.~~ — done 2026-06-01. CSS media
-    query collapses all keyframes + transitions; `bg.js` skips its rAF
-    loop (one-shot repaint on theme/resize); `app.js` freezes the
-    edge-particle flow and snaps the camera instead of easing it. 3D
-    mode's auto-spin still ignores the preference — separate follow-up.
+    viewer has asked for reduced motion.~~ — done 2026-06-01, extended
+    2026-06-07. CSS media query collapses all keyframes + transitions;
+    `bg.js` skips its rAF loop (one-shot repaint on theme/resize);
+    `app.js` freezes the edge-particle flow and snaps the camera instead
+    of easing it; `three3d.js` now skips the per-node bob and halo pulse
+    while keeping drag-spin/wheel-zoom (user controls are not motion).
 21. **Skip-to-content link.** Lets screen-reader users bypass the map.
 22. **Colour-blind-safe theme variant.** A fourth theme (or a toggle on
     cosmos) that uses shape + pattern in addition to hue for domain

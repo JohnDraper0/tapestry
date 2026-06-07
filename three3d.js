@@ -8,6 +8,12 @@ const Tapestry3D = (function () {
   let raycaster, mouse, onClickHandler, onResize;
   let angleOffset = 0;
 
+  // Honour OS-level "reduce motion": skip the per-frame node bob and
+  // halo pulse. User-initiated camera spin/zoom (drag, wheel) is kept,
+  // since that's a control, not gratuitous motion.
+  const reduceMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   async function loadThree() {
     if (THREE) return THREE;
     const mod = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
@@ -100,11 +106,14 @@ const Tapestry3D = (function () {
       camera.position.z = Math.cos(camAngle) * camDist;
       camera.position.y = camHeight;
       camera.lookAt(0, 0, 0);
-      // gentle node bob
-      nodes3d.forEach((n, i) => {
-        n.mesh.rotation.y += 0.01;
-        n.glow.material.opacity = 0.35 + 0.15 * Math.sin(angleOffset * 5 + i);
-      });
+      // Per-frame node bob + halo pulse — purely decorative, so skip
+      // it for visitors who asked for reduced motion.
+      if (!reduceMotion) {
+        nodes3d.forEach((n, i) => {
+          n.mesh.rotation.y += 0.01;
+          n.glow.material.opacity = 0.35 + 0.15 * Math.sin(angleOffset * 5 + i);
+        });
+      }
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
