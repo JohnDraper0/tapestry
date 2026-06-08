@@ -1071,6 +1071,7 @@ const ANALOGIES = [
   ['entanglement',   'information',   'one Bell pair = one ebit: entanglement is the fundamental unit of quantum information'],
   ['wien',           'stars',         "every star wears its temperature as a colour — the OBAFGKM spectral sequence is Wien's displacement law painted across the sky"],
   ['clt',            'statmech',      '10²³ molecules + CLT: thermodynamic averages look deterministic because fluctuations shrink as 1/√N — one part in 10¹¹ for a gram of gas'],
+  ['evolution',      'information',   "selection IS an information channel — each fit allele is a bit of environment written into the genome; a fish's eye encodes the optics of seawater"],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
