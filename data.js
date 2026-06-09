@@ -619,7 +619,7 @@ const LAWS = [
   {
     id: 'computation', name: 'Computation', domain: 'info', symbol: '01',
     tagline: 'Everything computable in principle.',
-    equation: 'U(⟨M⟩, x) = M(x)',
+    equation: 'U(\\langle M \\rangle, x) = M(x)',
     deps: ['logic', 'information'], sim: null,
     eli5: `A computer is just a box that follows simple instructions very, very fast. Alan Turing showed that with a surprisingly small set of instructions, you can do *any* calculation that's possible to do — not just one kind of maths, but all of it. Your phone, a supercomputer, and a human brain are all doing the same basic kind of thing: shuffling symbols by rules.`,
     intermediate: `Turing's 1936 paper defined a universal model — the Turing machine — and proved that a single simple machine can simulate any other: the universal Turing machine. Church and Turing independently conjectured that this captures all effectively computable functions. But Turing also proved fundamental limits: some problems (like the halting problem) cannot be solved by any algorithm. Modern computer science builds on this: complexity theory classifies problems by time or space needed, and we still don't know whether P = NP — one of the greatest open questions in maths.`,
