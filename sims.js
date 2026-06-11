@@ -2263,6 +2263,177 @@ SIMS.snells_law = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────── HERTZSPRUNG–RUSSELL DIAGRAM ─────────────────────
+SIMS.stars = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // x = log T, with the hot end on the LEFT (astronomy convention).
+  // y = log L / L_sun, faint at the bottom, luminous at the top.
+  const LT_MAX = 4.65, LT_MIN = 3.45;
+  const LL_MIN = -4,   LL_MAX = 6;
+
+  const padL = 44, padR = 12, padT = 22, padB = 30;
+  const plotL = padL, plotR = w - padR;
+  const plotT = padT, plotB = h - padB;
+  const plotW = plotR - plotL, plotH = plotB - plotT;
+  const xOf = lt => plotR - (lt - LT_MIN) / (LT_MAX - LT_MIN) * plotW;
+  const yOf = ll => plotB - (ll - LL_MIN) / (LL_MAX - LL_MIN) * plotH;
+
+  // Tanner Helland blackbody-RGB approximation
+  function bbColor(T) {
+    const Th = Math.max(1000, Math.min(40000, T)) / 100;
+    let r, g, b;
+    r = Th <= 66 ? 255 : 329.7 * Math.pow(Th - 60, -0.1332);
+    g = Th <= 66 ? 99.47 * Math.log(Th) - 161.12
+                 : 288.12 * Math.pow(Th - 60, -0.0755);
+    b = Th >= 66 ? 255
+        : (Th <= 19 ? 0 : 138.52 * Math.log(Th - 10) - 305.0448);
+    const cl = v => Math.max(0, Math.min(255, v | 0));
+    return `rgb(${cl(r)},${cl(g)},${cl(b)})`;
+  }
+
+  // Smooth cubic through main-sequence anchors:
+  //   (3.45,-3), (3.762,0), (4.2,+3.5), (4.6,+5.6)
+  const ms = lt => {
+    const x = lt - 3.762;
+    return 7.2 * x + 0.5 * x * x - 0.2 * x * x * x;
+  };
+
+  // Sample a fixed population once per open
+  const POP = [];
+  const push = (n, fn) => { for (let i = 0; i < n; i++) POP.push(fn()); };
+  push(240, () => {                                // main sequence
+    const lt = 3.45 + Math.random() * 1.18;
+    return { lt, ll: ms(lt) + (Math.random() - 0.5) * 0.45,
+             r: 1.1 + Math.random() * 1.3 };
+  });
+  push(70, () => ({ lt: 3.54 + Math.random() * 0.20,
+                    ll: 1.4 + Math.random() * 1.8,
+                    r: 1.4 + Math.random() * 1.6 })); // red giant branch
+  push(16, () => ({ lt: 3.55 + Math.random() * 1.00,
+                    ll: 4.6 + Math.random() * 1.2,
+                    r: 1.9 + Math.random() * 1.6 })); // supergiants
+  push(38, () => ({ lt: 3.95 + Math.random() * 0.55,
+                    ll: -3.2 + Math.random() * 0.9,
+                    r: 1.0 + Math.random() * 0.5 })); // white dwarfs
+
+  // 1 M_sun evolutionary track keyframes (u, log T, log L, phase)
+  const TRACK = [
+    { u: 0.00, lt: 3.762, ll: -0.02, phase: 'main sequence' },
+    { u: 0.50, lt: 3.757, ll:  0.13, phase: 'main sequence' },
+    { u: 0.65, lt: 3.700, ll:  1.20, phase: 'subgiant' },
+    { u: 0.75, lt: 3.560, ll:  3.30, phase: 'red giant' },
+    { u: 0.83, lt: 3.500, ll:  4.10, phase: 'asymptotic giant' },
+    { u: 0.89, lt: 4.640, ll:  3.70, phase: 'planetary nebula' },
+    { u: 0.95, lt: 4.500, ll:  0.30, phase: 'white dwarf' },
+    { u: 1.00, lt: 4.100, ll: -2.60, phase: 'white dwarf' },
+  ];
+  function trackPoint(u) {
+    for (let i = 1; i < TRACK.length; i++) {
+      if (u <= TRACK[i].u) {
+        const a = TRACK[i - 1], b = TRACK[i];
+        const t = (u - a.u) / (b.u - a.u);
+        return { lt: a.lt + (b.lt - a.lt) * t,
+                 ll: a.ll + (b.ll - a.ll) * t,
+                 phase: a.phase };
+      }
+    }
+    return TRACK[TRACK.length - 1];
+  }
+
+  const PERIOD_MS = 16000;
+  const t0 = performance.now();
+  let raf;
+
+  const T_TICKS = [40000, 20000, 10000, 6000, 4000, 3000];
+  const Y_TICKS = [
+    [-4, '10⁻⁴'], [-2, '10⁻²'], [0, '10⁰'],
+    [ 2, '10²' ], [ 4, '10⁴' ], [ 6, '10⁶'],
+  ];
+
+  function draw(now) {
+    const u = ((now - t0) / PERIOD_MS) % 1;
+    ctx.clearRect(0, 0, w, h);
+
+    // Frame
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(plotL, plotT, plotW, plotH);
+
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+
+    ctx.textAlign = 'center';
+    T_TICKS.forEach(T => {
+      const x = xOf(Math.log10(T));
+      if (x < plotL - 2 || x > plotR + 2) return;
+      ctx.beginPath(); ctx.moveTo(x, plotB); ctx.lineTo(x, plotB + 4); ctx.stroke();
+      ctx.fillText(T >= 10000 ? `${T / 1000}k` : String(T), x, plotB + 14);
+    });
+    ctx.fillText('T (K)  ← hot   cool →', (plotL + plotR) / 2, plotB + 26);
+
+    ctx.textAlign = 'right';
+    Y_TICKS.forEach(([ll, lbl]) => {
+      const y = yOf(ll);
+      if (y < plotT - 2 || y > plotB + 2) return;
+      ctx.beginPath(); ctx.moveTo(plotL - 4, y); ctx.lineTo(plotL, y); ctx.stroke();
+      ctx.fillText(lbl, plotL - 6, y + 3);
+    });
+    ctx.save();
+    ctx.translate(12, (plotT + plotB) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText('L / L☉', 0, 0);
+    ctx.restore();
+
+    // Background population — each star at its blackbody colour
+    ctx.globalAlpha = 0.82;
+    POP.forEach(s => {
+      const x = xOf(s.lt), y = yOf(s.ll);
+      if (x < plotL || x > plotR || y < plotT || y > plotB) return;
+      ctx.fillStyle = bbColor(Math.pow(10, s.lt));
+      ctx.beginPath(); ctx.arc(x, y, s.r, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // Region labels (faint)
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,255,255,0.32)';
+    ctx.fillText('main sequence', xOf(3.88), yOf(0.85));
+    ctx.fillText('red giants',    xOf(3.60), yOf(2.80));
+    ctx.fillText('supergiants',   xOf(3.95), yOf(5.30));
+    ctx.fillText('white dwarfs',  xOf(4.20), yOf(-2.70));
+
+    // Recent evolutionary track ghost + current Sun-like star
+    for (let i = 14; i > 0; i--) {
+      const uu = u - i * 0.005;
+      if (uu < 0) continue;
+      const p = trackPoint(uu);
+      ctx.fillStyle = `rgba(255,255,255,${(1 - i / 14) * 0.16})`;
+      ctx.beginPath();
+      ctx.arc(xOf(p.lt), yOf(p.ll), 1.7, 0, Math.PI * 2); ctx.fill();
+    }
+    const pt = trackPoint(u);
+    const col = bbColor(Math.pow(10, pt.lt));
+    ctx.shadowBlur = 14; ctx.shadowColor = col;
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(xOf(pt.lt), yOf(pt.ll), 5, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Title + live phase readout
+    ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillStyle = '#eee';
+    ctx.fillText('Hertzsprung–Russell diagram', plotL, plotT - 8);
+    ctx.font = '11px system-ui'; ctx.textAlign = 'right';
+    ctx.fillStyle = col;
+    ctx.fillText(`Sun-like star → ${pt.phase}`, plotR, plotT - 8);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
