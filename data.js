@@ -690,6 +690,18 @@ const LAWS = [
     history: `Alfred Lotka derived the equations in 1910 for autocatalytic chemical reactions, then re-applied them to predator-prey ecology in a 1920 paper. Vito Volterra independently reached the same equations in 1926, driven by his son-in-law Umberto D'Ancona's puzzle about Adriatic fish ratios during WWI. Their overlapping priority was settled amicably; both names stuck. The equations are now a cornerstone of theoretical ecology, extended by Holling, May, and MacArthur into the modern theory of food-web dynamics.`,
   },
 
+  {
+    id: 'soc', name: 'Self-Organised Criticality', domain: 'emergence', symbol: '1/f',
+    tagline: 'Nature tunes itself to the edge of catastrophe.',
+    equation: 'P(s) \\propto s^{-\\tau}',
+    deps: ['complexity', 'statmech'], sim: null,
+    eli5: `Build a pile of sand by dropping one grain at a time. The slope grows steeper and steeper, until one grain finally triggers an avalanche. Usually a small one. Once in a while — rarely — one big enough to wipe out half the pile. Without anyone planning it, the pile *settles itself* into a state that is always one grain away from disaster. Earthquakes do this. Forest fires do this. Snow avalanches, traffic jams, brain blackouts, market crashes — all the same trick. Left alone, the world slides to the edge of catastrophe and lives there.`,
+    intermediate: `Most physical systems sit firmly in a phase: solid, liquid, ordered, disordered. But many open, slowly-driven systems do something stranger — they spontaneously slide to the *boundary* between order and chaos, with no parameter being tuned by hand. Per Bak and colleagues called this self-organised criticality. The fingerprint is a power law: when you plot how often events of size s occur against s on a log-log graph, you get a straight line. No event size is "typical." Earthquakes (Gutenberg–Richter), solar flares, neuronal avalanches in cortex, lung-airway branching, evolution's punctuated equilibria, and Zipf's word-frequency law all show this signature. From the same machinery, the system can produce a whisper or a roar.`,
+    expert: `The Bak–Tang–Wiesenfeld (BTW) abelian sandpile is the paradigmatic model: a lattice site holds integer "slope" z, grains are dropped at random, and any site exceeding a threshold z_c topples — redistributing grains to neighbours and possibly triggering further topples. Slow driving balanced by boundary dissipation drives the system to a stationary state whose avalanche-size distribution is the power law P(s) ∝ s^{−τ} (τ ≈ 1.27 in 2D), with avalanche duration P(T) ∝ T^{−α} and a finite-size scaling form P(s, L) = s^{−τ} f(s/L^D). Crucially, this scale-invariance arises *without fine-tuning any control parameter* — that is the defining claim of SOC and the reason it is offered as an explanation for so many empirical 1/f noises. Generalisations include the Olami–Feder–Christensen earthquake model, the Bak–Sneppen evolution model, and the Drossel–Schwabl forest-fire model. Open questions: which empirical power laws are genuinely SOC and which arise from preferential attachment, multiplicative noise, or a sweep through criticality; how SOC relates to standard universality classes (conserved directed percolation); and whether the brain operates near a critical point (Beggs–Plenz neuronal avalanches with τ ≈ 3/2).`,
+    surprise: `Drop ten thousand grains of sand onto a pile, one at a time, and record every avalanche. Plot the number of avalanches of size s against s on log-log axes — you get a straight line. There is no "typical" avalanche. The same straight line appears in earthquake magnitudes between roughly M4 and M9, in solar flare energies across six decades, and in the firing cascades of neurons in a slice of cortex on a dish. Beneath the surface, the world really does work like this.`,
+    history: `Per Bak, Chao Tang and Kurt Wiesenfeld published "Self-organized criticality" in Physical Review Letters in July 1987 — three pages that opened a field. Bak's 1996 popular book *How Nature Works* argued the principle was almost universal, a claim that infuriated colleagues who felt the framework had been stretched well past its evidence. He died of myelodysplastic syndrome in 2002 at 54, still arguing. The sandpile, however, remains unambiguous: the original three-page model does exactly what they said it did.`,
+  },
+
   // ───────────────────────────── COSMOLOGY ──────────────────────────────────
 
   {
@@ -1002,6 +1014,8 @@ const IMAGES = {
                    caption: 'John Nash — equilibria where nobody gains by deviating' },
   lotka_volterra:{ image: WM('Lotka-Volterra.svg'),
                    caption: 'Lotka–Volterra phase portrait — closed orbits of predator and prey' },
+  soc:           { image: WM('Sandpile_10000x10000_identity_configuration.png'),
+                   caption: 'The 10000×10000 abelian-sandpile identity — fractal order from drop-and-topple rules' },
   bigbang:       { image: WM('Ilc_9yr_moll4096.png'),
                    caption: 'Cosmic microwave background — afterglow of the Big Bang' },
   darkmatter:    { image: WM('Dark_matter_halo.png'),
