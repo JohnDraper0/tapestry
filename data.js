@@ -645,7 +645,7 @@ const LAWS = [
   {
     id: 'emergence', name: 'Emergence', domain: 'emergence', symbol: '🐜',
     tagline: 'The whole is stranger than its parts.',
-    equation: '∞ × simple → novel',
+    equation: '\\underbrace{N \\gg 1}_{\\text{many parts}}:\\;\\;\\text{simple rules} \\;\\Longrightarrow\\; \\text{new laws}',
     deps: ['computation', 'probability', 'evolution'], sim: 'life',
     eli5: `One ant is just a little bug following simple rules. A million ants are a colony that farms fungus, builds bridges, wages war, and solves problems no single ant could. You don't find "colony" by looking really hard at one ant. New properties appear when parts team up. A single water molecule is not wet; a pool of them is. Your neurons don't think alone; together, they do.`,
     intermediate: `Emergence is the phenomenon where the collective behaviour of many simple parts produces qualitatively new properties not present in any single part. Examples: the wetness of water, the flocking of birds, the solidity of matter, the consciousness of brains, the price of a market. Emergent properties are in principle derivable from the parts' laws, but often not in practice — they need their own descriptive language. Emergence is why biology is not "just physics," even though it doesn't break any law of physics. It's how nature builds layers of complexity.`,
