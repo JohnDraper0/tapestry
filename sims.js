@@ -2434,6 +2434,152 @@ SIMS.stars = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── CENTRAL LIMIT THEOREM ───────────────────
+// Galton board: balls bounce through a triangle of pegs, each peg a
+// 50/50 left/right coin flip. After ROWS coins, the slot a ball lands
+// in is a Binomial(ROWS, ½) draw. As balls pile up, the histogram
+// converges to the analytic 𝒩(μ = n/2, σ² = n/4) overlaid in red.
+SIMS.clt = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const ROWS = 12;
+  const BINS = ROWS + 1;
+  const padT = 24, padB = 28, padX = 18;
+  const topY = padT + 4;
+  const pegBotY = padT + (h - padT - padB) * 0.55;
+  const binTopY = pegBotY + 8;
+  const binBotY = h - padB;
+  const colW = Math.min(28, (w - 2 * padX) / BINS);
+  const fieldW = colW * BINS;
+  const xLeft = (w - fieldW) / 2;
+  const xCenter = w / 2;
+  const rowH = (pegBotY - topY) / (ROWS + 1);
+
+  const pegs = [];
+  for (let r = 0; r < ROWS; r++) {
+    const y = topY + (r + 1) * rowH;
+    for (let i = 0; i <= r; i++) {
+      pegs.push({ x: xCenter + (i - r / 2) * colW, y });
+    }
+  }
+
+  const bins = new Array(BINS).fill(0);
+  let total = 0;
+  const balls = [];
+  let raf, last = performance.now(), spawn = 0;
+
+  const SPAWN_RATE = 22;
+  const MAX_BALLS = 28;
+  const MAX_TOTAL = 9000;
+
+  function newBall() {
+    balls.push({
+      x: xCenter + (Math.random() - 0.5) * 3,
+      y: topY - 4,
+      vy: 90,
+      row: 0,
+      slot: 0,
+      nextY: topY + rowH,
+    });
+  }
+
+  function step(dt) {
+    for (let i = balls.length - 1; i >= 0; i--) {
+      const b = balls[i];
+      b.vy += 260 * dt;
+      b.y += b.vy * dt;
+      if (b.row < ROWS && b.y >= b.nextY) {
+        if (Math.random() < 0.5) { b.x += colW / 2; b.slot++; }
+        else                     { b.x -= colW / 2; }
+        b.row++;
+        b.nextY = topY + (b.row + 1) * rowH;
+        b.vy *= 0.78;
+      }
+      if (b.row >= ROWS && b.y >= binBotY - 6) {
+        bins[b.slot]++;
+        total++;
+        balls.splice(i, 1);
+      }
+    }
+  }
+
+  const mu = ROWS / 2;
+  const variance = ROWS / 4;
+  const sigma = Math.sqrt(variance);
+  const gaussPDF = (k) => {
+    const z = (k - mu) / sigma;
+    return Math.exp(-0.5 * z * z) / (sigma * Math.sqrt(2 * Math.PI));
+  };
+
+  function draw(now) {
+    const dt = Math.min(0.032, (now - last) / 1000); last = now;
+    spawn += dt * SPAWN_RATE;
+    while (spawn >= 1 && balls.length < MAX_BALLS && total < MAX_TOTAL) {
+      spawn -= 1; newBall();
+    }
+    step(dt);
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.42)';
+    pegs.forEach(p => {
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); ctx.fill();
+    });
+
+    const binH = binBotY - binTopY;
+    const scaleRef = Math.max(...bins, total * gaussPDF(mu), 1);
+    for (let i = 0; i < BINS; i++) {
+      const x = xLeft + i * colW;
+      ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+      ctx.strokeRect(x + 0.5, binTopY + 0.5, colW - 1, binH - 1);
+      const bh = (bins[i] / scaleRef) * (binH - 2);
+      ctx.fillStyle = '#4facfe';
+      ctx.fillRect(x + 2, binBotY - 1 - bh, colW - 4, bh);
+    }
+
+    if (total > 40) {
+      ctx.strokeStyle = '#e91e63';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let s = 0; s <= 200; s++) {
+        const k = (s / 200) * BINS - 0.5;
+        const x = xLeft + ((k + 0.5) / BINS) * fieldW;
+        const expected = total * gaussPDF(k);
+        const y = binBotY - 1 - (expected / scaleRef) * (binH - 2);
+        if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = '#ffd166';
+    balls.forEach(b => {
+      ctx.beginPath(); ctx.arc(b.x, b.y, 2.6, 0, Math.PI * 2); ctx.fill();
+    });
+
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText('Galton board → bell curve', padX, 16);
+
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillText(`n = ${total}`, w - padX, 16);
+
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillText(`${ROWS} coin flips per ball`, padX, h - 10);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#e91e63';
+    ctx.fillText(`𝒩(${mu}, ${variance.toFixed(0)})`, w - padX, h - 10);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
