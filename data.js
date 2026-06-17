@@ -545,7 +545,7 @@ const LAWS = [
   {
     id: 'selfrep', name: 'Self-Replication', domain: 'biology', symbol: '⟳ DNA',
     tagline: 'Molecules that copy themselves.',
-    equation: 'DNA → 2×DNA',
+    equation: '\\underbrace{(s,\\bar{s})}_{\\text{parent}} \\;\\longrightarrow\\; \\underbrace{(s,\\bar{s}\'),\\;(s\',\\bar{s})}_{\\text{semi-conservative daughters}}',
     deps: ['bonding'], sim: null,
     eli5: `Some molecules have a magical property: drop them in a soup of the right raw materials, and they make copies of themselves. DNA is the most famous. It's a twisted ladder whose rungs spell out instructions. The ladder can unzip, and each half builds its missing side. This one trick — a molecule that copies itself — is what makes life possible.`,
     intermediate: `Self-replicating molecules are the precondition for biology. DNA's double helix carries genetic information as a sequence of four bases — A, T, C, G — complementary in pairs. When the helix unwinds, each strand is a template for a new partner, producing two identical copies. Replicators with variation are the substrate natural selection acts on. The origin of such replicators from non-living chemistry (abiogenesis) remains one of science's great open questions.`,
