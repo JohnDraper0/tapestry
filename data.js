@@ -796,7 +796,7 @@ const LAWS = [
   {
     id: 'consciousness', name: 'Consciousness', domain: 'unknown', symbol: '🧠?',
     tagline: 'Why is there something it is like to be you?',
-    equation: 'brain states → qualia = ?',
+    equation: '\\underbrace{\\mathcal{B}}_{\\text{neural state}} \\;\\xrightarrow{\\,f\\,?\\,}\\; \\underbrace{\\mathcal{Q}}_{\\text{phenomenal experience}}',
     deps: ['emergence', 'centraldogma'], known: false, sim: null,
     eli5: `When you see red, there's a *feeling* of red — not just information about wavelengths. When you taste coffee, there's a *what-it's-like-to-taste-coffee*. Nobody has the slightest clue why any physical system should feel like anything from the inside. We can map brains in huge detail, and still the question "why is it not all just dark in there?" has no answer. This is called the hard problem.`,
     intermediate: `The "easy problems" of consciousness — how brains discriminate, integrate and report information — are in principle tractable and partly solved. The "hard problem" (Chalmers 1995) is why any of this is accompanied by subjective experience. Proposed frameworks: **Integrated Information Theory** (Tononi) identifies consciousness with Φ, a measure of irreducible information integration; **Global Workspace Theory** (Baars, Dehaene) ties awareness to broadcast networks in the cortex; **higher-order theories** require representations of representations; **panpsychism** proposes that experience is fundamental and everywhere. None is conclusively supported, and no experiment can currently distinguish them.`,
