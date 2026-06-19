@@ -688,7 +688,13 @@
   DOMAIN_ORDER.forEach(d => {
     const item = document.createElement('div');
     item.className = 'legend-item';
-    item.innerHTML = `<span class="dot" style="background:${DOMAINS[d].color}"></span>${DOMAINS[d].label}`;
+    const dom = DOMAINS[d];
+    if (dom.desc) {
+      item.setAttribute('data-desc', dom.desc);
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('aria-label', `${dom.label}. ${dom.desc}`);
+    }
+    item.innerHTML = `<span class="dot" style="background:${dom.color}"></span>${dom.label}`;
     legend.appendChild(item);
   });
 

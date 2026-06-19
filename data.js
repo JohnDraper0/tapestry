@@ -12,20 +12,20 @@
 //   history       who discovered it, when, and how
 
 const DOMAINS = {
-  math:      { label: 'Mathematics & Logic',       color: '#f7b733' },
-  principle: { label: 'Deep Principles',           color: '#c471ed' },
-  mechanics: { label: 'Classical Mechanics',       color: '#4facfe' },
-  thermo:    { label: 'Thermodynamics',            color: '#ff8a65' },
-  em:        { label: 'Electromagnetism',          color: '#ffd166' },
-  relativity:{ label: 'Relativity',                color: '#06d6a0' },
-  quantum:   { label: 'Quantum',                   color: '#e91e63' },
-  forces:    { label: 'Fundamental Forces',        color: '#b388ff' },
-  chemistry: { label: 'Chemistry',                 color: '#64ffda' },
-  biology:   { label: 'Biology & Evolution',       color: '#8bc34a' },
-  info:      { label: 'Information & Computation', color: '#00e5ff' },
-  emergence: { label: 'Emergence & Complexity',    color: '#ff6f91' },
-  cosmos:    { label: 'Cosmology',                 color: '#7986cb' },
-  unknown:   { label: 'The Frontier — What We Don\'t Know', color: '#d0d0d0' },
+  math:      { label: 'Mathematics & Logic',       color: '#f7b733', desc: 'Pure structure — the grammar every other rung is written in.' },
+  principle: { label: 'Deep Principles',           color: '#c471ed', desc: 'Meta-laws so general they shape every theory beneath them.' },
+  mechanics: { label: 'Classical Mechanics',       color: '#4facfe', desc: 'How everyday matter moves, pushes, falls, flows.' },
+  thermo:    { label: 'Thermodynamics',            color: '#ff8a65', desc: 'How heat, work, and disorder keep their books.' },
+  em:        { label: 'Electromagnetism',          color: '#ffd166', desc: 'Charge, current, and the fields that braid into light.' },
+  relativity:{ label: 'Relativity',                color: '#06d6a0', desc: 'Spacetime as one fabric — bent by mass, stretched by speed.' },
+  quantum:   { label: 'Quantum',                   color: '#e91e63', desc: 'The discrete, probabilistic logic of the very small.' },
+  forces:    { label: 'Fundamental Forces',        color: '#b388ff', desc: 'The handful of ways particles speak to each other.' },
+  chemistry: { label: 'Chemistry',                 color: '#64ffda', desc: 'How atoms pair off and rearrange into stuff.' },
+  biology:   { label: 'Biology & Evolution',       color: '#8bc34a', desc: 'Once chemistry learned to copy itself, evolution took over.' },
+  info:      { label: 'Information & Computation', color: '#00e5ff', desc: 'Bits, computation, and the limits of what can be known.' },
+  emergence: { label: 'Emergence & Complexity',    color: '#ff6f91', desc: 'Simple rules, wildly intricate behaviour — at every scale.' },
+  cosmos:    { label: 'Cosmology',                 color: '#7986cb', desc: 'The biography of the universe — stars, galaxies, time itself.' },
+  unknown:   { label: 'The Frontier — What We Don\'t Know', color: '#d0d0d0', desc: 'The honest edge of the map. Here be dragons.' },
 };
 
 const LAWS = [
