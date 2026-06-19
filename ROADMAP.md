@@ -145,8 +145,10 @@ One bullet per F-category run. Order is roughly priority.
 3. **Collapse the 7-button header behind an overflow `⋯` menu on phones.**
    Keep search, theme, and reset in the header; move tour, 3D, iceberg,
    print, mute, help into the overflow.
-4. **Tap targets ≥44 × 44 px everywhere.** Theme buttons and top-buttons
-   currently shrink to ~28 px on mobile — below the Apple/WCAG minimum.
+4. ~~**Tap targets ≥44 × 44 px everywhere.**~~ — done 2026-05-22. Header
+   `.top-btn` and `.theme-btn` now get `min-height: 44px` (centred via
+   inline-flex) below 800 px, meeting the Apple HIG / WCAG 2.5.5 minimum.
+   Search/legend tap targets still worth a future pass.
 5. **Depth tabs respond to horizontal swipe** on the open panel, so a
    reader can thumb through ELI5 → intermediate → expert without
    hunting for small tab buttons.
