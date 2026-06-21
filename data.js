@@ -593,7 +593,7 @@ const LAWS = [
   {
     id: 'ecosystems', name: 'Ecosystems', domain: 'biology', symbol: '🌿',
     tagline: 'Everything eats everything.',
-    equation: 'NPP = GPP − R',
+    equation: '\\text{NPP} = \\underbrace{\\text{GPP}}_{\\text{photosynthesis}} - \\underbrace{R}_{\\text{respiration}}',
     deps: ['evolution', 'thermo'], sim: null,
     eli5: `Plants eat sunlight. Bugs eat plants. Birds eat bugs. Foxes eat birds. Fungi eat foxes when they die. And it all goes round and round, with energy flowing in from the Sun and carbon and water cycling through everything. No creature stands alone; the living world is one giant tangled web.`,
     intermediate: `Ecosystems are networks of organisms linked by flows of energy and matter. Sunlight enters through primary producers (plants, algae, cyanobacteria) that fix carbon via photosynthesis. Energy moves up food chains, dissipating as heat at each step (obeying thermodynamics). Nutrients cycle through biogeochemical loops (carbon, nitrogen, phosphorus, water). Feedback between species — predation, competition, symbiosis — produces the dynamic stability of healthy ecosystems. Ecology is, in a sense, thermodynamics applied to life.`,
