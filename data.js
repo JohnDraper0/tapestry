@@ -796,7 +796,7 @@ const LAWS = [
   {
     id: 'abiogenesis', name: 'Origin of Life', domain: 'unknown', symbol: '?→🧬',
     tagline: 'How did molecules first become alive?',
-    equation: 'chemistry → self-replicator = ?',
+    equation: '\\underbrace{\\text{geochemistry}}_{\\text{Hadean Earth}} \\;\\xrightarrow{\\,?\\,}\\; \\underbrace{\\text{biochemistry}}_{\\text{first cell}}',
     deps: ['bonding', 'selfrep'], known: false, sim: null,
     eli5: `Somewhere on early Earth, about 4 billion years ago, a soup of ordinary chemicals did something amazing: a molecule appeared that could copy itself. From that first copy-maker, every single living thing on Earth is descended. But how that first replicator got built — out of just rocks, water and lightning — is still a mystery. We have good guesses. None of them have been proven.`,
     intermediate: `The gap between complex non-living chemistry and the simplest self-replicating life is enormous and not yet bridged. Leading hypotheses: the **RNA world** (RNA can both store information and catalyse reactions, so a single molecule could act as both gene and enzyme); **metabolism-first** (autocatalytic networks of reactions preceded genetics); **alkaline hydrothermal vents** (mineral-surface catalysis plus natural proton gradients); and **panspermia** (life or precursors arrived from space). Miller–Urey (1953) showed amino acids can form from simple precursors; we still can't get from there to a full replicating system in the lab.`,
