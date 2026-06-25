@@ -2580,6 +2580,221 @@ SIMS.clt = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ───────────────────── EQUIVALENCE PRINCIPLE ─────────────────────────
+// Side-by-side rendering of Einstein's "happiest thought." LEFT: a sealed
+// box at rest on Earth; the released ball falls under gravity. RIGHT: an
+// identical box accelerating at g in deep space; the ball stays inertial
+// while the box's floor races up to meet it. The interior-frame trajectory
+// is identical in both — same parabola, same arrival time. A horizontal
+// light pulse traversing each box likewise bends downward by the same
+// amount, foreshadowing GR's prediction that gravity bends light.
+SIMS.equivalence = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const PAD = 12;
+  const headerH = 18;
+  const footerH = 16;
+  const paneW = (w - PAD * 3) / 2;
+  const paneH = h - PAD * 2 - headerH - footerH;
+  const leftX = PAD;
+  const rightX = PAD * 2 + paneW;
+  const topY = PAD + headerH;
+
+  const BMX = 16, BMY = 10;
+  const boxW = paneW - BMX * 2;
+  const boxH = paneH - BMY * 2;
+
+  // Ball trajectory: start near the top, reach the floor in CYCLE_DROP seconds.
+  const CYCLE_DROP = 1.7;
+  const HOLD       = 0.7;
+  const FULL       = CYCLE_DROP + HOLD;
+  const startY     = boxH * 0.20;
+  const endY       = boxH * 0.92;
+  const drop       = endY - startY;
+  // s = ½ g t² ⇒ g = 2·drop / CYCLE_DROP² (in pixel units)
+  const g = 2 * drop / (CYCLE_DROP * CYCLE_DROP);
+
+  // Light pulse crosses the box faster than the ball falls — but follows the
+  // same downward acceleration in the box frame.
+  const lightDur = CYCLE_DROP * 0.55;
+
+  // Deterministic starfield for the right pane.
+  const stars = [];
+  for (let i = 0; i < 32; i++) {
+    stars.push({
+      x: ((i * 73 + 11) % 100) / 100,
+      y: ((i * 41 + 7)  % 100) / 100,
+      s: 0.5 + ((i * 17) % 12) / 14,
+    });
+  }
+
+  function arrow(x0, y0, x1, y1, col) {
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - 5 * Math.cos(a - 0.5), y1 - 5 * Math.sin(a - 0.5));
+    ctx.lineTo(x1 - 5 * Math.cos(a + 0.5), y1 - 5 * Math.sin(a + 0.5));
+    ctx.closePath(); ctx.fill();
+  }
+
+  function drawPane(x, y, mode, phase) {
+    const innerX = x + BMX;
+    const innerY = y + BMY;
+    const color = mode === 'gravity' ? '#ffd166' : '#80cbc4';
+
+    if (mode === 'gravity') {
+      const grd = ctx.createLinearGradient(0, y, 0, y + paneH);
+      grd.addColorStop(0, 'rgba(80,140,200,0.10)');
+      grd.addColorStop(1, 'rgba(140,170,90,0.18)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(x, y, paneW, paneH);
+      const groundY = innerY + boxH + 4;
+      ctx.fillStyle = 'rgba(140,170,90,0.32)';
+      ctx.fillRect(x + 2, groundY, paneW - 4, paneH - (groundY - y) - 2);
+      ctx.strokeStyle = 'rgba(140,170,90,0.55)';
+      ctx.lineWidth = 1;
+      for (let xx = x + 6; xx < x + paneW - 8; xx += 9) {
+        ctx.beginPath();
+        ctx.moveTo(xx, groundY + 2);
+        ctx.lineTo(xx + 5, groundY - 3);
+        ctx.stroke();
+      }
+    } else {
+      ctx.fillStyle = 'rgba(30, 36, 60, 0.30)';
+      ctx.fillRect(x, y, paneW, paneH);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      for (const s of stars) {
+        ctx.beginPath();
+        ctx.arc(x + 4 + s.x * (paneW - 8), y + 4 + s.y * (paneH - 8), s.s, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Rocket flame jutting below the box.
+      const flameTop = innerY + boxH;
+      const flameCx  = innerX + boxW / 2;
+      const flameH   = (paneH - (flameTop - y)) - 2;
+      const flick = 0.82 + 0.18 * Math.sin(performance.now() / 80);
+      const fg = ctx.createLinearGradient(0, flameTop, 0, flameTop + flameH * flick);
+      fg.addColorStop(0,   'rgba(255,210,90,0.95)');
+      fg.addColorStop(0.55,'rgba(255,120,60,0.70)');
+      fg.addColorStop(1,   'rgba(180,40,40,0.0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath();
+      ctx.moveTo(flameCx - boxW * 0.20, flameTop);
+      ctx.lineTo(flameCx + boxW * 0.20, flameTop);
+      ctx.lineTo(flameCx,                flameTop + flameH * flick);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.8;
+    ctx.strokeRect(innerX + 0.5, innerY + 0.5, boxW, boxH);
+
+    ctx.fillStyle = color;
+    ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText(mode === 'gravity' ? 'AT REST ON EARTH'
+                                    : 'ACCELERATING IN DEEP SPACE',
+                 x + paneW / 2, y - 6);
+
+    // Ghost trajectory.
+    ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let k = 0; k <= 30; k++) {
+      const tk = (k / 30) * CYCLE_DROP;
+      const yk = Math.min(startY + 0.5 * g * tk * tk, endY);
+      const xx = innerX + boxW / 2;
+      if (k === 0) ctx.moveTo(xx, innerY + yk);
+      else         ctx.lineTo(xx, innerY + yk);
+    }
+    ctx.stroke();
+
+    // Release marker — tiny horizontal tick at the start point.
+    ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+    ctx.lineWidth = 1;
+    const rx = innerX + boxW / 2;
+    ctx.beginPath();
+    ctx.moveTo(rx - 6, innerY + startY - 2);
+    ctx.lineTo(rx + 6, innerY + startY - 2);
+    ctx.stroke();
+
+    // Ball.
+    const t = Math.min(phase, CYCLE_DROP);
+    const sy = Math.min(startY + 0.5 * g * t * t, endY);
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(rx, innerY + sy, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Light pulse — parabolic in box frame.
+    const tl = Math.min(phase, lightDur);
+    if (tl >= 0) {
+      const lt = tl / lightDur;
+      const ly0 = innerY + boxH * 0.12;
+      ctx.strokeStyle = 'rgba(255,209,102,0.55)';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      const STEP = 0.04;
+      for (let u = 0; u <= lt + 1e-6; u += STEP) {
+        const ux = innerX + u * boxW;
+        const tu = u * lightDur;
+        const uy = ly0 + 0.5 * g * tu * tu;
+        if (u === 0) ctx.moveTo(ux, uy);
+        else         ctx.lineTo(ux, uy);
+      }
+      ctx.stroke();
+      if (lt <= 1) {
+        const lx = innerX + lt * boxW;
+        const ly = ly0 + 0.5 * g * tl * tl;
+        ctx.fillStyle = '#ffd166';
+        ctx.beginPath();
+        ctx.arc(lx, ly, 2.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Local acceleration arrow + label inside the box.
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = color;
+    if (mode === 'gravity') {
+      ctx.fillText('g', innerX + 6, innerY + 14);
+      arrow(innerX + 14, innerY + 6, innerX + 14, innerY + 26, color);
+    } else {
+      ctx.fillText('a = g', innerX + 6, innerY + 14);
+      arrow(innerX + 24, innerY + 26, innerX + 24, innerY + 6, color);
+    }
+  }
+
+  function draw(now) {
+    const T = (now - t0) / 1000;
+    const phase = T % FULL;
+
+    ctx.fillStyle = '#0a0e1e';
+    ctx.fillRect(0, 0, w, h);
+
+    drawPane(leftX,  topY, 'gravity', phase);
+    drawPane(rightX, topY, 'rocket',  phase);
+
+    ctx.fillStyle = '#b9f6ca';
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('No experiment inside the box can tell gravity from acceleration.',
+                 w / 2, h - 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

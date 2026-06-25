@@ -14,10 +14,10 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 70 (58 known, 12 frontier). Domains: 14. Sims: 25. Analogous
+- Nodes: 70 (58 known, 12 frontier). Domains: 14. Sims: 26. Analogous
   cross-links populated: 20. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-06-13.
+- Last updated: 2026-06-25.
 
 ## The atlas we want (inventory)
 
