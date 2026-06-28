@@ -738,7 +738,18 @@ header * { pointer-events: auto; }
   .hint { display: none; }
   header { padding: 14px 14px; flex-wrap: wrap; }
   .header-centre { order: 3; width: 100%; max-width: none; margin-top: 10px; }
-  .theme-switcher .theme-btn { padding: 7px 10px; font-size: 10px; }
+
+  /* WCAG 2.5.5 / Apple HIG: header controls hit the 44×44 tap-target floor
+     on touch screens. Previously the theme switcher shrank further on mobile
+     (≈24 px tall) — well into thumb-friction territory. */
+  .top-btn,
+  .theme-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 16px;
+    font-size: 11px;
+  }
+  .top-buttons { gap: 6px; }
 }
 
 /* ── node visual states driven by classes ───────────── */
