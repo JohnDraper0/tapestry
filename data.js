@@ -493,7 +493,7 @@ const LAWS = [
   {
     id: 'higgs', name: 'Higgs Mechanism', domain: 'forces', symbol: 'ϕ',
     tagline: 'How particles got their mass.',
-    equation: '|\\Phi|^2 = v^2/2',
+    equation: '\\underbrace{V(\\Phi) = -\\mu^2|\\Phi|^2 + \\lambda|\\Phi|^4}_{\\text{Mexican hat}}\\;\\Longrightarrow\\;\\langle\\Phi\\rangle = v/\\sqrt{2}',
     deps: ['standard', 'qft'], sim: null,
     eli5: `Imagine the universe is filled with invisible jelly. Some particles slide through easily — those are "light." Others get stuck and drag through — those are "heavy." The Higgs field is the jelly, and how much it sticks to each kind of particle is what we call mass. Scientists found the jelly by watching it ripple when they smashed protons together at enormous speeds. A ripple in the jelly is the Higgs boson.`,
     intermediate: `Before the Higgs field "switched on" in the early universe, all particles were massless and flew at the speed of light. A spontaneous symmetry-breaking event gave the Higgs field a constant, nonzero value everywhere — and particles interacting with it behave as though they were heavy. The heavier a particle's coupling to the Higgs, the more mass it has. This mechanism was essential to unify the electromagnetic and weak forces while still allowing the W and Z bosons to be heavy and the photon to be massless. Finding the Higgs boson in 2012 confirmed the theory.`,
