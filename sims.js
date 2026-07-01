@@ -2795,6 +2795,169 @@ SIMS.equivalence = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── PHOTOELECTRIC EFFECT ────────────────────────
+// Monochromatic photons rain down on a cesium plate (φ = 2.14 eV).
+// Below the threshold wavelength (~579 nm) NO electrons are ejected
+// however many photons arrive — the wave picture predicts intensity
+// should matter; it doesn't. Above threshold, each landing photon
+// ejects one electron with KE = hν − φ, made visible as its exit
+// speed. Auto-cycles red → yellow → cyan → blue → near-UV → deep-UV.
+SIMS.photoelectric = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const PHI = 2.14;                                // work function, eV (cesium)
+  const LAM_THRESH = 1240 / PHI;                   // ≈ 579 nm (E[eV] = 1240/λ[nm])
+  const STOPS = [
+    { lam: 700, name: 'red',      dwell: 2200 },
+    { lam: 580, name: 'yellow',   dwell: 2200 },   // right at threshold
+    { lam: 500, name: 'cyan',     dwell: 2200 },
+    { lam: 440, name: 'blue',     dwell: 2200 },
+    { lam: 350, name: 'near UV',  dwell: 2400 },
+    { lam: 250, name: 'deep UV',  dwell: 2600 },
+  ];
+  const TOTAL = STOPS.reduce((s, x) => s + x.dwell, 0);
+
+  const plateY = h - 42;
+  const plateH = 18;
+
+  // Approximate wavelength → sRGB. UV rendered as a pale glowing violet.
+  function wlColor(lam) {
+    let r, g, b;
+    if (lam < 380)      { r = 180; g = 120; b = 255; }             // UV
+    else if (lam < 440) { r = 130 + (lam - 380) * 2; g = 0; b = 255; }
+    else if (lam < 490) { r = 0; g = (lam - 440) * 5.1; b = 255; }
+    else if (lam < 510) { r = 0; g = 255; b = 255 - (lam - 490) * 12.75; }
+    else if (lam < 580) { r = (lam - 510) * 3.64; g = 255; b = 0; }
+    else if (lam < 645) { r = 255; g = 255 - (lam - 580) * 3.92; b = 0; }
+    else                { r = 255; g = 0; b = 0; }                 // red
+    return `rgb(${r | 0}, ${g | 0}, ${b | 0})`;
+  }
+
+  const photons   = [];
+  const electrons = [];
+  let lastSpawn = 0;
+  const SPAWN_MS = 130;
+
+  function currentStop(T) {
+    let t = T % TOTAL;
+    for (const s of STOPS) { if (t < s.dwell) return { s, t }; t -= s.dwell; }
+    return { s: STOPS[0], t: 0 };
+  }
+
+  function draw(now) {
+    const T   = now - t0;
+    const cur = currentStop(T).s;
+    const lam = cur.lam;
+    const eV  = 1240 / lam;
+    const above = eV > PHI;
+    const col = wlColor(lam);
+
+    if (now - lastSpawn > SPAWN_MS) {
+      lastSpawn = now;
+      photons.push({
+        x: 20 + Math.random() * (w - 40),
+        y: -8,
+        vy: 190 + Math.random() * 40,
+        col,
+      });
+    }
+
+    const dt = 1 / 60;
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.y += p.vy * dt;
+      if (p.y >= plateY - 2) {
+        if (above) {
+          const KE = eV - PHI;
+          const v  = -(85 + 95 * Math.sqrt(KE));
+          electrons.push({ x: p.x, y: plateY - 3, vy: v });
+        }
+        photons.splice(i, 1);
+      }
+    }
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.y += e.vy * dt;
+      if (e.y < -8) electrons.splice(i, 1);
+    }
+
+    // dark background — colour photons need contrast
+    ctx.fillStyle = '#0a0e1e';
+    ctx.fillRect(0, 0, w, h);
+
+    // title
+    ctx.fillStyle = '#b9f6ca';
+    ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Photoelectric Effect — cesium plate, φ = 2.14 eV', 8, 15);
+
+    // readouts (top-right)
+    ctx.textAlign = 'right';
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = col;
+    ctx.fillText(`λ = ${lam} nm  (${cur.name})`, w - 8, 15);
+    ctx.fillStyle = 'rgba(255,255,255,0.78)';
+    ctx.fillText(`hν = ${eV.toFixed(2)} eV`, w - 8, 30);
+    if (above) {
+      ctx.fillStyle = '#69f0ae';
+      ctx.fillText(`KE = ${(eV - PHI).toFixed(2)} eV`, w - 8, 45);
+    } else {
+      ctx.fillStyle = '#ff8a65';
+      ctx.fillText('no ejection', w - 8, 45);
+    }
+
+    // photons
+    for (const p of photons) {
+      ctx.fillStyle = p.col;
+      ctx.shadowColor = p.col; ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 3.2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    // plate
+    const grd = ctx.createLinearGradient(0, plateY, 0, plateY + plateH);
+    grd.addColorStop(0, '#a4abc0');
+    grd.addColorStop(1, '#42485a');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, plateY, w, plateH);
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+    ctx.beginPath(); ctx.moveTo(0, plateY); ctx.lineTo(w, plateY); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('Cs cathode', w / 2, plateY + 12);
+
+    // electrons
+    for (const e of electrons) {
+      ctx.fillStyle = '#e0f7fa';
+      ctx.shadowColor = '#4facfe'; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.arc(e.x, e.y, 2.2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    // spectrum scale strip along the bottom
+    const scaleY = h - 12;
+    const scaleL = 20, scaleR = w - 20;
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(scaleL, scaleY); ctx.lineTo(scaleR, scaleY); ctx.stroke();
+    const nmToX = (nm) => scaleL + (720 - nm) / (720 - 200) * (scaleR - scaleL);
+
+    const tx = nmToX(LAM_THRESH);
+    ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(tx, scaleY - 4); ctx.lineTo(tx, scaleY + 4); ctx.stroke();
+    ctx.fillStyle = '#ffd166'; ctx.font = '9px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText(`threshold ${LAM_THRESH.toFixed(0)} nm`, tx, scaleY - 6);
+
+    const cx = nmToX(lam);
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(cx, scaleY, 3, 0, Math.PI * 2); ctx.fill();
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
