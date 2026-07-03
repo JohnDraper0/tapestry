@@ -880,7 +880,7 @@ const LAWS = [
   {
     id: 'missing_unknowns', name: 'What We Don\'t Know We Don\'t Know', domain: 'unknown', symbol: '??',
     tagline: 'The unknown unknowns.',
-    equation: '∅',
+    equation: '\\bigl\\{\\,?_1,\\,?_2,\\,?_3,\\,\\ldots\\,\\bigr\\} \\;\\nsubseteq\\; \\mathcal{K}_{\\text{now}}',
     deps: ['quantum_gravity', 'dark_nature', 'consciousness'], known: false, sim: null,
     eli5: `Imagine if, 200 years ago, someone told a scientist "the universe is expanding, atoms are mostly empty, time slows down when you move fast, there are invisible particles everywhere, and 95% of the universe is made of stuff nobody knows about." They'd think you were mad. A lot of what we now know, we had no idea was even a question back then. So the scariest thought is: what enormous, obvious things are we missing today? We probably know less than we think.`,
     intermediate: `Every major era of science has been blindsided by discoveries the previous era didn't even have categories for. Nineteenth-century physics had no concept of quantum mechanics or general relativity. Early twentieth-century biology had no concept of DNA. Mid-twentieth-century cosmology had no concept of dark energy. There is no particular reason to think our era is different. Estimates of how much we know range wildly, but a sober take: we understand the fundamental laws at energy scales we can access, and the basic machinery of life, and the rough history of the cosmos — but we barely understand complex systems, consciousness, emergence, the origin of life, or the full contents of the universe. The iceberg analogy is optimistic; it might be more like a snowball on a mountain.`,
