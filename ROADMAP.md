@@ -17,7 +17,7 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 70 (58 known, 12 frontier). Domains: 14. Sims: 29. Analogous
   cross-links populated: 21. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-01.
+- Last updated: 2026-07-04.
 
 ## The atlas we want (inventory)
 
@@ -150,8 +150,11 @@ One bullet per F-category run. Order is roughly priority.
 5. **Depth tabs respond to horizontal swipe** on the open panel, so a
    reader can thumb through ELI5 → intermediate → expert without
    hunting for small tab buttons.
-6. **Hero image responsive widths.** Pass `WM(file, 480)` on phones and
-   `WM(file, 900)` on desktop; saves ~75% of image bytes over cellular.
+6. ~~**Hero image responsive widths.**~~ — done 2026-07-04. The panel `<img>`
+   now ships a 480 / 900 / 1400 `srcset` with `sizes="(max-width: 640px)
+   100vw, 560px"`; Wikimedia's `Special:FilePath` honours the widths, so
+   cellular phones pull ~480 and retina desktops pull ~1400 without any
+   extra bookkeeping — ~75% fewer image bytes on a phone.
 7. **Compress the intro overlay on mobile.** The three-paragraph body
    often exceeds the fold on a 6-inch phone; collapse into a single
    "what is this?" teaser with an expandable "tell me more".

@@ -573,8 +573,16 @@
       }).filter(Boolean).join('');
 
     const color = DOMAINS[l.domain].color;
+    // Responsive hero: Wikimedia serves any width via ?width=…; offering three
+    // sizes lets phones on cellular pull the 480 while retina desktops get 1400,
+    // saving ~75% of image bytes on mobile without any bookkeeping on our end.
+    const heroSrcset = l.image
+      ? [480, 900, 1400]
+          .map(w => `${l.image.replace(/width=\d+/, 'width=' + w)} ${w}w`)
+          .join(', ')
+      : '';
     const heroImg = l.image
-      ? `<img class="hero-photo" src="${l.image}" alt="${l.name}" onerror="this.style.display='none'">`
+      ? `<img class="hero-photo" src="${l.image}" srcset="${heroSrcset}" sizes="(max-width: 640px) 100vw, 560px" alt="${l.name}" onerror="this.style.display='none'">`
       : '';
     const heroCaption = l.caption
       ? `<div class="hero-caption">${l.caption}</div>`
