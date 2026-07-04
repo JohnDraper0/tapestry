@@ -17,7 +17,8 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 70 (58 known, 12 frontier). Domains: 14. Sims: 29. Analogous
   cross-links populated: 21. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-04.
+- Last updated: 2026-07-04. Mobile: detail panel is now a drag-to-dismiss
+  bottom sheet below 640 px (roadmap mobile #1 done).
 
 ## The atlas we want (inventory)
 
@@ -136,12 +137,14 @@ Treat this list as a backlog: each bullet is a single-run-sized task.
 One bullet per F-category run. Order is roughly priority.
 
 ### Mobile & touch (biggest gap)
-1. **Panel becomes a bottom sheet on narrow viewports.** Below ~640 px the
-   560 px side drawer swallows the map; switch to a bottom sheet that
-   covers ~85 vh with a drag handle and a visible "close" affordance.
-2. **Touch pan + pinch-zoom on the SVG map.** Today drag/scroll are
-   mouse-only; add pointer-event handlers (or hammer-like pinch detection
-   in <50 lines) so phones can navigate the tower natively.
+1. ~~**Panel becomes a bottom sheet on narrow viewports.**~~ — done
+   2026-07-04. Below 640 px `#panel` docks as an 86 vh bottom sheet with a
+   grab handle, rounded top, and flick-down-to-dismiss (pointer events,
+   110 px threshold). Desktop side drawer unchanged.
+2. ~~**Touch pan + pinch-zoom on the SVG map.**~~ — already in place
+   (`app.js` touchstart/touchmove handlers do single-finger pan + two-finger
+   pinch). Could still improve: zoom toward the pinch centroid, not viewport
+   centre.
 3. **Collapse the 7-button header behind an overflow `⋯` menu on phones.**
    Keep search, theme, and reset in the header; move tour, 3D, iceberg,
    print, mute, help into the overflow.
