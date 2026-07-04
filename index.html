@@ -58,13 +58,18 @@
         <button class="theme-btn" data-theme="paper" title="Vintage manuscript">◧</button>
         <button class="theme-btn" data-theme="blueprint" title="Engineering schematic">◨</button>
       </div>
-      <button class="top-btn" id="tourBtn" title="Auto-climb the tower">▶ Tour</button>
-      <button class="top-btn" id="view3dBtn" title="Spiral staircase view">◎ 3D</button>
-      <button class="top-btn" id="icebergBtn" title="What we know vs don't know">🧊</button>
-      <button class="top-btn" id="printBtn" title="Print poster">⎙</button>
-      <button class="top-btn" id="muteBtn" title="Toggle sound">♪</button>
+      <!-- These collapse behind the ⋯ menu on phones; inline on desktop. -->
+      <div class="overflow-group" id="overflowGroup">
+        <button class="top-btn" id="tourBtn" title="Auto-climb the tower">▶ Tour</button>
+        <button class="top-btn" id="view3dBtn" title="Spiral staircase view">◎ 3D</button>
+        <button class="top-btn" id="icebergBtn" title="What we know vs don't know">🧊</button>
+        <button class="top-btn" id="printBtn" title="Print poster">⎙</button>
+        <button class="top-btn" id="muteBtn" title="Toggle sound">♪</button>
+        <button class="top-btn" id="helpBtn" title="Show intro">?</button>
+      </div>
       <button class="top-btn" id="resetBtn" title="Recenter map">⌂</button>
-      <button class="top-btn" id="helpBtn" title="Show intro">?</button>
+      <button class="top-btn overflow-toggle" id="overflowBtn"
+              title="More controls" aria-haspopup="true" aria-expanded="false">⋯</button>
     </div>
   </header>
 

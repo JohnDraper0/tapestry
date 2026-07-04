@@ -18,7 +18,8 @@ architecture in their head and know which rungs hold which weight.
   cross-links populated: 21. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
 - Last updated: 2026-07-04. Mobile: detail panel is now a drag-to-dismiss
-  bottom sheet below 640 px (roadmap mobile #1 done).
+  bottom sheet (mobile #1) and the header controls collapse behind a ⋯
+  overflow menu (mobile #3) below 640 px.
 
 ## The atlas we want (inventory)
 
@@ -145,9 +146,11 @@ One bullet per F-category run. Order is roughly priority.
    (`app.js` touchstart/touchmove handlers do single-finger pan + two-finger
    pinch). Could still improve: zoom toward the pinch centroid, not viewport
    centre.
-3. **Collapse the 7-button header behind an overflow `⋯` menu on phones.**
-   Keep search, theme, and reset in the header; move tour, 3D, iceberg,
-   print, mute, help into the overflow.
+3. ~~**Collapse the 7-button header behind an overflow `⋯` menu on phones.**~~
+   — done 2026-07-04. Below 640 px, tour/3D/iceberg/print/mute/help collapse
+   into a `⋯` dropdown anchored below the header; search, theme switcher and
+   reset stay inline. Menu closes on pick or outside click; ⋯ is a 44 px
+   target.
 4. **Tap targets ≥44 × 44 px everywhere.** Theme buttons and top-buttons
    currently shrink to ~28 px on mobile — below the Apple/WCAG minimum.
 5. **Depth tabs respond to horizontal swipe** on the open panel, so a

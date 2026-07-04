@@ -762,6 +762,31 @@
     });
   }
 
+  // ── mobile overflow (⋯) menu ─────────────────────────────────────
+  // The toggle is display:none above 640px, so this only matters on phones.
+  // Tapping a control inside the menu also runs its own handler, so we just
+  // close the menu after any pick and on any outside click.
+  const overflowBtn = document.getElementById('overflowBtn');
+  const overflowGroup = document.getElementById('overflowGroup');
+  if (overflowBtn && overflowGroup) {
+    const closeOverflow = () => {
+      overflowGroup.classList.remove('open');
+      overflowBtn.setAttribute('aria-expanded', 'false');
+    };
+    overflowBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = overflowGroup.classList.toggle('open');
+      overflowBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    overflowGroup.addEventListener('click', (e) => {
+      if (e.target.closest('.top-btn')) closeOverflow();
+    });
+    document.addEventListener('click', (e) => {
+      if (!overflowGroup.classList.contains('open')) return;
+      if (!overflowGroup.contains(e.target) && e.target !== overflowBtn) closeOverflow();
+    });
+  }
+
   // ── theme switcher ───────────────────────────────────────────────
   const THEMES = ['cosmos', 'paper', 'blueprint'];
   let currentTheme = localStorage.getItem('tapestry-theme') || 'cosmos';
