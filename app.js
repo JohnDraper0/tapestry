@@ -692,6 +692,38 @@
     if (activeSim) { activeSim.stop(); activeSim = null; }
   });
 
+  // ── mobile bottom-sheet: flick the grabber down to dismiss ─────────
+  // The grabber is display:none above 640px, so these handlers only ever
+  // fire on phones. Pointer events unify touch/pen; touch-action:none on
+  // the grabber keeps the drag from scrolling the sheet.
+  const panelGrabber = document.getElementById('panelGrabber');
+  if (panelGrabber) {
+    let sy = 0, dy = 0, sheetDrag = false;
+    panelGrabber.addEventListener('pointerdown', (e) => {
+      sheetDrag = true; sy = e.clientY; dy = 0;
+      panel.style.transition = 'none';
+      panelGrabber.setPointerCapture(e.pointerId);
+    });
+    panelGrabber.addEventListener('pointermove', (e) => {
+      if (!sheetDrag) return;
+      dy = Math.max(0, e.clientY - sy);
+      panel.style.transform = `translateY(${dy}px)`;
+    });
+    const endSheetDrag = () => {
+      if (!sheetDrag) return;
+      sheetDrag = false;
+      panel.style.transition = '';
+      panel.style.transform = '';
+      if (dy > 110) {
+        panel.classList.remove('open');
+        if (typeof Sound !== 'undefined') Sound.closePanel();
+        if (activeSim) { activeSim.stop(); activeSim = null; }
+      }
+    };
+    panelGrabber.addEventListener('pointerup', endSheetDrag);
+    panelGrabber.addEventListener('pointercancel', endSheetDrag);
+  }
+
   // ── 9. legend ────────────────────────────────────────────────────
   DOMAIN_ORDER.forEach(d => {
     const item = document.createElement('div');
