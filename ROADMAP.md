@@ -14,12 +14,12 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 70 (58 known, 12 frontier). Domains: 14. Sims: 29. Analogous
+- Nodes: 71 (59 known, 12 frontier). Domains: 14. Sims: 29. Analogous
   cross-links populated: 21. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-04. Mobile: detail panel is now a drag-to-dismiss
-  bottom sheet (mobile #1) and the header controls collapse behind a ⋯
-  overflow menu (mobile #3) below 640 px.
+- Last updated: 2026-07-05. New info-domain node **Landauer's principle**
+  (thermo-info bridge) — kT ln 2 per erased bit, closing gap #15 and
+  giving the existing `information↔thermo` analogy its own rung.
 
 ## The atlas we want (inventory)
 
@@ -99,7 +99,7 @@ equation, and valid `deps`:
 12. ~~**Gravitational waves** (relativity)~~ — added 2026-04-17.
 13. ~~**Entanglement** (quantum) — "spooky action" and Bell's theorem.~~ — added 2026-04-18.
 14. **Neuron action potential** (neuro) — how a cell fires a signal.
-15. **Entropy–information link / Landauer** (thermo-info bridge node).
+15. ~~**Entropy–information link / Landauer** (thermo-info bridge node).~~ — added 2026-07-05.
 
 **Frontier (known: false) additions worth having:**
 ~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap · turbulence ·
