@@ -2958,6 +2958,168 @@ SIMS.photoelectric = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── FARADAY ────────────────────────────────
+// A bar magnet slides in and out of a coil; the galvanometer needle
+// deflects with −dΦ/dt. Needle rests at zero at the turnaround points
+// (v = 0) AND when the magnet is centred inside the coil (dΦ/dy = 0),
+// peaking halfway between — the exact physics of Faraday's law.
+SIMS.faraday = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  // Layout.
+  const coilCx  = w * 0.34;
+  const coilCy  = h * 0.50;
+  const coilRx  = Math.min(74, w * 0.16);
+  const coilRy  = 5;
+  const N       = 8;
+  const spacing = Math.min(11, (h * 0.45) / (N - 1));
+  const coilTop = coilCy - (N - 1) / 2 * spacing;
+  const coilBot = coilTop + (N - 1) * spacing;
+
+  const meterCx = w * 0.74;
+  const meterCy = h * 0.55;
+  const meterR  = Math.min(62, Math.min(h * 0.30, w * 0.18));
+
+  const magW    = coilRx * 0.95;
+  const magHalf = 22;
+
+  const AMP     = Math.min(120, h * 0.32);
+  const PERIOD  = 3200; // ms
+  const omega   = 2 * Math.PI / (PERIOD / 1000);
+
+  // Bar-magnet on-axis dipole field ∝ 1 / (a² + z²)^{3/2}, summed over loops.
+  const a2 = (coilRx * 0.9) ** 2;
+  function flux(yMag) {
+    let s = 0;
+    for (let i = 0; i < N; i++) {
+      const z = (coilTop + i * spacing) - yMag;
+      s += 1 / Math.pow(a2 + z * z, 1.5);
+    }
+    return s;
+  }
+  // Empirical EMF normaliser so full-scale deflection matches the actual peak.
+  let emfMax = 1e-9;
+
+  function draw(now) {
+    const t = (now - t0) / 1000;
+    const yMag = coilCy + AMP * Math.sin(omega * t);
+    const vMag = AMP * omega * Math.cos(omega * t);
+
+    const dy = 1;
+    const dPhi = (flux(yMag + dy) - flux(yMag - dy)) / (2 * dy);
+    const emf  = -dPhi * vMag;
+    emfMax = Math.max(emfMax, Math.abs(emf));
+    const emfNorm = Math.max(-1, Math.min(1, emf / emfMax));
+
+    ctx.clearRect(0, 0, w, h);
+
+    // ── coil: back arcs (top half of ellipse) first ────────────────────
+    ctx.strokeStyle = 'rgba(255, 210, 130, 0.90)';
+    ctx.lineWidth = 1.6;
+    for (let i = 0; i < N; i++) {
+      const y = coilTop + i * spacing;
+      ctx.beginPath();
+      ctx.ellipse(coilCx, y, coilRx, coilRy, 0, Math.PI, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    // ── magnet ────────────────────────────────────────────────────────
+    const magTop = yMag - magHalf;
+    ctx.fillStyle = '#ff5b5b';
+    ctx.fillRect(coilCx - magW / 2, magTop, magW, magHalf);
+    ctx.fillStyle = '#3aa1ff';
+    ctx.fillRect(coilCx - magW / 2, yMag, magW, magHalf);
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(coilCx - magW / 2 + 0.5, magTop + 0.5, magW - 1, magHalf * 2 - 1);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('N', coilCx, yMag - magHalf / 2);
+    ctx.fillText('S', coilCx, yMag + magHalf / 2);
+
+    // ── coil: front arcs (bottom half) drawn last, so they cross in front
+    ctx.strokeStyle = 'rgba(255, 210, 130, 0.95)';
+    ctx.lineWidth = 1.6;
+    for (let i = 0; i < N; i++) {
+      const y = coilTop + i * spacing;
+      ctx.beginPath();
+      ctx.ellipse(coilCx, y, coilRx, coilRy, 0, 0, Math.PI);
+      ctx.stroke();
+    }
+
+    // ── wires from coil top/bottom to galvanometer ────────────────────
+    ctx.strokeStyle = 'rgba(255,210,130,0.75)';
+    ctx.lineWidth = 1.4;
+    const wireX = coilCx + coilRx + 6;
+    const meterInL = meterCx - meterR * 0.55;
+    const meterInR = meterCx + meterR * 0.55;
+    ctx.beginPath();
+    ctx.moveTo(coilCx + coilRx, coilTop);
+    ctx.lineTo(wireX, coilTop);
+    ctx.lineTo(wireX, coilTop - 12);
+    ctx.lineTo(meterInL, meterCy - meterR * 0.95);
+    ctx.moveTo(coilCx + coilRx, coilBot);
+    ctx.lineTo(wireX, coilBot);
+    ctx.lineTo(wireX, coilBot + 12);
+    ctx.lineTo(meterInR, meterCy - meterR * 0.95);
+    ctx.stroke();
+
+    // ── galvanometer body ─────────────────────────────────────────────
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.arc(meterCx, meterCy, meterR, Math.PI * 1.10, Math.PI * 1.90, false);
+    ctx.moveTo(meterCx - meterR, meterCy);
+    ctx.lineTo(meterCx + meterR, meterCy);
+    ctx.stroke();
+    // Ticks.
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    for (let k = -5; k <= 5; k++) {
+      const a = Math.PI * 1.5 + k * (Math.PI * 0.4 / 5);
+      const inner = (k === 0 || k === 5 || k === -5) ? meterR - 9 : meterR - 4;
+      ctx.beginPath();
+      ctx.moveTo(meterCx + Math.cos(a) * meterR, meterCy + Math.sin(a) * meterR);
+      ctx.lineTo(meterCx + Math.cos(a) * inner, meterCy + Math.sin(a) * inner);
+      ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('−', meterCx - meterR * 0.82, meterCy - meterR * 0.02);
+    ctx.fillText('+', meterCx + meterR * 0.82, meterCy - meterR * 0.02);
+    ctx.fillText('0', meterCx, meterCy - meterR + 3);
+
+    // Needle.
+    const needleA = Math.PI * 1.5 + emfNorm * (Math.PI * 0.4);
+    ctx.strokeStyle = '#ff6b6b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(meterCx, meterCy);
+    ctx.lineTo(meterCx + Math.cos(needleA) * (meterR - 6),
+               meterCy + Math.sin(needleA) * (meterR - 6));
+    ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(meterCx, meterCy, 3, 0, Math.PI * 2); ctx.fill();
+
+    // Labels.
+    ctx.fillStyle = 'rgba(255,255,255,0.72)';
+    ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('galvanometer', meterCx, meterCy + 22);
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.font = '10px system-ui';
+    ctx.fillText('ε = −dΦ/dt', meterCx, meterCy + 38);
+    ctx.textAlign = 'left';
+    ctx.fillText('coil of N turns', coilCx - coilRx, coilBot + 26);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
