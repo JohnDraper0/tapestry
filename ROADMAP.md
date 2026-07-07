@@ -15,11 +15,12 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 71 (59 known, 12 frontier). Domains: 14. Sims: 29. Analogous
-  cross-links populated: 21. Images mirrored locally: 0 (all hot-linked hero
+  cross-links populated: 22. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-05. New info-domain node **Landauer's principle**
-  (thermo-info bridge) — kT ln 2 per erased bit, closing gap #15 and
-  giving the existing `information↔thermo` analogy its own rung.
+- Last updated: 2026-07-07. New cross-link **`symmetry` ↔ `standard`** —
+  the Standard Model IS SU(3) × SU(2) × U(1); Yang–Mills local invariance
+  hands you gluons, W/Z and the photon for free. Ties the deep-principles
+  layer directly into the map of all known particles.
 
 ## The atlas we want (inventory)
 
