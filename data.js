@@ -1116,6 +1116,7 @@ const ANALOGIES = [
   ['evolution',      'information',   "selection IS an information channel — each fit allele is a bit of environment written into the genome; a fish's eye encodes the optics of seawater"],
   ['snells_law',     'action',        "Fermat's principle of least time IS the action principle for light: refraction picks the path that makes δ∫n dℓ vanish"],
   ['selfrep',        'computation',   "von Neumann (1948) proved any non-trivial self-replicator must carry a quoted self-description plus a separate constructor that reads it — five years before Watson and Crick found DNA's tape with the cell's polymerase and ribosome doing exactly that"],
+  ['riemann_hypothesis', 'quantum',   "Montgomery–Odlyzko: the spacings between Riemann's non-trivial zeros statistically match the eigenvalue spacings of large random Hermitian matrices — the same distribution that governs energy levels in chaotic quantum systems. Hilbert and Pólya guessed a century ago that the primes are eigenvalues of some Hermitian operator; nobody has yet found it"],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {
