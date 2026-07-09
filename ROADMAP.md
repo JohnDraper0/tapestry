@@ -14,13 +14,13 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 71 (59 known, 12 frontier). Domains: 14. Sims: 29. Analogous
+- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 29. Analogous
   cross-links populated: 22. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-08. New cross-link `riemann_hypothesis↔quantum`
-  (Montgomery–Odlyzko / Hilbert–Pólya) — the first analogy that reaches
-  from the frontier domain back into the known tower, tying primes to
-  quantum-chaotic level statistics.
+- Last updated: 2026-07-09. Added the **Strong CP Problem** frontier node
+  (deps: standard, symmetry): why is QCD's θ̄ smaller than 10⁻¹⁰ when the
+  Lagrangian allows any value in [0, 2π)? Peccei–Quinn, axions, and one of
+  the most hunted unseen particles in physics.
 
 ## The atlas we want (inventory)
 
@@ -104,8 +104,8 @@ equation, and valid `deps`:
 
 **Frontier (known: false) additions worth having:**
 ~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap · turbulence ·
-strong CP problem · hierarchy problem · nature of time · hard problem of
-consciousness (strengthen) · pre-Big-Bang state · Fermi paradox.
+~~strong CP problem~~ (added 2026-07-09) · hierarchy problem · nature of time ·
+hard problem of consciousness (strengthen) · pre-Big-Bang state · Fermi paradox.
 
 **Sims still missing on existing nodes, ranked by teachability:**
 - ~~`uncertainty` — wave packet with inverse Δx↔Δp width.~~ — added 2026-04-17.
