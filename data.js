@@ -1131,6 +1131,7 @@ const ANALOGIES = [
   ['snells_law',     'action',        "Fermat's principle of least time IS the action principle for light: refraction picks the path that makes δ∫n dℓ vanish"],
   ['selfrep',        'computation',   "von Neumann (1948) proved any non-trivial self-replicator must carry a quoted self-description plus a separate constructor that reads it — five years before Watson and Crick found DNA's tape with the cell's polymerase and ribosome doing exactly that"],
   ['riemann_hypothesis', 'quantum',   "Montgomery–Odlyzko: the spacings between Riemann's non-trivial zeros statistically match the eigenvalue spacings of large random Hermitian matrices — the same distribution that governs energy levels in chaotic quantum systems. Hilbert and Pólya guessed a century ago that the primes are eigenvalues of some Hermitian operator; nobody has yet found it"],
+  ['wien',               'quantum',   "the ultraviolet catastrophe: Wien's law fit the short-wavelength blackbody spectrum, Rayleigh–Jeans fit the long-wavelength one, and the two disagreed by infinity in the middle. Planck's 1900 interpolation — that light comes in packets E = hν — was the ad-hoc patch that made both limits match. Quantum mechanics was born as a fix for a thermodynamic paradox; Planck himself called it 'an act of despair.'"],
 ];
 const byIdMap = new Map(LAWS.map(l => [l.id, l]));
 ANALOGIES.forEach(([a, b, note]) => {

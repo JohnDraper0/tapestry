@@ -15,12 +15,12 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 29. Analogous
-  cross-links populated: 22. Images mirrored locally: 0 (all hot-linked hero
+  cross-links populated: 24. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-09. Added the **Strong CP Problem** frontier node
-  (deps: standard, symmetry): why is QCD's θ̄ smaller than 10⁻¹⁰ when the
-  Lagrangian allows any value in [0, 2π)? Peccei–Quinn, axions, and one of
-  the most hunted unseen particles in physics.
+- Last updated: 2026-07-10. Cross-linked **Wien ↔ Quantum**: Wien's short-λ
+  law + Rayleigh–Jeans's long-λ law disagreed by infinity in the middle;
+  Planck's 1900 interpolation E = hν was the ad-hoc patch that reconciled
+  them and inadvertently birthed quantum mechanics.
 
 ## The atlas we want (inventory)
 
