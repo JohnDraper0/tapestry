@@ -3120,6 +3120,182 @@ SIMS.faraday = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── ENTANGLEMENT ────────────────────────────
+// Singlet Bell pair: source emits, Alice & Bob measure along tilted axes.
+// Empirical ⟨A·B⟩ builds up on the theoretical −cos(Δθ) curve.
+SIMS.entanglement = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const srcX = w * 0.50, srcY = h * 0.24;
+  const aliceX = w * 0.13, bobX = w * 0.87;
+  const detR   = Math.max(14, Math.min(22, w * 0.045));
+
+  const NBINS  = 30;
+  const bins   = Array.from({ length: NBINS }, () => ({ n: 0, s: 0 }));
+  const pairs  = [];              // in-flight photon pairs
+  const EMIT_MS = 320, TRANSIT_MS = 720;
+  let lastEmit = 0, totalN = 0;
+
+  let flashA = -1e9, flashB = -1e9;
+  let lastA = 0, lastB = 0;
+
+  const plotT = h * 0.54, plotB = h - 20;
+  const plotL = Math.max(28, w * 0.10), plotR = w - 12;
+  const midY  = (plotT + plotB) / 2;
+
+  const xFromD = d => plotL + ((d + Math.PI) / (2 * Math.PI)) * (plotR - plotL);
+  const yFromE = E => plotT + (1 - (E + 1) / 2) * (plotB - plotT);
+
+  function drawDetector(cx, cy, angle, label, flashT, out) {
+    const flashU = Math.max(0, 1 - (performance.now() - flashT) / 380);
+    if (flashU > 0) {
+      const col = out > 0 ? 'rgba(139, 195, 74,' : 'rgba(239, 154, 154,';
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, detR + 12);
+      g.addColorStop(0, col + (0.55 * flashU) + ')');
+      g.addColorStop(1, col + '0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(cx, cy, detR + 12, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(cx, cy, detR, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = '#82cfff'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * detR, cy + Math.sin(angle) * detR);
+    ctx.lineTo(cx - Math.cos(angle) * detR, cy - Math.sin(angle) * detR);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.font = 'bold 11px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy + detR + 14);
+    ctx.fillStyle = 'rgba(255,255,255,0.50)'; ctx.font = '10px system-ui';
+    ctx.fillText(`${Math.round(angle * 180 / Math.PI)}°`, cx, cy + detR + 26);
+  }
+
+  function draw(now) {
+    const t = now - t0;
+
+    if (now - lastEmit > EMIT_MS) { pairs.push({ born: now }); lastEmit = now; }
+
+    const thetaA = 0;
+    const thetaB = (t / 18000 * Math.PI * 2) % (Math.PI * 2);
+    let dTheta   = thetaB - thetaA;
+    while (dTheta >  Math.PI) dTheta -= 2 * Math.PI;
+    while (dTheta <= -Math.PI) dTheta += 2 * Math.PI;
+
+    for (let i = pairs.length - 1; i >= 0; i--) {
+      const u = (now - pairs[i].born) / TRANSIT_MS;
+      if (u >= 1) {
+        const pSame = Math.sin(dTheta / 2) ** 2;
+        const outA  = Math.random() < 0.5 ? +1 : -1;
+        const outB  = (Math.random() < pSame) ? outA : -outA;
+        const bIdx  = Math.min(NBINS - 1, Math.max(0,
+          Math.floor(((dTheta + Math.PI) / (2 * Math.PI)) * NBINS)));
+        bins[bIdx].n++; if (outA === outB) bins[bIdx].s++;
+        totalN++;
+        flashA = now; flashB = now; lastA = outA; lastB = outB;
+        pairs.splice(i, 1);
+      }
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Central source
+    const sg = ctx.createRadialGradient(srcX, srcY, 0, srcX, srcY, 26);
+    sg.addColorStop(0, 'rgba(233,30,99,0.75)');
+    sg.addColorStop(1, 'rgba(233,30,99,0)');
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.arc(srcX, srcY, 26, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffb3d1';
+    ctx.beginPath(); ctx.arc(srcX, srcY, 4.5, 0, Math.PI * 2); ctx.fill();
+
+    // Beamline rails
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(aliceX + detR, srcY); ctx.lineTo(srcX - 10, srcY);
+    ctx.moveTo(srcX + 10, srcY);     ctx.lineTo(bobX - detR, srcY);
+    ctx.stroke();
+
+    // In-flight pairs (dashed link hints at "shared fate")
+    for (const p of pairs) {
+      const u  = Math.max(0, Math.min(1, (now - p.born) / TRANSIT_MS));
+      const ax = srcX + (aliceX - srcX) * u;
+      const bx = srcX + (bobX   - srcX) * u;
+      ctx.strokeStyle = 'rgba(184,130,255,0.22)';
+      ctx.setLineDash([2, 4]);
+      ctx.beginPath(); ctx.moveTo(ax, srcY); ctx.lineTo(bx, srcY); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(200,160,255,0.90)';
+      ctx.beginPath(); ctx.arc(ax, srcY, 3.4, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(bx, srcY, 3.4, 0, Math.PI * 2); ctx.fill();
+    }
+
+    drawDetector(aliceX, srcY, thetaA, 'Alice', flashA, lastA);
+    drawDetector(bobX,   srcY, thetaB, 'Bob',   flashB, lastB);
+
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('Singlet Bell pair — Alice & Bob measure', 10, 16);
+
+    // Plot frame
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotT); ctx.lineTo(plotL, plotB);
+    ctx.moveTo(plotL, midY);  ctx.lineTo(plotR, midY);
+    ctx.moveTo(plotL, plotB); ctx.lineTo(plotR, plotB);
+    ctx.stroke();
+
+    // Theoretical curve E = −cos(Δθ)
+    ctx.strokeStyle = 'rgba(233,30,99,0.55)'; ctx.lineWidth = 1.6;
+    ctx.setLineDash([4, 4]); ctx.beginPath();
+    for (let i = 0; i <= 96; i++) {
+      const d = -Math.PI + (i / 96) * 2 * Math.PI;
+      const x = xFromD(d), y = yFromE(-Math.cos(d));
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+
+    // Empirical bin points — E = 2·P(same) − 1
+    ctx.fillStyle = '#82cfff';
+    for (let i = 0; i < NBINS; i++) {
+      if (bins[i].n < 2) continue;
+      const E = 2 * bins[i].s / bins[i].n - 1;
+      const d = -Math.PI + ((i + 0.5) / NBINS) * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.arc(xFromD(d), yFromE(E), 2.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Live Δθ cursor
+    ctx.strokeStyle = 'rgba(130,207,255,0.40)'; ctx.setLineDash([2, 3]);
+    const mx = xFromD(dTheta);
+    ctx.beginPath(); ctx.moveTo(mx, plotT); ctx.lineTo(mx, plotB); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Axis labels
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText('−180°', plotL + 12, plotB + 12);
+    ctx.fillText('0°',    (plotL + plotR) / 2, plotB + 12);
+    ctx.fillText('+180°', plotR - 16, plotB + 12);
+    ctx.textAlign = 'right';
+    ctx.fillText('+1', plotL - 4, plotT + 4);
+    ctx.fillText(' 0', plotL - 4, midY + 4);
+    ctx.fillText('−1', plotL - 4, plotB + 4);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 11px system-ui';
+    ctx.fillText('⟨A·B⟩ = −cos(θ_B − θ_A)', plotL + 4, plotT - 4);
+    ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.font = '11px system-ui';
+    ctx.textAlign = 'right';
+    ctx.fillText(`Δθ = ${Math.round(dTheta * 180 / Math.PI)}°   pairs: ${totalN}`,
+                 plotR - 2, plotT - 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

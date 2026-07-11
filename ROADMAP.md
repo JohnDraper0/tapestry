@@ -14,13 +14,13 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 29. Analogous
+- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 31. Analogous
   cross-links populated: 24. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-10. Cross-linked **Wien ↔ Quantum**: Wien's short-λ
-  law + Rayleigh–Jeans's long-λ law disagreed by infinity in the middle;
-  Planck's 1900 interpolation E = hν was the ad-hoc patch that reconciled
-  them and inadvertently birthed quantum mechanics.
+- Last updated: 2026-07-11. Added **entanglement sim**: singlet Bell pair
+  source, Alice fixed at 0°, Bob's analyzer rotates. Empirical ⟨A·B⟩ dots
+  accumulate onto the theoretical −cos(Δθ) curve — the shape Bell forbade
+  any local hidden-variable theory from producing.
 
 ## The atlas we want (inventory)
 
