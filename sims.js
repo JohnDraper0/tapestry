@@ -3296,6 +3296,172 @@ SIMS.entanglement = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── OHM'S LAW ───────────────────────────────
+// A DC loop: battery on the left, resistor on the right. V and R drift
+// on independent cycles so every (V, R) combination gets visited; the
+// carrier flow speed tracks I = V/R and the glow behind the resistor
+// tracks P = V·I. You read Ohm's law off the picture.
+SIMS.ohms_law = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const pad   = Math.max(52, w * 0.14);
+  const loopL = pad, loopR = w - pad;
+  const loopT = Math.max(38, h * 0.24);
+  const loopB = h - Math.max(56, h * 0.26);
+  const loopW = loopR - loopL, loopH = loopB - loopT;
+  const perim = 2 * (loopW + loopH);
+  const midY  = (loopT + loopB) / 2;
+
+  const battHalf = Math.max(10, loopH * 0.11);
+  const resHalf  = Math.max(14, loopH * 0.15);
+
+  // Position along the loop by arc length. 0 is the top-left corner;
+  // travelling top → right → bottom → left matches conventional current
+  // with + at top-left, − at bottom-left.
+  function posOf(s) {
+    s = ((s % perim) + perim) % perim;
+    if (s < loopW) return [loopL + s, loopT];
+    s -= loopW;
+    if (s < loopH) return [loopR, loopT + s];
+    s -= loopH;
+    if (s < loopW) return [loopR - s, loopB];
+    s -= loopW;
+    return [loopL, loopB - s];
+  }
+
+  const N_CARRIERS = 30;
+  const carriers = Array.from({ length: N_CARRIERS },
+                              (_, i) => i * (perim / N_CARRIERS));
+  let lastFrame = 0;
+
+  function draw(now) {
+    const t  = (now - t0) / 1000;
+    const dt = lastFrame ? Math.min(0.05, (now - lastFrame) / 1000) : 0;
+    lastFrame = now;
+
+    // Two independent slow oscillators so all (V, R) regions are visited.
+    const V = 5.0 + 4.0 * Math.sin(2 * Math.PI * t /  8.0);   // 1 – 9  V
+    const R = 4.5 + 3.5 * Math.sin(2 * Math.PI * t / 12.0 + 1.3); // 1 – 8 Ω
+    const I = V / R;
+    const P = V * I;
+
+    // Carrier flow: at I = 1 A, one lap every 8 s. Speed is linear in I.
+    const drift = (perim / 8) * I;
+    for (let k = 0; k < N_CARRIERS; k++) {
+      carriers[k] = ((carriers[k] + drift * dt) % perim + perim) % perim;
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Heat glow behind the resistor — Joule heating P = I²R = V·I.
+    const glow = Math.min(1, P / 30);
+    if (glow > 0.02) {
+      const gg = ctx.createRadialGradient(loopR, midY, 0,
+                                          loopR, midY, resHalf * 4.5);
+      gg.addColorStop(0, `rgba(255, 140, 60, ${0.55 * glow})`);
+      gg.addColorStop(1, 'rgba(255, 140, 60, 0)');
+      ctx.fillStyle = gg;
+      ctx.beginPath();
+      ctx.arc(loopR, midY, resHalf * 4.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Wires: full loop minus gaps for the battery (left) and resistor (right).
+    ctx.strokeStyle = 'rgba(255, 210, 130, 0.85)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(loopL, loopT); ctx.lineTo(loopR, loopT);
+    ctx.moveTo(loopR, loopT); ctx.lineTo(loopR, midY - resHalf);
+    ctx.moveTo(loopR, midY + resHalf); ctx.lineTo(loopR, loopB);
+    ctx.moveTo(loopR, loopB); ctx.lineTo(loopL, loopB);
+    ctx.moveTo(loopL, loopB); ctx.lineTo(loopL, midY + battHalf);
+    ctx.moveTo(loopL, midY - battHalf); ctx.lineTo(loopL, loopT);
+    ctx.stroke();
+
+    // Battery: long plate (+) on top, short plate (−) on bottom.
+    // Plate widths grow slightly with V so voltage is legible from the drawing.
+    const longW  = 22 + 14 * (V / 9);
+    const shortW = 12 +  6 * (V / 9);
+    const yPlus  = midY - battHalf;
+    const yMin   = midY + battHalf;
+    ctx.strokeStyle = '#ffd166';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(loopL - longW  / 2, yPlus); ctx.lineTo(loopL + longW  / 2, yPlus);
+    ctx.moveTo(loopL - shortW / 2, yMin);  ctx.lineTo(loopL + shortW / 2, yMin);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255, 209, 102, 0.85)';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('+', loopL - longW  / 2 - 4, yPlus);
+    ctx.fillText('−', loopL - shortW / 2 - 4, yMin);
+
+    // Resistor: zigzag on the right side. Amplitude grows with R.
+    const zw = 5 + 8 * (R / 8);
+    const rTop = midY - resHalf, rBot = midY + resHalf;
+    const N_ZZ = 6;
+    ctx.strokeStyle = '#ff8a65';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(loopR, rTop);
+    for (let k = 0; k < N_ZZ; k++) {
+      const y  = rTop + (rBot - rTop) * (k + 0.5) / N_ZZ;
+      const dx = (k % 2 === 0) ? zw : -zw;
+      ctx.lineTo(loopR + dx, y);
+    }
+    ctx.lineTo(loopR, rBot);
+    ctx.stroke();
+
+    // Current carriers drifting around the loop.
+    ctx.fillStyle = 'rgba(130, 210, 255, 0.90)';
+    for (const s of carriers) {
+      const [ex, ey] = posOf(s);
+      ctx.beginPath(); ctx.arc(ex, ey, 3, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Direction arrow floating above the top wire.
+    const ax = (loopL + loopR) / 2, ay = loopT - 10;
+    ctx.fillStyle = 'rgba(255, 210, 130, 0.90)';
+    ctx.beginPath();
+    ctx.moveTo(ax + 8, ay);
+    ctx.lineTo(ax - 6, ay - 5);
+    ctx.lineTo(ax - 6, ay + 5);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = 'rgba(255, 210, 130, 0.65)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('current', ax, ay - 6);
+
+    // Header
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('V = I · R', 10, 8);
+
+    // Live readout across the bottom — V yellow, R orange, I blue, P amber.
+    const rowY = h - 18;
+    ctx.font = '11px system-ui'; ctx.textBaseline = 'middle';
+    ctx.textAlign = 'left';
+    const cells = [
+      { text: `V = ${V.toFixed(2)} V`, col: 'rgba(255, 209, 102, 0.95)' },
+      { text: `R = ${R.toFixed(2)} Ω`, col: 'rgba(255, 138, 101, 0.95)' },
+      { text: `I = ${I.toFixed(2)} A`, col: 'rgba(130, 210, 255, 0.95)' },
+      { text: `P = ${P.toFixed(1)} W`, col: 'rgba(255, 175, 90, 0.95)'  },
+    ];
+    const gap = (w - 20) / cells.length;
+    for (let k = 0; k < cells.length; k++) {
+      ctx.fillStyle = cells[k].col;
+      ctx.fillText(cells[k].text, 10 + k * gap, rowY);
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

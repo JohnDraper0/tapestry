@@ -14,13 +14,14 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 31. Analogous
+- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 24. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-11. Added **entanglement sim**: singlet Bell pair
-  source, Alice fixed at 0°, Bob's analyzer rotates. Empirical ⟨A·B⟩ dots
-  accumulate onto the theoretical −cos(Δθ) curve — the shape Bell forbade
-  any local hidden-variable theory from producing.
+- Last updated: 2026-07-16. Added **Ohm's law sim**: DC loop with a
+  battery on the left and a zigzag resistor on the right. V and R drift
+  on independent cycles; carrier flow speed tracks I = V/R, plate width
+  tracks V, zigzag amplitude tracks R, and a heat glow behind the
+  resistor tracks P = V·I. You read Ohm's law off the picture.
 
 ## The atlas we want (inventory)
 
@@ -113,7 +114,10 @@ hard problem of consciousness (strengthen) · pre-Big-Bang state · Fermi parado
 - `pauli` — electron-shell filling by aufbau + exclusion.
 - `kepler` — three-law visualiser (ellipses, equal areas, T²∝a³).
 - `stars` — HR diagram with a live evolving track.
-- `maxwell` / `ohms_law` — EM wave propagation + resistor-network.
+- ~~`ohms_law` — DC loop with V/R oscillators, drift ∝ I, heat glow ∝ P.~~
+  — added 2026-07-16.
+- `maxwell` — full EM wave propagation (`sim: 'wave'` today is a generic
+  transverse wave; upgrade to real E-and-B travelling together).
 - `standard` — particle zoo with interaction vertices.
 - `periodic` — interactive table colouring by property.
 - `selfrep` / `centraldogma` — transcription-translation micro-machine.
