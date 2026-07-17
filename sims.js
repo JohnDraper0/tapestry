@@ -3462,6 +3462,140 @@ SIMS.ohms_law = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── MAXWELL EM WAVE ─────────────────────────
+// A plane EM wave in vacuum: E and B are perpendicular to each other and
+// to the propagation direction, in phase (both maxima together), with
+// |E|/|B| = c. The current-side draw uses a shallow axonometric projection
+// so B can leave the page toward the viewer while E stays in-plane.
+SIMS.maxwell = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  // Axonometric: y is on-screen down (canvas convention), z leaves the
+  // page toward the upper-right of the screen. project(y, z) → screen dxdy.
+  const AZ = -Math.PI / 6;                      // z projected up-and-right
+  const zx = Math.cos(AZ), zy = Math.sin(AZ);   // ≈ (+0.866, −0.5)
+
+  const padL = Math.max(52, w * 0.11);
+  const padR = Math.max(24, w * 0.06);
+  const axisY = h * 0.55;
+  const axisX0 = padL, axisX1 = w - padR;
+  const axisLen = axisX1 - axisX0;
+
+  // Wave parameters. Two full wavelengths across the axis makes the
+  // in-phase relationship easy to read at a glance.
+  const k    = (2 * Math.PI * 2) / axisLen;    // spatial frequency
+  const omega = 2.4;                            // rad / s — phase velocity ω/k
+  const ampE = Math.min(70, h * 0.30);          // pixels for E arrows
+  const ampB = ampE * 0.7;                      // shorter so both fit visually
+  // ~10 arrows per wavelength reads as a discrete field, not a solid brush.
+  const N    = Math.max(14, Math.min(28, Math.round(axisLen / 22)));
+
+  function arrowhead(x0, y0, x1, y1, size, color) {
+    const a = Math.atan2(y1 - y0, x1 - x0);
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - size * Math.cos(a - 0.45),
+               y1 - size * Math.sin(a - 0.45));
+    ctx.lineTo(x1 - size * Math.cos(a + 0.45),
+               y1 - size * Math.sin(a + 0.45));
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function draw(now) {
+    const t = (now - t0) / 1000;
+    const phase = omega * t;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Ghost z-axis (into/out of page) at the origin, so the third
+    // dimension reads even before B starts wagging.
+    ctx.strokeStyle = 'rgba(200, 210, 230, 0.22)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.moveTo(axisX0, axisY);
+    ctx.lineTo(axisX0 + zx * ampB * 1.2, axisY + zy * ampB * 1.2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Propagation axis.
+    ctx.strokeStyle = 'rgba(220, 230, 245, 0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(axisX0, axisY);
+    ctx.lineTo(axisX1, axisY);
+    ctx.stroke();
+    arrowhead(axisX1 - 12, axisY, axisX1, axisY, 8,
+              'rgba(220, 230, 245, 0.75)');
+
+    // E field envelope (yellow, vertical) and B field envelope
+    // (cyan, along z). Both are sin(kx − ωt), in phase.
+    const Epts = [], Bpts = [];
+    for (let i = 0; i <= N * 2; i++) {
+      const x = axisX0 + (axisLen * i) / (N * 2);
+      const s = Math.sin(k * (x - axisX0) - phase);
+      Epts.push([x, axisY - ampE * s]);
+      Bpts.push([x + zx * ampB * s, axisY + zy * ampB * s]);
+    }
+    ctx.strokeStyle = 'rgba(255, 209, 102, 0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    Epts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+    ctx.stroke();
+    ctx.strokeStyle = 'rgba(120, 220, 240, 0.55)';
+    ctx.beginPath();
+    Bpts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+    ctx.stroke();
+
+    // Discrete field arrows at N stops — spaced enough not to crowd.
+    for (let i = 1; i <= N; i++) {
+      const x = axisX0 + (axisLen * i) / (N + 1);
+      const s = Math.sin(k * (x - axisX0) - phase);
+      if (Math.abs(s) < 0.06) continue;
+
+      const eTipY = axisY - ampE * s;
+      ctx.strokeStyle = 'rgba(255, 209, 102, 0.85)';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(x, axisY);
+      ctx.lineTo(x, eTipY);
+      ctx.stroke();
+      arrowhead(x, axisY, x, eTipY, 5, 'rgba(255, 209, 102, 0.95)');
+
+      const bTipX = x + zx * ampB * s;
+      const bTipY = axisY + zy * ampB * s;
+      ctx.strokeStyle = 'rgba(120, 220, 240, 0.85)';
+      ctx.beginPath();
+      ctx.moveTo(x, axisY);
+      ctx.lineTo(bTipX, bTipY);
+      ctx.stroke();
+      arrowhead(x, axisY, bTipX, bTipY, 5, 'rgba(150, 230, 245, 0.95)');
+    }
+
+    // Labels.
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('E and B, perpendicular and in phase — the wave is light', 10, 8);
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = 'rgba(255, 209, 102, 0.95)';
+    ctx.fillText('E (electric)', 10, 26);
+    ctx.fillStyle = 'rgba(150, 230, 245, 0.95)';
+    ctx.fillText('B (magnetic)', 92, 26);
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.85)';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText('propagates at c', axisX1, axisY - 6);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

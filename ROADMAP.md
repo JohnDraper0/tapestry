@@ -17,11 +17,12 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 24. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-16. Added **Ohm's law sim**: DC loop with a
-  battery on the left and a zigzag resistor on the right. V and R drift
-  on independent cycles; carrier flow speed tracks I = V/R, plate width
-  tracks V, zigzag amplitude tracks R, and a heat glow behind the
-  resistor tracks P = V·I. You read Ohm's law off the picture.
+- Last updated: 2026-07-17. Upgraded **Maxwell's equations** off the
+  generic `wave` sim onto a proper `maxwell` sim: E and B drawn as
+  perpendicular in-phase arrow fields on a shared propagation axis,
+  with B projected along an axonometric z so the third dimension reads
+  at a glance. The old sim used sin+cos (90° out of phase) — factually
+  wrong for a vacuum plane wave.
 
 ## The atlas we want (inventory)
 
@@ -116,8 +117,10 @@ hard problem of consciousness (strengthen) · pre-Big-Bang state · Fermi parado
 - `stars` — HR diagram with a live evolving track.
 - ~~`ohms_law` — DC loop with V/R oscillators, drift ∝ I, heat glow ∝ P.~~
   — added 2026-07-16.
-- `maxwell` — full EM wave propagation (`sim: 'wave'` today is a generic
-  transverse wave; upgrade to real E-and-B travelling together).
+- ~~`maxwell` — full EM wave propagation (`sim: 'wave'` today is a generic
+  transverse wave; upgrade to real E-and-B travelling together).~~
+  — added 2026-07-17 as `SIMS.maxwell`: E vertical, B along an
+  axonometric z, both sin(kx − ωt) in phase.
 - `standard` — particle zoo with interaction vertices.
 - `periodic` — interactive table colouring by property.
 - `selfrep` / `centraldogma` — transcription-translation micro-machine.
