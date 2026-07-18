@@ -15,14 +15,14 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 32. Analogous
-  cross-links populated: 24. Images mirrored locally: 0 (all hot-linked hero
+  cross-links populated: 26. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-17. Upgraded **Maxwell's equations** off the
-  generic `wave` sim onto a proper `maxwell` sim: E and B drawn as
-  perpendicular in-phase arrow fields on a shared propagation axis,
-  with B projected along an axonometric z so the third dimension reads
-  at a glance. The old sim used sin+cos (90° out of phase) — factually
-  wrong for a vacuum plane wave.
+- Last updated: 2026-07-18. Added `landauer` ↔ `arrow_of_time`
+  cross-link — Landauer localises where the second law's ratchet
+  actually bites (irreversible bit-erasure), and Bennett's reversible
+  computation shows the tick is paid only when the universe forgets
+  something. A conceptual bridge from the info-thermo interface into
+  the deepest open question about time.
 
 ## The atlas we want (inventory)
 
