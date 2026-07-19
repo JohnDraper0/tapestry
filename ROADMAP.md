@@ -17,12 +17,11 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 26. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-18. Added `landauer` ↔ `arrow_of_time`
-  cross-link — Landauer localises where the second law's ratchet
-  actually bites (irreversible bit-erasure), and Bennett's reversible
-  computation shows the tick is paid only when the universe forgets
-  something. A conceptual bridge from the info-thermo interface into
-  the deepest open question about time.
+- Last updated: 2026-07-19. Sharpened the `sets` surprise: swapped the
+  "some infinities are bigger than others" line (already the punchline
+  of the intermediate paragraph) for Banach–Tarski — a genuinely
+  astonishing theorem that lands the axiom-of-choice payoff the expert
+  block hints at, without any redundancy with earlier depths.
 
 ## The atlas we want (inventory)
 
