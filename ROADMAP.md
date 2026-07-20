@@ -14,14 +14,17 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 73 (60 known, 13 frontier). Domains: 14. Sims: 32. Analogous
-  cross-links populated: 26. Images mirrored locally: 0 (all hot-linked hero
+- Nodes: 74 (60 known, 14 frontier). Domains: 14. Sims: 32. Analogous
+  cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-19. Sharpened the `sets` surprise: swapped the
-  "some infinities are bigger than others" line (already the punchline
-  of the intermediate paragraph) for Banach–Tarski — a genuinely
-  astonishing theorem that lands the axiom-of-choice payoff the expert
-  block hints at, without any redundancy with earlier depths.
+- Last updated: 2026-07-20. Added the **Turbulence** frontier node: the
+  Feynman/Heisenberg "last unsolved problem of classical physics",
+  Kolmogorov's −5/3 spectrum, Onsager's anomalous-dissipation
+  conjecture (resolved by Isett 2018), and the closure problem — sitting
+  one rung above Navier–Stokes with a hero image of Leonardo's
+  c. 1508 water-turbulence drawings. Cross-linked to `soc` (both are
+  power laws that self-organise without tuning; Bak cited Kolmogorov's
+  cascade as SOC's inspiration).
 
 ## The atlas we want (inventory)
 
@@ -104,7 +107,8 @@ equation, and valid `deps`:
 15. ~~**Entropy–information link / Landauer** (thermo-info bridge node).~~ — added 2026-07-05.
 
 **Frontier (known: false) additions worth having:**
-~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap · turbulence ·
+~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap ·
+~~turbulence~~ (added 2026-07-20) ·
 ~~strong CP problem~~ (added 2026-07-09) · hierarchy problem · nature of time ·
 hard problem of consciousness (strengthen) · pre-Big-Bang state · Fermi paradox.
 
