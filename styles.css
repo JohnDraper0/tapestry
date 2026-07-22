@@ -1072,3 +1072,45 @@ header * { pointer-events: auto; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ── mobile tap targets (WCAG 2.5.5 ≥ 44×44) ──────────
+   On phones every interactive control gets a minimum
+   44 × 44 tap area. The header theme buttons used to
+   squash to ~28 px at ≤800 px, and #panelClose /
+   #narrateBtn kept their 34 × 34 desktop size even on
+   touch. Cursor-first desktop stays small. */
+@media (max-width: 640px) {
+  .theme-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+  #resetBtn,
+  .overflow-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 12px;
+  }
+  #search {
+    font-size: 14px;
+    padding: 14px 14px 14px 38px;
+  }
+  #panelClose {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+    top: 12px;
+    right: 12px;
+    margin-top: -44px;
+  }
+  #narrateBtn {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+    top: 12px;
+    left: auto;
+    right: 68px;
+    margin-top: -44px;
+  }
+}

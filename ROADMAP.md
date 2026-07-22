@@ -17,14 +17,14 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 74 (60 known, 14 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-20. Added the **Turbulence** frontier node: the
-  Feynman/Heisenberg "last unsolved problem of classical physics",
-  Kolmogorov's −5/3 spectrum, Onsager's anomalous-dissipation
-  conjecture (resolved by Isett 2018), and the closure problem — sitting
-  one rung above Navier–Stokes with a hero image of Leonardo's
-  c. 1508 water-turbulence drawings. Cross-linked to `soc` (both are
-  power laws that self-organise without tuning; Bak cited Kolmogorov's
-  cascade as SOC's inspiration).
+- Last updated: 2026-07-22. Presentation-layer polish: mobile tap
+  targets are now ≥ 44 × 44 px (WCAG 2.5.5). The header theme buttons
+  used to squash to ~28 px at ≤ 800 px; the panel close and narrate
+  buttons kept their 34 × 34 desktop size even on touch. A new
+  `@media (max-width: 640px)` block at the end of `styles.css` bumps
+  every phone-visible control — theme trio, reset ⌂, overflow ⋯, search
+  input, panel-close ✕, narrate 🔊 — while cursor-first desktop stays
+  compact.
 
 ## The atlas we want (inventory)
 
@@ -162,8 +162,11 @@ One bullet per F-category run. Order is roughly priority.
    into a `⋯` dropdown anchored below the header; search, theme switcher and
    reset stay inline. Menu closes on pick or outside click; ⋯ is a 44 px
    target.
-4. **Tap targets ≥44 × 44 px everywhere.** Theme buttons and top-buttons
-   currently shrink to ~28 px on mobile — below the Apple/WCAG minimum.
+4. ~~**Tap targets ≥44 × 44 px everywhere.**~~ — done 2026-07-22. A
+   `@media (max-width: 640px)` block bumps `.theme-btn`, `#resetBtn`,
+   `.overflow-toggle`, the search input, `#panelClose`, and `#narrateBtn`
+   to a minimum 44 × 44 tap area (WCAG 2.5.5). Panel-close and narrate
+   buttons keep the 34 × 34 desktop size where a cursor rules.
 5. **Depth tabs respond to horizontal swipe** on the open panel, so a
    reader can thumb through ELI5 → intermediate → expert without
    hunting for small tab buttons.
