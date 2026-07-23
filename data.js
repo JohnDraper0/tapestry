@@ -22,6 +22,7 @@ const DOMAINS = {
   forces:    { label: 'Fundamental Forces',        color: '#b388ff', desc: 'The handful of ways particles speak to each other.' },
   chemistry: { label: 'Chemistry',                 color: '#64ffda', desc: 'How atoms pair off and rearrange into stuff.' },
   biology:   { label: 'Biology & Evolution',       color: '#8bc34a', desc: 'Once chemistry learned to copy itself, evolution took over.' },
+  neuro:     { label: 'Neuroscience',              color: '#ff9800', desc: 'Voltage, ions, and the tempo of thinking cells.' },
   info:      { label: 'Information & Computation', color: '#00e5ff', desc: 'Bits, computation, and the limits of what can be known.' },
   emergence: { label: 'Emergence & Complexity',    color: '#ff6f91', desc: 'Simple rules, wildly intricate behaviour — at every scale.' },
   cosmos:    { label: 'Cosmology',                 color: '#7986cb', desc: 'The biography of the universe — stars, galaxies, time itself.' },
@@ -614,6 +615,20 @@ const LAWS = [
     history: `In 1908, Cambridge geneticist Reginald Punnett was puzzled why dominant alleles don't crowd out recessives over time. He asked mathematician G.H. Hardy at a cricket match. Hardy dashed off a two-paragraph letter to *Science*, visibly impatient with the triviality. That same year, German physician Wilhelm Weinberg independently derived the same law and tested it on twin-birth data. The two men never corresponded; both names stuck.`,
   },
 
+  // ───────────────────────────── NEUROSCIENCE ───────────────────────────────
+
+  {
+    id: 'hodgkin_huxley', name: 'Hodgkin–Huxley Model', domain: 'neuro', symbol: 'V(t)',
+    tagline: 'How a neuron actually fires — in four coupled equations.',
+    equation: 'C_m \\dfrac{dV}{dt} = I_{\\text{ext}} - \\bar g_{\\text{Na}}\\,m^{3}h\\,(V - E_{\\text{Na}}) - \\bar g_{\\text{K}}\\,n^{4}(V - E_{\\text{K}}) - \\bar g_{L}(V - E_{L})',
+    deps: ['bonding', 'statmech', 'atp'], sim: null,
+    eli5: `A neuron is a very thin bag of salty water floating in more salty water — and the two waters carry slightly different salts. That difference is a battery. When something jolts one end of the bag, tiny doors in the wall flick open in a wave that runs its whole length: for a millisecond sodium rushes in, then potassium rushes back out, and the bag briefly reads +40 millivolts instead of −70. That spike is one letter of a thought. Your brain is 86 billion of these bags, whispering to one another about a hundred times a second, all day.`,
+    intermediate: `In 1952 Alan Hodgkin and Andrew Huxley wired up a squid's giant axon — up to a millimetre across, big enough to see with the naked eye — and figured out, in four equations, how a nerve pulse actually works. At rest a neuron sits at about −70 mV, kept there by an ATP-powered pump that trades three sodium ions out for every two potassium ions in. Push the voltage past a threshold near −55 mV and voltage-gated sodium channels snap open, sodium floods in, and V rockets to +40 mV inside a millisecond. Almost immediately the sodium channels self-inactivate while potassium channels open, potassium leaves, and V plunges back — even overshooting to about −80 mV — before the pump slowly resets everything. That whole event is an *action potential*, and it propagates down the axon like a fuse burning, at speeds up to 120 m/s. Two ingredients make it work: the channels are voltage-sensitive, so a small depolarisation opens more channels which depolarise further (a classic positive-feedback avalanche), and sodium inactivation makes the pulse self-limiting.`,
+    expert: `Hodgkin and Huxley modelled the axonal membrane as a capacitor in parallel with three ionic conductances — sodium, potassium, and a small "leak" — each driven by (V − E_ion), where the equilibrium potentials E_ion come from the Nernst equation applied to the resting ion concentrations. Sodium conductance is g̅_Na·m³h and potassium is g̅_K·n⁴, with m, h, n gating variables in [0,1] obeying first-order kinetics ẋ = α_x(V)(1−x) − β_x(V)x. The rate constants α, β were fitted from voltage-clamp data (a technique HH developed with Cole and Marmont). The full model is four coupled ODEs (V, m, h, n) that reproduce the shape, threshold, absolute and relative refractory periods, and conduction velocity of a real spike within a few percent. Molecular biology has since confirmed their phenomenological gates as real structures: Na_V's four S4 voltage-sensor helices carry a total gating charge of about 12 e; inactivation is an intracellular "ball-and-chain" domain. Reductions like FitzHugh–Nagumo (1961) collapse HH to two variables and expose it as a canonical excitable dynamical system with a supercritical Hopf bifurcation into a limit cycle. The cable-theory extension to spatially extended axons predicts myelinated saltatory conduction. Modern brain simulations use multi-compartment HH-type models with dozens of ion-channel species per cell. A postscript: Alle, Roth & Geiger (Science 2009) measured that hippocampal spikes overlap Na⁺ and K⁺ currents far less than HH assumed, so real cortical neurons are about four times more energy-efficient than the 1952 model predicts.`,
+    surprise: `Your brain runs on about 20 watts — a dim bedside bulb — and yet a single action potential moves only about 10⁻¹² grams of sodium across the membrane, roughly 30,000 ions in a millisecond. Over an average life, that machinery fires on the order of 10¹⁵ times inside you without ever quite running out of battery.`,
+    history: `Alan Hodgkin and Andrew Huxley, at Cambridge and the Marine Biological Association in Plymouth, picked the squid's giant axon because at up to 1 mm across it is a hundred times fatter than a mammalian axon — large enough to thread a wire down and voltage-clamp. From 1949 to 1952 they painstakingly measured ionic currents, fitted them to empirical exponentials, and integrated the four coupled ODEs by hand on a mechanical Brunsviga calculator over the winter of 1951 — one of the first computational-biology projects ever attempted. Their synthesis appeared as five back-to-back papers in the *Journal of Physiology* in 1952. They shared the 1963 Nobel with John Eccles.`,
+  },
+
   // ───────────────────────────── INFORMATION & COMPUTATION ──────────────────
 
   {
@@ -1050,6 +1065,8 @@ const IMAGES = {
                    caption: 'The Amazon — thermodynamics made alive' },
   hardy_weinberg:{ image: WM('Ghhardy@72.jpg'),
                    caption: 'G.H. Hardy — wrote the null model of evolution at a cricket match' },
+  hodgkin_huxley:{ image: WM('Action_potential.svg'),
+                   caption: 'The action potential: Na⁺ rushes in (rise), K⁺ rushes out (fall), pump resets — one millisecond of thought' },
   information:   { image: WM('ClaudeShannon_MFO3807.jpg'),
                    caption: 'Claude Shannon — invented the bit' },
   computation:   { image: WM('Alan_Turing_Aged_16.jpg'),

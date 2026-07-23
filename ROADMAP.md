@@ -14,17 +14,18 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 74 (60 known, 14 frontier). Domains: 14. Sims: 32. Analogous
-  cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
-  URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-22. Presentation-layer polish: mobile tap
-  targets are now ≥ 44 × 44 px (WCAG 2.5.5). The header theme buttons
-  used to squash to ~28 px at ≤ 800 px; the panel close and narrate
-  buttons kept their 34 × 34 desktop size even on touch. A new
-  `@media (max-width: 640px)` block at the end of `styles.css` bumps
-  every phone-visible control — theme trio, reset ⌂, overflow ⋯, search
-  input, panel-close ✕, narrate 🔊 — while cursor-first desktop stays
-  compact.
+- Nodes: 75 (61 known, 14 frontier). Domains: 15 — **neuro** opened
+  2026-07-23 with its first node. Sims: 32. Analogous cross-links
+  populated: 27. Images mirrored locally: 0 (all hot-linked hero URLs
+  verified loading 2026-05-31; 10 dead ones replaced that run).
+- Last updated: 2026-07-23. Opened the **neuroscience** domain (biggest
+  gap on the atlas: 0/4 → 1/4) with the **Hodgkin–Huxley model** — the
+  four coupled ODEs that describe how a squid axon's Na⁺, K⁺ and leak
+  currents build one millisecond of action potential. Sits at layer 16
+  (deps: bonding, statmech, atp), between ATP and central dogma on the
+  living-matter rungs. Added `neuro` to `DOMAINS`, `DOMAIN_ORDER`
+  (app.js) and the 3D spiral's angular slot list (three3d.js, divisor
+  bumped 14 → 15).
 
 ## The atlas we want (inventory)
 
@@ -47,7 +48,7 @@ points, not quotas.
 | info            |   3   |    5   | channel coding, error correction, Landauer bridge         |
 | emergence       |   5   |    7   | Zipf, networks, cellular auto                             |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
-| neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
+| neuro (new)     |   1   |    4   | synapse, cortex / maps, myelination                       |
 | earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
 | unknown         |  12   |   15   | strong CP, hierarchy, turbulence, pre-BB state, Fermi     |
 
@@ -93,7 +94,7 @@ equation, and valid `deps`:
 1. ~~**Photoelectric effect** (quantum)~~ — added 2026-04-17.
 2. ~~**Faraday's law of induction** (em)~~ — added 2026-04-17.
 3. ~~**Hardy–Weinberg equilibrium** (biology) — the null model of evolution.~~ — added 2026-04-17.
-4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
+4. ~~**Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.~~ — added 2026-07-23. Opens the neuro domain; deps: bonding, statmech, atp (layer 16).
 5. ~~**ATP / chemiosmosis** (biology) — life's universal energy currency.~~ — added 2026-04-21.
 6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
 7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
