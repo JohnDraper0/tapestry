@@ -44,7 +44,7 @@
     'math', 'principle',
     'mechanics', 'thermo', 'em',
     'relativity', 'quantum', 'forces',
-    'chemistry', 'biology',
+    'chemistry', 'biology', 'neuro',
     'info', 'emergence', 'cosmos',
   ];
 

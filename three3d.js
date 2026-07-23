@@ -130,8 +130,8 @@ const Tapestry3D = (function () {
     laws.forEach((l, idx) => {
       // spiral parameters
       const layer = l.layer || 0;
-      const domainAngle = (['math','principle','mechanics','thermo','em','relativity','quantum','forces','chemistry','biology','info','emergence','cosmos','unknown']
-        .indexOf(l.domain) / 14) * Math.PI * 2;
+      const domainAngle = (['math','principle','mechanics','thermo','em','relativity','quantum','forces','chemistry','biology','neuro','info','emergence','cosmos','unknown']
+        .indexOf(l.domain) / 15) * Math.PI * 2;
       const twist = layer * 0.35;
       const angle = domainAngle + twist;
       const y = layer * 6 - maxLayer * 3;
