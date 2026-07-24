@@ -307,7 +307,7 @@ const LAWS = [
   {
     id: 'maxwell', name: "Maxwell's Equations", domain: 'em', symbol: '∇·E, ∇×B',
     tagline: 'Light is a wave in the electric field.',
-    equation: '\\nabla\\!\\cdot\\!\\mathbf{E} = \\rho/\\varepsilon_0,\\quad \\nabla\\!\\times\\!\\mathbf{B} - \\partial_t\\mathbf{E} = \\mu_0\\mathbf{J}',
+    equation: '\\begin{aligned}\\nabla\\cdot\\mathbf{E} &= \\dfrac{\\rho}{\\varepsilon_0} & \\nabla\\times\\mathbf{E} &= -\\dfrac{\\partial\\mathbf{B}}{\\partial t} \\\\[2pt] \\nabla\\cdot\\mathbf{B} &= 0 & \\nabla\\times\\mathbf{B} &= \\mu_0\\mathbf{J} + \\mu_0\\varepsilon_0\\,\\dfrac{\\partial\\mathbf{E}}{\\partial t}\\end{aligned}',
     deps: ['calculus', 'newton', 'conservation'], sim: 'maxwell',
     eli5: `Rub a balloon on your hair — it sticks to the wall. Swing a magnet past a wire — electricity flows. For ages these seemed like different things. Then James Maxwell figured out they're the same thing, dancing together. When they dance, they make ripples. Those ripples travel at exactly the speed of light — because light *is* those ripples. Radio, Wi-Fi, X-rays, the visible glow you're reading by: all the same wave, just at different frequencies.`,
     intermediate: `Four equations describe all classical electricity and magnetism: Gauss's law (charges make electric fields), Gauss's law for magnetism (no magnetic monopoles), Faraday's law (changing magnetic fields make electric fields), and Ampère–Maxwell (currents and changing electric fields make magnetic fields). From these, Maxwell derived that oscillating electric and magnetic fields propagate as waves at a specific speed — 1/√(ε₀μ₀) ≈ 3 × 10⁸ m/s, exactly the speed of light. Electricity, magnetism and light are one phenomenon.`,
