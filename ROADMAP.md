@@ -14,17 +14,17 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 74 (60 known, 14 frontier). Domains: 14. Sims: 32. Analogous
+- Nodes: 75 (60 known, 15 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-22. Presentation-layer polish: mobile tap
-  targets are now ≥ 44 × 44 px (WCAG 2.5.5). The header theme buttons
-  used to squash to ~28 px at ≤ 800 px; the panel close and narrate
-  buttons kept their 34 × 34 desktop size even on touch. A new
-  `@media (max-width: 640px)` block at the end of `styles.css` bumps
-  every phone-visible control — theme trio, reset ⌂, overflow ⋯, search
-  input, panel-close ✕, narrate 🔊 — while cursor-first desktop stays
-  compact.
+- Last updated: 2026-07-25. Added the **Fermi Paradox** as a new
+  frontier node — the atlas's frontier domain now includes the most
+  famous "and yet…" in the whole map of what we don't know. Sits on
+  `stars` and `evolution`; deps chosen because the paradox is the
+  collision of astronomical opportunity (many stars, deep time) with
+  biological plausibility (life evolved once here already). Hero: the
+  1943–49 Los Alamos portrait of Fermi himself, taken about five years
+  before his lunchtime "Where is everybody?" at Fuller Lodge.
 
 ## The atlas we want (inventory)
 
@@ -49,7 +49,7 @@ points, not quotas.
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
 | earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
-| unknown         |  12   |   15   | strong CP, hierarchy, turbulence, pre-BB state, Fermi     |
+| unknown         |  15   |   17   | hierarchy problem, nature of time, pre-Big-Bang state     |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
 **Quality always beats quantity.** One excellent node per run beats three thin
@@ -110,7 +110,8 @@ equation, and valid `deps`:
 ~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap ·
 ~~turbulence~~ (added 2026-07-20) ·
 ~~strong CP problem~~ (added 2026-07-09) · hierarchy problem · nature of time ·
-hard problem of consciousness (strengthen) · pre-Big-Bang state · Fermi paradox.
+hard problem of consciousness (strengthen) · pre-Big-Bang state ·
+~~Fermi paradox~~ (added 2026-07-25).
 
 **Sims still missing on existing nodes, ranked by teachability:**
 - ~~`uncertainty` — wave packet with inverse Δx↔Δp width.~~ — added 2026-04-17.
