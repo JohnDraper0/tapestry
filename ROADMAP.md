@@ -14,17 +14,18 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 75 (60 known, 15 frontier). Domains: 14. Sims: 32. Analogous
+- Nodes: 76 (60 known, 16 frontier). Domains: 14. Sims: 32. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-25. Added the **Fermi Paradox** as a new
-  frontier node — the atlas's frontier domain now includes the most
-  famous "and yet…" in the whole map of what we don't know. Sits on
-  `stars` and `evolution`; deps chosen because the paradox is the
-  collision of astronomical opportunity (many stars, deep time) with
-  biological plausibility (life evolved once here already). Hero: the
-  1943–49 Los Alamos portrait of Fermi himself, taken about five years
-  before his lunchtime "Where is everybody?" at Fuller Lodge.
+- Last updated: 2026-07-30. Added the **Hierarchy Problem** as a new
+  frontier node — the puzzle of why the Higgs mass sits ~10¹⁷ times
+  below the Planck scale despite quantum corrections that should
+  drag it up there. Sits on `higgs` and `standard`; the fine-tuning
+  is quoted at one part in ~10³², with 't Hooft naturalness, SUSY,
+  composite Higgs, warped extra dimensions, the relaxion mechanism,
+  and anthropic selection each surveyed in the expert block. Hero:
+  Leonard Susskind, who named the "gauge hierarchy problem" in his
+  1979 technicolor paper.
 
 ## The atlas we want (inventory)
 
@@ -49,7 +50,7 @@ points, not quotas.
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
 | earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
-| unknown         |  15   |   17   | hierarchy problem, nature of time, pre-Big-Bang state     |
+| unknown         |  16   |   17   | nature of time, pre-Big-Bang state, Yang–Mills mass gap   |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
 **Quality always beats quantity.** One excellent node per run beats three thin
@@ -109,7 +110,8 @@ equation, and valid `deps`:
 **Frontier (known: false) additions worth having:**
 ~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap ·
 ~~turbulence~~ (added 2026-07-20) ·
-~~strong CP problem~~ (added 2026-07-09) · hierarchy problem · nature of time ·
+~~strong CP problem~~ (added 2026-07-09) ·
+~~hierarchy problem~~ (added 2026-07-30) · nature of time ·
 hard problem of consciousness (strengthen) · pre-Big-Bang state ·
 ~~Fermi paradox~~ (added 2026-07-25).
 
