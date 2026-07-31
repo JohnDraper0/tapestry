@@ -3596,6 +3596,200 @@ SIMS.maxwell = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── SANDPILE (SOC) ──────────────────────────
+// Bak–Tang–Wiesenfeld abelian sandpile — the paradigm of self-organised
+// criticality. A grain drops on a random cell each tick; any cell holding
+// four grains topples, spilling one to each of its four neighbours. Grains
+// pushed off the edge are lost — the boundary dissipation that closes the
+// slow drive. With no parameter tuned by hand, the pile settles into a
+// stationary state whose avalanche-size distribution is a power law
+// P(s) ∝ s^{−τ}, τ ≈ 1.27 in 2D. Left: heatmap of cell heights (0–3).
+// Right: log-log histogram building live, with the −τ reference line.
+SIMS.soc = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  const splitX = Math.floor(w * 0.58);
+  const padT = 34, padB = 22;
+
+  const gL = 8, gR = splitX - 12;
+  const gT = padT, gB = h - padB;
+  const cellSize = Math.max(3, Math.min(7,
+    Math.floor(Math.min((gR - gL) / 60, (gB - gT) / 40))));
+  const NX = Math.max(12, Math.floor((gR - gL) / cellSize));
+  const NY = Math.max(10, Math.floor((gB - gT) / cellSize));
+  const gridW = NX * cellSize, gridH = NY * cellSize;
+  const gX0 = gL + Math.floor(((gR - gL) - gridW) / 2);
+  const gY0 = gT + Math.floor(((gB - gT) - gridH) / 2);
+
+  const Z = new Uint8Array(NX * NY);
+  const idx = (i, j) => j * NX + i;
+
+  // Log-binned avalanche-size histogram.
+  const B = 1.4;
+  const NBINS = 22;
+  const bins = new Int32Array(NBINS);
+  let totalAv = 0, biggest = 0;
+  function record(s) {
+    totalAv++;
+    if (s > biggest) biggest = s;
+    let k = Math.floor(Math.log(s) / Math.log(B));
+    if (k < 0) k = 0;
+    if (k >= NBINS) k = NBINS - 1;
+    bins[k]++;
+  }
+
+  const stack = [];
+  function drop() {
+    const k0 = idx((Math.random() * NX) | 0, (Math.random() * NY) | 0);
+    Z[k0]++;
+    if (Z[k0] < 4) return 0;
+    let size = 0;
+    stack.length = 0;
+    stack.push(k0);
+    while (stack.length) {
+      const k = stack.pop();
+      if (Z[k] < 4) continue;
+      Z[k] -= 4;
+      size++;
+      const i = k % NX, j = (k / NX) | 0;
+      if (i > 0)      { const kn = k - 1;  Z[kn]++; if (Z[kn] >= 4) stack.push(kn); }
+      if (i < NX - 1) { const kn = k + 1;  Z[kn]++; if (Z[kn] >= 4) stack.push(kn); }
+      if (j > 0)      { const kn = k - NX; Z[kn]++; if (Z[kn] >= 4) stack.push(kn); }
+      if (j < NY - 1) { const kn = k + NX; Z[kn]++; if (Z[kn] >= 4) stack.push(kn); }
+      if (Z[k] >= 4) stack.push(k);
+    }
+    return size;
+  }
+
+  // Cool → warm as a cell approaches critical (z = 3).
+  const PAL = [
+    '#101528',
+    'rgba(100, 170, 255, 0.90)',
+    'rgba(120, 220, 200, 0.95)',
+    'rgba(255, 200, 100, 1.00)',
+  ];
+
+  function draw() {
+    const DROPS = 8;
+    for (let g = 0; g < DROPS; g++) {
+      const s = drop();
+      if (s > 0) record(s);
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // ── Left pane: height heatmap ──────────────────────────────────────
+    ctx.fillStyle = '#080b18';
+    ctx.fillRect(gX0 - 1, gY0 - 1, gridW + 2, gridH + 2);
+    for (let j = 0; j < NY; j++) {
+      for (let i = 0; i < NX; i++) {
+        const z = Z[idx(i, j)];
+        if (z === 0) continue;
+        ctx.fillStyle = PAL[Math.min(3, z)];
+        ctx.fillRect(gX0 + i * cellSize, gY0 + j * cellSize, cellSize, cellSize);
+      }
+    }
+    ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    ctx.strokeRect(gX0 + 0.5, gY0 + 0.5, gridW - 1, gridH - 1);
+
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Bak–Tang–Wiesenfeld sandpile', 8, 4);
+
+    ctx.font = '10px system-ui';
+    for (let z = 0; z < 4; z++) {
+      const bx = 8 + z * 34;
+      ctx.fillStyle = PAL[z];
+      ctx.fillRect(bx, 20, 10, 10);
+      ctx.fillStyle = 'rgba(255,255,255,0.70)';
+      ctx.fillText(String(z), bx + 12, 21);
+    }
+
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`${totalAv} avalanches · biggest ${biggest}`, 8, h - 4);
+
+    // ── Right pane: log-log histogram ──────────────────────────────────
+    const hL = splitX + 6, hR = w - 10;
+    const hT = padT, hB = h - padB;
+    const hW = hR - hL, hHt = hB - hT;
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(hL, hT); ctx.lineTo(hL, hB); ctx.lineTo(hR, hB);
+    ctx.stroke();
+
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('P(size)  log-log', hL, 4);
+
+    // Densities (bin count divided by bin width in s).
+    const logD = new Float64Array(NBINS);
+    let logMax = -Infinity, anchor = -1;
+    for (let k = 0; k < NBINS; k++) {
+      if (bins[k] === 0) { logD[k] = NaN; continue; }
+      const width = Math.pow(B, k) * (B - 1);
+      logD[k] = Math.log(bins[k] / width);
+      if (anchor < 0) anchor = k;
+      if (logD[k] > logMax) logMax = logD[k];
+    }
+
+    if (isFinite(logMax)) {
+      const yTop = logMax + 0.5;
+      const yBot = yTop - Math.log(1e6);   // ~6 decades of dynamic range
+      const yScale = hHt / (yTop - yBot);
+
+      // Reference power-law: log P = log P(anchor) − τ · (k − anchor) · ln B.
+      const TAU = 1.27;
+      const lnB = Math.log(B);
+      ctx.strokeStyle = 'rgba(255, 210, 130, 0.65)';
+      ctx.lineWidth = 1.2;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      let started = false;
+      for (let k = anchor; k < NBINS; k++) {
+        const yLog = logD[anchor] - TAU * (k - anchor) * lnB;
+        if (yLog < yBot) break;
+        const x = hL + ((k + 0.5) / NBINS) * hW;
+        const y = hB - (yLog - yBot) * yScale;
+        if (!started) { ctx.moveTo(x, y); started = true; }
+        else          { ctx.lineTo(x, y); }
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Empirical bars.
+      const bw = Math.max(2, hW / NBINS - 1);
+      ctx.fillStyle = 'rgba(130, 210, 255, 0.85)';
+      for (let k = 0; k < NBINS; k++) {
+        if (isNaN(logD[k])) continue;
+        const y = hB - (logD[k] - yBot) * yScale;
+        if (y >= hB) continue;
+        const x = hL + (k / NBINS) * hW + 0.5;
+        ctx.fillRect(x, y, bw, hB - y);
+      }
+    }
+
+    ctx.fillStyle = 'rgba(255, 210, 130, 0.9)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText('slope −1.27', hR - 4, hT + 4);
+    ctx.fillStyle = 'rgba(130, 210, 255, 0.9)';
+    ctx.fillText('empirical', hR - 4, hT + 18);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('size →', hL + 2, hB + 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

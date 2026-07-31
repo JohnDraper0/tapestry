@@ -14,18 +14,17 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 76 (60 known, 16 frontier). Domains: 14. Sims: 32. Analogous
+- Nodes: 76 (60 known, 16 frontier). Domains: 14. Sims: 33. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-30. Added the **Hierarchy Problem** as a new
-  frontier node — the puzzle of why the Higgs mass sits ~10¹⁷ times
-  below the Planck scale despite quantum corrections that should
-  drag it up there. Sits on `higgs` and `standard`; the fine-tuning
-  is quoted at one part in ~10³², with 't Hooft naturalness, SUSY,
-  composite Higgs, warped extra dimensions, the relaxion mechanism,
-  and anthropic selection each surveyed in the expert block. Hero:
-  Leonard Susskind, who named the "gauge hierarchy problem" in his
-  1979 technicolor paper.
+- Last updated: 2026-07-31. Filled the long-vacant sim slot on **Self-
+  Organised Criticality** with a live Bak–Tang–Wiesenfeld sandpile.
+  Grains drop on a random cell each tick; any cell holding four topples
+  to its four neighbours, edge grains falling off. Left pane: heatmap
+  of cell heights (0–3, cool → warm at critical). Right pane: log-log
+  histogram of avalanche sizes with a dashed −1.27 reference line the
+  empirical bars converge on within a few seconds. No parameter tuned
+  by hand — the pile finds its own critical state, which is the point.
 
 ## The atlas we want (inventory)
 
