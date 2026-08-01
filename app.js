@@ -814,6 +814,18 @@
     intro.classList.add('hidden');
     if (typeof Sound !== 'undefined') Sound.init();
   });
+
+  // Intro "Tell me more" — phone-only collapse (CSS hides the toggle on
+  // desktop). Reveals paragraphs 2/3 and the keyboard-hint row.
+  const introMoreToggle = intro.querySelector('.intro-more-toggle');
+  const introBodyEl = intro.querySelector('.intro-body');
+  if (introMoreToggle && introBodyEl) {
+    introMoreToggle.addEventListener('click', () => {
+      const open = introBodyEl.classList.toggle('expanded');
+      introMoreToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      introMoreToggle.firstChild.textContent = open ? 'Show less ' : 'Tell me more ';
+    });
+  }
   resetBtn.addEventListener('click', resetCam);
   helpBtn.addEventListener('click', () => { intro.classList.remove('hidden'); });
   muteBtn.addEventListener('click', () => {

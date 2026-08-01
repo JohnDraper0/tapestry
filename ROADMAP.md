@@ -17,14 +17,13 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 76 (60 known, 16 frontier). Domains: 14. Sims: 33. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-07-31. Filled the long-vacant sim slot on **Self-
-  Organised Criticality** with a live Bak–Tang–Wiesenfeld sandpile.
-  Grains drop on a random cell each tick; any cell holding four topples
-  to its four neighbours, edge grains falling off. Left pane: heatmap
-  of cell heights (0–3, cool → warm at critical). Right pane: log-log
-  histogram of avalanche sizes with a dashed −1.27 reference line the
-  empirical bars converge on within a few seconds. No parameter tuned
-  by hand — the pile finds its own critical state, which is the point.
+- Last updated: 2026-08-01. Compressed the intro overlay on phones (F-7):
+  paragraphs 2 and 3 now collapse behind a "Tell me more" pill, and the
+  six-key keyboard-hint row (`/`, `T`, `R`, `M`, `P`) hides entirely
+  below 640 px — nobody has those keys on a touch device. Title, sub,
+  and body sizes trim so the whole overlay fits above the fold on a
+  6-inch phone in portrait. Desktop is unchanged: toggle is `display:
+  none`, both paragraphs and the hint row render as before.
 
 ## The atlas we want (inventory)
 
@@ -177,9 +176,12 @@ One bullet per F-category run. Order is roughly priority.
    100vw, 560px"`; Wikimedia's `Special:FilePath` honours the widths, so
    cellular phones pull ~480 and retina desktops pull ~1400 without any
    extra bookkeeping — ~75% fewer image bytes on a phone.
-7. **Compress the intro overlay on mobile.** The three-paragraph body
-   often exceeds the fold on a 6-inch phone; collapse into a single
-   "what is this?" teaser with an expandable "tell me more".
+7. ~~**Compress the intro overlay on mobile.**~~ — done 2026-08-01.
+   Below 640 px, only the first paragraph shows by default; the other
+   two collapse behind a "Tell me more" pill that also reveals the
+   keyboard-hint row (hidden on phones by default — those keys don't
+   exist on a touch device). Title/sub/body sizes trimmed so the whole
+   overlay fits above the fold on a 6-inch phone in portrait.
 
 ### Readability
 8. ~~**Cap KaTeX line width to the panel and enable horizontal scroll.**~~

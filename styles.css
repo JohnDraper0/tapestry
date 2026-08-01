@@ -737,6 +737,37 @@ header * { pointer-events: auto; }
   letter-spacing: 0.08em;
 }
 
+/* Collapsible "tell me more" — desktop shows everything, phones collapse
+   the second and third paragraph behind this toggle (see 640px block). */
+.intro-more-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px;
+  margin: 6px 0 12px 0;
+  color: var(--ink-dim);
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  min-height: 44px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.intro-more-toggle:hover,
+.intro-more-toggle:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+  outline: none;
+}
+.intro-more-toggle span {
+  display: inline-block;
+  margin-left: 6px;
+  transition: transform 0.25s;
+}
+.intro-body.expanded .intro-more-toggle span { transform: rotate(90deg); }
+
 @media (max-width: 800px) {
   .intro-box { padding: 40px 26px; }
   .intro-title { font-size: 42px; }
@@ -837,6 +868,22 @@ header * { pointer-events: auto; }
     min-height: 44px;
     border-radius: 12px;
   }
+
+  /* Compress the intro overlay on phones: only the first paragraph shows;
+     paragraphs 2 and 3 hide behind "Tell me more". Keyboard hints hide too
+     — they name shortcut keys nobody has on a touch device. */
+  .intro-box { padding: 32px 20px; }
+  .intro-title { font-size: 34px; }
+  .intro-sub { font-size: 10px; margin-bottom: 24px; }
+  .intro-body { font-size: 15px; line-height: 1.55; margin-bottom: 22px; }
+  .intro-body p { margin: 0 0 10px 0; }
+  .intro-more { display: none; }
+  .intro-body.expanded .intro-more { display: block; }
+  .intro-more-toggle { display: inline-flex; align-items: center; }
+  .intro-controls { display: none; }
+  .intro-body.expanded ~ .intro-controls { display: flex; }
+  #introBtn { padding: 14px 36px; font-size: 12px; }
+  .intro-footnote { margin-top: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
