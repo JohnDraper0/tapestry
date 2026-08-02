@@ -14,16 +14,22 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 76 (60 known, 16 frontier). Domains: 14. Sims: 33. Analogous
+- Nodes: 77 (60 known, 17 frontier). Domains: 14. Sims: 33. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-01. Compressed the intro overlay on phones (F-7):
-  paragraphs 2 and 3 now collapse behind a "Tell me more" pill, and the
-  six-key keyboard-hint row (`/`, `T`, `R`, `M`, `P`) hides entirely
-  below 640 px — nobody has those keys on a touch device. Title, sub,
-  and body sizes trim so the whole overlay fits above the fold on a
-  6-inch phone in portrait. Desktop is unchanged: toggle is `display:
-  none`, both paragraphs and the hint row render as before.
+- Last updated: 2026-08-02. Added the **Yang–Mills mass gap** (B-8) as the
+  third Clay Millennium Prize problem in the frontier, sitting between
+  `riemann_hypothesis` and `fermi_paradox`. The eli5 pitches the puzzle as
+  "a working engine no engineer can prove doesn't secretly divide by zero";
+  the expert block cites the Jaffe–Witten problem statement,
+  Aizenman–Duminil-Copin's 2021 triviality proof for φ⁴₄ (which sharpens
+  rather than eases the 4D existence puzzle), Wilson's 1974 area-law
+  confinement, Λ_QCD via asymptotic freedom, and glueball spectroscopy;
+  the surprise is that ≈ 99% of a proton's mass — and therefore of you —
+  is pure QCD binding energy, held in place by the very theorem that
+  remains unproved. The history sits with the 1954 Pauli–Yang Princeton
+  seminar exchange. Deps: `qft`, `standard`. This closes the frontier
+  atlas target exactly (17 / 17).
 
 ## The atlas we want (inventory)
 
@@ -48,7 +54,7 @@ points, not quotas.
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
 | earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
-| unknown         |  16   |   17   | nature of time, pre-Big-Bang state, Yang–Mills mass gap   |
+| unknown         |  17   |   17   | nature of time, pre-Big-Bang state (target hit)           |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
 **Quality always beats quantity.** One excellent node per run beats three thin
@@ -106,7 +112,8 @@ equation, and valid `deps`:
 15. ~~**Entropy–information link / Landauer** (thermo-info bridge node).~~ — added 2026-07-05.
 
 **Frontier (known: false) additions worth having:**
-~~Riemann hypothesis~~ (added 2026-06-03) · Yang–Mills mass gap ·
+~~Riemann hypothesis~~ (added 2026-06-03) ·
+~~Yang–Mills mass gap~~ (added 2026-08-02) ·
 ~~turbulence~~ (added 2026-07-20) ·
 ~~strong CP problem~~ (added 2026-07-09) ·
 ~~hierarchy problem~~ (added 2026-07-30) · nature of time ·
