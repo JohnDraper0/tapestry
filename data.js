@@ -741,6 +741,18 @@ const LAWS = [
   },
 
   {
+    id: 'hubble_law', name: 'Hubble–Lemaître Law', domain: 'cosmos', symbol: 'H₀',
+    tagline: 'Every galaxy is running away — and the farther, the faster.',
+    equation: 'v = H_0\\,d',
+    deps: ['general'], sim: null,
+    eli5: `The universe is expanding. Every galaxy is running away from every other galaxy, and the farther a galaxy is from us, the faster it's flying away. It's not that galaxies are zooming through space — space itself is stretching. Picture raisins baked into a loaf of rising bread: every raisin sees every other raisin drifting away, and the far-off raisins drift fastest. Edwin Hubble discovered this in 1929 by measuring the colour of light from distant galaxies. Their light was shifted toward red — like the low note of an ambulance speeding away — proof they were rushing away. Rewinding that expansion is how we know the universe had a beginning.`,
+    intermediate: `Distant galaxies recede with velocities proportional to their distance: v = H₀ · d, where H₀ ≈ 70 km/s per megaparsec — so a galaxy 100 million light-years away drifts away at about 2 000 km/s. Crucially, this is not motion through space but the stretching of space itself, imprinted on galactic spectra as cosmological redshift. The universe has no centre; every observer in every galaxy sees exactly the same relation, because it isn't the galaxies that move but the metric between them. The inverse of H₀ sets a natural cosmological timescale — the Hubble time, about 14 billion years — close to the actual age of the universe. Two very different measurement methods — the cosmic distance ladder (Cepheids anchoring Type Ia supernovae) and the cosmic microwave background — currently give slightly different values. The gap is called the **Hubble tension**, and it is one of the live puzzles of cosmology.`,
+    expert: `The Hubble–Lemaître relation v = H₀d is the low-redshift limit of the FLRW metric ds² = −c²dt² + a(t)²[dr²/(1−kr²) + r²dΩ²]; the Hubble parameter is H(t) = ȧ/a, with H₀ ≡ H(t₀). Cosmological redshift is a metric effect, 1 + z = a(t₀)/a(t_em), coinciding with special-relativistic Doppler only at v ≪ c. The distance-ladder programme SH0ES (Milky-Way parallax → Cepheids in SN Ia hosts → SN Ia in the Hubble flow) reports H₀ = 73.04 ± 1.04 km/s/Mpc (Riess et al., 2022); the Planck 2018 CMB fit under flat ΛCDM gives H₀ = 67.36 ± 0.54 km/s/Mpc. The ≈ 5σ gap is the **Hubble tension**. Cross-checks — TRGB, Miras, JAGB, water-maser geometry in NGC 4258, gravitational-wave standard sirens (GW170817 gave H₀ = 70⁺¹²₋₈), strong-lensing time delays (H0LiCOW/TDCOSMO), and DESI BAO 2024 (68.53 ± 0.80) — cluster around 70 with scatter that has not yet dissolved the discrepancy. Cepheid systematics (metallicity, crowding, dust) have been aggressively re-examined with JWST 2023–2024 without vanishing the offset. The Hubble time 1/H₀ ≈ 14.4 Gyr sets the cosmological scale; the Hubble sphere c/H₀ ≈ 4.3 Gpc is the surface where recession velocity equals c — beyond which galaxies still emit light that eventually reaches us, because expansion decelerates before re-accelerating in the ΛCDM history.`,
+    surprise: `Two independent measurements of the same number — one using nearby exploding stars, the other using the afterglow of the Big Bang — disagree by about 8 per cent, and they have been disagreeing, at rising statistical significance, for over a decade. Either an unnoticed systematic is hiding in both experiments, or the standard model of cosmology is missing something we haven't yet named.`,
+    history: `Georges Lemaître, a Belgian priest, derived v = Hd from Einstein's equations in 1927 and estimated H — but the paper appeared in French in a small Belgian journal, and when Lemaître himself translated it for MNRAS in 1931 he quietly dropped the velocity-distance paragraph as "of no actual interest" (Livio, 2011, from the RAS archives) because Hubble's 1929 estimate had by then superseded his own. Hubble, using the 100-inch reflector at Mount Wilson, measured redshifts of 24 nebulae and published H₀ ≈ 500 km/s/Mpc — nearly seven times too large, because he had conflated two brightness classes of Cepheid. Fixing the calibration took decades. In October 2018 the IAU voted 78 per cent in favour of renaming the relation the Hubble–Lemaître Law, restoring Lemaître's priority almost a century late.`,
+  },
+
+  {
     id: 'darkmatter', name: 'Dark Matter & Dark Energy', domain: 'cosmos', symbol: 'Λ',
     tagline: '95 % of the universe is missing.',
     equation: '\\Omega_\\Lambda \\approx 0.69,\\;\\Omega_\\mathrm{DM} \\approx 0.26',
@@ -1117,6 +1129,8 @@ const IMAGES = {
                    caption: 'Simulated dark-matter halo structure' },
   stars:         { image: WM('Eagle_nebula_pillars.jpg'),
                    caption: "Hubble's Pillars of Creation — a star nursery" },
+  hubble_law:    { image: WM('Studio_portrait_photograph_of_Edwin_Powell_Hubble_(cropped).JPG'),
+                   caption: 'Edwin Hubble, 1931 — two years after showing that the universe expands' },
   chandrasekhar: { image: WM('Subrahmanyan_Chandrasekhar.jpg'),
                    caption: 'Subrahmanyan Chandrasekhar — derived the mass limit at 19' },
   navier_stokes: { image: WM('Karman_vortex_street_off_Alejandro_Selkirk_Island.jpg'),
