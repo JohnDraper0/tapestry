@@ -14,22 +14,18 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 77 (60 known, 17 frontier). Domains: 14. Sims: 33. Analogous
+- Nodes: 78 (61 known, 17 frontier). Domains: 14. Sims: 35. Analogous
   cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-02. Added the **Yang–Mills mass gap** (B-8) as the
-  third Clay Millennium Prize problem in the frontier, sitting between
-  `riemann_hypothesis` and `fermi_paradox`. The eli5 pitches the puzzle as
-  "a working engine no engineer can prove doesn't secretly divide by zero";
-  the expert block cites the Jaffe–Witten problem statement,
-  Aizenman–Duminil-Copin's 2021 triviality proof for φ⁴₄ (which sharpens
-  rather than eases the 4D existence puzzle), Wilson's 1974 area-law
-  confinement, Λ_QCD via asymptotic freedom, and glueball spectroscopy;
-  the surprise is that ≈ 99% of a proton's mass — and therefore of you —
-  is pure QCD binding energy, held in place by the very theorem that
-  remains unproved. The history sits with the 1954 Pauli–Yang Princeton
-  seminar exchange. Deps: `qft`, `standard`. This closes the frontier
-  atlas target exactly (17 / 17).
+- Last updated: 2026-08-06. Added a **Hardy–Weinberg sim** — a 480-individual
+  population grid (AA blue, Aa purple, aa coral) beside three genotype bars
+  with a dashed H–W prediction anchored to the current allele frequency p.
+  Every ~7 seconds the founder resets to a state that is *not* at
+  equilibrium — all heterozygotes (0 / 100 / 0), a 50 / 50 mix of
+  homozygotes, then a p = 0.8 skew — and one round of random mating snaps
+  the bars onto the p² : 2pq : q² marks. The theorem's one-generation
+  convergence, made visible. `sims.js` +178 lines; `data.js` flips
+  `sim: null → 'hardy_weinberg'` on the hardy_weinberg node.
 
 ## The atlas we want (inventory)
 

@@ -3790,6 +3790,194 @@ SIMS.soc = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── HARDY–WEINBERG ──────────────────────────────
+// The null model of evolution, made visible. Every ~7s we reset the
+// population to a founder state that is *not* at Hardy–Weinberg equilibrium
+// — all heterozygotes, or a 50/50 mix of homozygotes, or an 80/20 skew —
+// and run random mating one generation at a time. After exactly one round,
+// genotype frequencies snap to p² : 2pq : q² and drift around it forever;
+// the dashed lines mark the H–W prediction from the current allele
+// frequency p. The theorem is a one-step convergence, and this shows it.
+SIMS.hardy_weinberg = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  const NX = 24, NY = 20;
+  const N = NX * NY;
+  let pop = new Uint8Array(N * 2);   // two alleles per individual: 0 = A, 1 = a
+
+  const splitX = Math.floor(w * 0.58);
+  const padT = 34, padB = 26;
+  const gL = 10, gR = splitX - 10;
+  const gT = padT, gB = h - padB;
+  const cellSize = Math.max(6, Math.min(14,
+    Math.floor(Math.min((gR - gL) / NX, (gB - gT) / NY))));
+  const gridW = NX * cellSize, gridH = NY * cellSize;
+  const gX0 = gL + Math.floor(((gR - gL) - gridW) / 2);
+  const gY0 = gT + Math.floor(((gB - gT) - gridH) / 2);
+
+  const COL_AA = '#4facfe';
+  const COL_Aa = '#c471ed';
+  const COL_aa = '#ff8a65';
+
+  const SCENARIOS = [
+    { name: 'founder: every individual heterozygous (Aa)', init() {
+        for (let i = 0; i < N; i++) { pop[2*i] = 0; pop[2*i + 1] = 1; } } },
+    { name: 'founder: 50% AA · 50% aa · zero heterozygotes', init() {
+        for (let i = 0; i < N; i++) {
+          const a = i < N / 2 ? 0 : 1;
+          pop[2*i] = a; pop[2*i + 1] = a;
+        }
+        for (let i = N - 1; i > 0; i--) {   // shuffle so the grid isn't split
+          const j = (Math.random() * (i + 1)) | 0;
+          const t0 = pop[2*i], t1 = pop[2*i + 1];
+          pop[2*i] = pop[2*j];  pop[2*i + 1] = pop[2*j + 1];
+          pop[2*j] = t0;        pop[2*j + 1] = t1;
+        }
+      } },
+    { name: 'founder: 80% AA · 20% aa · skewed p = 0.8', init() {
+        const cutoff = Math.round(0.8 * N);
+        for (let i = 0; i < N; i++) {
+          const a = i < cutoff ? 0 : 1;
+          pop[2*i] = a; pop[2*i + 1] = a;
+        }
+        for (let i = N - 1; i > 0; i--) {
+          const j = (Math.random() * (i + 1)) | 0;
+          const t0 = pop[2*i], t1 = pop[2*i + 1];
+          pop[2*i] = pop[2*j];  pop[2*i + 1] = pop[2*j + 1];
+          pop[2*j] = t0;        pop[2*j + 1] = t1;
+        }
+      } },
+  ];
+
+  let scenario = 0;
+  let generation = 0;
+  const RESET_EVERY = 9;
+  SCENARIOS[scenario].init();
+
+  function nextGen() {
+    const newPop = new Uint8Array(N * 2);
+    for (let i = 0; i < N; i++) {
+      const p1 = (Math.random() * N) | 0;
+      const p2 = (Math.random() * N) | 0;
+      newPop[2*i]     = pop[2*p1 + (Math.random() < 0.5 ? 0 : 1)];
+      newPop[2*i + 1] = pop[2*p2 + (Math.random() < 0.5 ? 0 : 1)];
+    }
+    pop = newPop;
+    generation++;
+  }
+
+  function tally() {
+    let AA = 0, Aa = 0, aa = 0, Acount = 0;
+    for (let i = 0; i < N; i++) {
+      const a1 = pop[2*i], a2 = pop[2*i + 1];
+      if (a1 === 0) Acount++;
+      if (a2 === 0) Acount++;
+      const s = a1 + a2;
+      if (s === 0)      AA++;
+      else if (s === 2) aa++;
+      else              Aa++;
+    }
+    return { AA, Aa, aa, p: Acount / (2 * N) };
+  }
+
+  function drawBar(x, y, bw, bh, obs, pred, color, label) {
+    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillRect(x, y, bw, bh);
+    const oh = obs * bh;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y + bh - oh, bw, oh);
+    const py = y + bh - pred * bh;
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.setLineDash([4, 3]);
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(x - 4, py); ctx.lineTo(x + bw + 4, py);
+    ctx.stroke();
+    ctx.setLineDash([]); ctx.lineWidth = 1;
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(label, x + bw / 2, y + bh + 4);
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(`${(obs * 100).toFixed(0)}%`, x + bw / 2, y - 2);
+  }
+
+  const FRAME_MS = 750;
+  let last = performance.now();
+  let sinceStep = 0;
+  let sinceReset = 0;
+
+  function draw(now) {
+    const dt = now - last; last = now;
+    sinceStep += dt;
+    if (sinceStep >= FRAME_MS) {
+      sinceStep = 0;
+      nextGen();
+      sinceReset++;
+      if (sinceReset >= RESET_EVERY) {
+        sinceReset = 0;
+        scenario = (scenario + 1) % SCENARIOS.length;
+        SCENARIOS[scenario].init();
+        generation = 0;
+      }
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Random mating → p² : 2pq : q² in one generation', 10, 4);
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillText(SCENARIOS[scenario].name, 10, 20);
+
+    for (let j = 0; j < NY; j++) {
+      for (let i = 0; i < NX; i++) {
+        const k = j * NX + i;
+        const s = pop[2*k] + pop[2*k + 1];
+        ctx.fillStyle = (s === 0) ? COL_AA : (s === 2) ? COL_aa : COL_Aa;
+        const cx = gX0 + i * cellSize + cellSize / 2;
+        const cy = gY0 + j * cellSize + cellSize / 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, cellSize / 2 - 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const c = tally();
+    const p = c.p, q = 1 - p;
+    const barsL = splitX + 12, barsR = w - 12;
+    const barsT = padT + 4;
+    const barsW = barsR - barsL;
+    const barsHt = (h - padB - 4) - barsT - 14;
+    const barW = Math.min(48, (barsW - 24) / 3);
+    const gap = (barsW - 3 * barW) / 4;
+    const x0 = barsL + gap;
+    drawBar(x0,                   barsT, barW, barsHt, c.AA / N, p * p,       COL_AA, 'AA');
+    drawBar(x0 + (barW + gap),    barsT, barW, barsHt, c.Aa / N, 2 * p * q,   COL_Aa, 'Aa');
+    drawBar(x0 + 2 * (barW + gap), barsT, barW, barsHt, c.aa / N, q * q,       COL_aa, 'aa');
+
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.font = 'bold 10px system-ui';
+    ctx.fillText(`generation ${generation} · p = ${p.toFixed(2)}`,
+                 barsL + barsW / 2, h - 6);
+
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.font = '10px system-ui';
+    ctx.fillStyle = 'rgba(255,255,255,0.65)';
+    ctx.fillText('— — H–W prediction', w - 12, 20);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
