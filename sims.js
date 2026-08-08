@@ -1521,6 +1521,112 @@ SIMS.statmech = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── CENTRAL LIMIT THEOREM ───────────────────────
+// A deliberately lumpy two-humped source. Average n draws, accumulate the
+// means into a histogram, and watch a single bell emerge as n grows.
+SIMS.clt = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  const VMAX = 3, BINS = 60, BATCH = 5, CAP = 8000;
+  const NS = [1, 2, 5, 30];
+  const MU = 1.5, SIG = 0.8145; // mean / sd of the bimodal source below
+
+  let ni = 0, raf;
+  let bins = new Array(BINS).fill(0), total = 0;
+
+  function gauss(m, s) {
+    const u = Math.max(Math.random(), 1e-9), v = Math.random();
+    return m + s * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  // bimodal mixture: a narrow hump at 0.7, a broader one at 2.3
+  function drawOne() {
+    const x = Math.random() < 0.5 ? gauss(0.7, 0.12) : gauss(2.3, 0.18);
+    return Math.min(VMAX - 0.01, Math.max(0.01, x));
+  }
+  const comp = (x, m, s) => Math.exp(-((x - m) ** 2) / (2 * s * s)) / (s * Math.sqrt(2 * Math.PI));
+  const srcPDF = x => 0.5 * comp(x, 0.7, 0.12) + 0.5 * comp(x, 2.3, 0.18);
+  let srcMax = 0;
+  for (let i = 0; i <= 300; i++) srcMax = Math.max(srcMax, srcPDF((i / 300) * VMAX));
+
+  function reset() { bins = new Array(BINS).fill(0); total = 0; }
+  canvas.addEventListener('click', () => { ni = (ni + 1) % NS.length; reset(); });
+
+  const padL = 30, padR = 12;
+  const plotW = w - padL - padR;
+  const xOf = v => padL + (v / VMAX) * plotW;
+
+  function curvePath(yOf) {
+    ctx.beginPath();
+    for (let i = 0; i <= plotW; i++) ctx[i ? 'lineTo' : 'moveTo'](padL + i, yOf((i / plotW) * VMAX));
+  }
+
+  function draw() {
+    const n = NS[ni];
+
+    if (total < CAP) {
+      for (let b = 0; b < BATCH; b++) {
+        let s = 0;
+        for (let k = 0; k < n; k++) s += drawOne();
+        const m = s / n;
+        bins[Math.min(BINS - 1, Math.max(0, Math.floor((m / VMAX) * BINS)))]++;
+        total++;
+      }
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // ── TOP: the fixed two-humped source distribution ──
+    const tY0 = 20, tY1 = h * 0.34, tH = tY1 - tY0;
+    const srcY = v => tY1 - (srcPDF(v) / srcMax) * tH;
+    curvePath(srcY); ctx.lineTo(xOf(VMAX), tY1); ctx.lineTo(xOf(0), tY1); ctx.closePath();
+    ctx.fillStyle = 'rgba(128,216,255,0.16)'; ctx.fill();
+    curvePath(srcY); ctx.strokeStyle = 'rgba(128,216,255,0.75)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = 'rgba(200,225,255,0.85)'; ctx.font = '11px system-ui';
+    ctx.fillText('source — lumpy, not a bell', padL, tY0 + 9);
+
+    // divider
+    const mid = h * 0.38;
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1; ctx.setLineDash([4, 6]);
+    ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(w, mid); ctx.stroke(); ctx.setLineDash([]);
+
+    // ── BOTTOM: histogram of sample means + normal overlay ──
+    const bY0 = h * 0.43, bY1 = h - 24, bH = bY1 - bY0;
+    const barW = plotW / BINS;
+    const binMax = Math.max(...bins, 1);
+    bins.forEach((c, i) => {
+      const bh = (c / binMax) * bH * 0.92;
+      ctx.fillStyle = 'hsla(45,90%,60%,0.5)';
+      ctx.fillRect(padL + i * barW, bY1 - bh, Math.max(barW - 0.5, 1), bh);
+    });
+
+    // theoretical N(μ, σ²/n), peak-normalised to the histogram height
+    const sd = SIG / Math.sqrt(n);
+    const npeak = comp(MU, MU, sd);
+    curvePath(v => bY1 - (comp(v, MU, sd) / npeak) * bH * 0.92);
+    ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 2; ctx.stroke();
+
+    // μ marker + baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(xOf(MU), bY1); ctx.lineTo(xOf(MU), bY0 + 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.beginPath(); ctx.moveTo(padL, bY1); ctx.lineTo(padL + plotW, bY1); ctx.stroke();
+
+    // labels
+    ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font = '12px system-ui';
+    ctx.fillText(`mean of n = ${n} draws   ·   click to change n`, padL, bY0 - 6);
+    ctx.fillStyle = '#ffcc00'; ctx.font = '10px system-ui';
+    ctx.fillText('— normal  N(μ, σ²/n)', padL + 4, bY1 - bH + 12);
+    ctx.fillStyle = 'rgba(200,200,200,0.5)';
+    ctx.fillText(`samples: ${total}`, padL + plotW - 76, bY1 - bH + 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.fillText('μ', xOf(MU) - 4, bY1 + 14);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── UNCERTAINTY ─────────────────────────────
 SIMS.uncertainty = function (canvas) {
   const { ctx, w, h } = fit(canvas);
