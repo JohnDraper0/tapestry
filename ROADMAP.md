@@ -15,17 +15,17 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 78 (61 known, 17 frontier). Domains: 14. Sims: 35. Analogous
-  cross-links populated: 27. Images mirrored locally: 0 (all hot-linked hero
+  cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-06. Added a **Hardy–Weinberg sim** — a 480-individual
-  population grid (AA blue, Aa purple, aa coral) beside three genotype bars
-  with a dashed H–W prediction anchored to the current allele frequency p.
-  Every ~7 seconds the founder resets to a state that is *not* at
-  equilibrium — all heterozygotes (0 / 100 / 0), a 50 / 50 mix of
-  homozygotes, then a p = 0.8 skew — and one round of random mating snaps
-  the bars onto the p² : 2pq : q² marks. The theorem's one-generation
-  convergence, made visible. `sims.js` +178 lines; `data.js` flips
-  `sim: null → 'hardy_weinberg'` on the hardy_weinberg node.
+- Last updated: 2026-08-08. Added a **grav_waves ↔ maxwell** cross-link —
+  the deep field-theoretic rhyme between classical electromagnetism and
+  linearised general relativity. Both are gauge theories whose linearised
+  field equations reduce to a wave equation ☐φ = source with waves at c and
+  exactly two physical polarisations; the Lorenz gauge ∂_μA^μ = 0 is the
+  same trick as the harmonic gauge ∂^μh̄_μν = 0. Both discoveries were
+  confirmed decades late by an incredulous physics community — Hertz 22
+  years after Maxwell, LIGO 99 years after Einstein — the second essentially
+  the first done again, one spin higher. `data.js` +1 line in `ANALOGIES`.
 
 ## The atlas we want (inventory)
 
