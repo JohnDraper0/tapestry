@@ -3978,6 +3978,205 @@ SIMS.hardy_weinberg = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── CHANDRASEKHAR LIMIT ─────────────────────────
+// White dwarfs are held up not by heat but by electron-degeneracy
+// pressure (Pauli exclusion, P ∝ n^{5/3} non-relativistic). As mass
+// climbs and electrons approach c the equation of state softens toward
+// P ∝ n^{4/3}, and the star shrinks — R → 0 at M_Ch ≈ 1.44 M☉, above
+// which gravity wins outright. Left panel: the dwarf drawn to scale
+// against Earth's radius, ramping in mass then collapsing at the limit.
+// Right panel: the mass–radius curve with the current point tracked.
+SIMS.chandrasekhar = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  const M_CH = 1.44;                 // Chandrasekhar mass, in M☉
+  const M_MIN = 0.35, M_MAX = 1.55;  // plotted range on the M axis
+  const R_MAX = 1.8;                 // R axis top, in R⊕
+  const K_R = 1.25;                  // empirical fit prefactor (R in R⊕)
+
+  // Nauenberg-style polytropic interpolation: captures both the
+  // non-relativistic (P ∝ n^{5/3}, R ∝ M^{-1/3}) low-mass regime and
+  // the ultra-relativistic softening (P ∝ n^{4/3}) as M → M_Ch, where
+  // R must go to zero. Reproduces observed Sirius B / 40 Eri B radii
+  // to within ~10% with K_R = 1.25.
+  function radius(M) {
+    if (M >= M_CH) return 0;
+    const a = Math.pow(M_CH / M, 2 / 3);
+    const b = Math.pow(M / M_CH, 2 / 3);
+    return K_R * Math.sqrt(Math.max(0, a - b));
+  }
+
+  // Panel geometry: left half is the visual, right half is the plot.
+  const splitX = Math.floor(w * 0.48);
+  const pxL = 8,          pxR = splitX - 8;
+  const pxL2 = splitX + 8, pxR2 = w - 8;
+  const pyT = 28,         pyB = h - 18;
+
+  // Precompute the curve once.
+  const CURVE = [];
+  for (let i = 0; i <= 220; i++) {
+    const M = M_MIN + (M_CH - 0.001 - M_MIN) * (i / 220);
+    CURVE.push([M, radius(M)]);
+  }
+
+  // Animation phases: ramp → warn (at M_Ch) → collapse → rest → repeat.
+  const RAMP_MS = 12000, WARN_MS = 900, COLLAPSE_MS = 1000, REST_MS = 1000;
+  let phase = 'ramp';
+  let mass = M_MIN;
+  let collapseR = 0;
+  let last = performance.now();
+  let phaseStart = last;
+
+  function updatePhase(now) {
+    if (phase === 'ramp') {
+      const t = Math.min(1, (now - phaseStart) / RAMP_MS);
+      mass = M_MIN + (M_CH - 0.005 - M_MIN) * t;
+      if (t >= 1) { phase = 'warn'; phaseStart = now; }
+    } else if (phase === 'warn') {
+      mass = M_CH - 0.005;
+      if (now - phaseStart >= WARN_MS) {
+        phase = 'collapse'; phaseStart = now;
+        collapseR = radius(mass);
+      }
+    } else if (phase === 'collapse') {
+      const p = Math.min(1, (now - phaseStart) / COLLAPSE_MS);
+      collapseR = radius(M_CH - 0.005) * Math.pow(1 - p, 1.4);
+      if (p >= 1) { phase = 'rest'; phaseStart = now; }
+    } else if (phase === 'rest') {
+      if (now - phaseStart >= REST_MS) {
+        phase = 'ramp'; phaseStart = now; mass = M_MIN;
+      }
+    }
+  }
+
+  function drawVisual() {
+    const cx = (pxL + pxR) / 2;
+    const cy = (pyT + pyB) / 2 + 4;
+    const availR = Math.min((pxR - pxL) / 2 - 22, (pyB - pyT) / 2 - 36);
+    const scale  = availR / R_MAX;   // pixels per R⊕
+
+    // Earth reference — dashed outline
+    ctx.strokeStyle = 'rgba(120,190,255,0.5)';
+    ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, 1 * scale, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(120,190,255,0.65)';
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Earth', cx, cy + 1 * scale + 3);
+
+    // White dwarf itself
+    const drawR = phase === 'collapse' ? collapseR : radius(mass);
+    if (drawR > 0.005) {
+      const rpx = drawR * scale;
+      const glow = ctx.createRadialGradient(cx, cy, rpx, cx, cy, rpx * 1.7);
+      glow.addColorStop(0, 'rgba(180,220,255,0.35)');
+      glow.addColorStop(1, 'rgba(180,220,255,0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(cx, cy, rpx * 1.7, 0, Math.PI * 2); ctx.fill();
+      const body = ctx.createRadialGradient(cx - rpx * 0.35, cy - rpx * 0.35, 0, cx, cy, rpx);
+      body.addColorStop(0, '#ffffff');
+      body.addColorStop(0.55, '#dfeaff');
+      body.addColorStop(1, '#4c7bb6');
+      ctx.fillStyle = body;
+      ctx.beginPath(); ctx.arc(cx, cy, rpx, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Readouts
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+    ctx.font = 'bold 13px system-ui'; ctx.textBaseline = 'top';
+    ctx.fillText(`M = ${mass.toFixed(2)} M☉`, cx, pyB - 32);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    const rShown = phase === 'collapse' ? collapseR : radius(mass);
+    ctx.fillText(`R ≈ ${rShown.toFixed(2)} R⊕`, cx, pyB - 16);
+
+    if (phase === 'warn' || phase === 'collapse') {
+      ctx.fillStyle = phase === 'warn' ? '#ff6b6b' : '#ffb74d';
+      ctx.font = 'bold 11px system-ui'; ctx.textBaseline = 'top';
+      ctx.fillText(phase === 'warn' ? 'M → M_Ch : gravity wins'
+                                    : 'collapse → Type Ia supernova',
+                   cx, pyT - 2);
+    }
+  }
+
+  function drawPlot() {
+    const gL = pxL2 + 32, gR = pxR2 - 6;
+    const gT = pyT + 4,  gB = pyB - 22;
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(gL, gT); ctx.lineTo(gL, gB); ctx.lineTo(gR, gB); ctx.stroke();
+
+    // Vertical ticks / M_Ch marker
+    ctx.font = '9px system-ui'; ctx.textBaseline = 'top';
+    [0.5, 1.0, 1.44].forEach(mv => {
+      const xp = gL + (mv - M_MIN) / (M_MAX - M_MIN) * (gR - gL);
+      const isCh = mv === 1.44;
+      ctx.strokeStyle = isCh ? 'rgba(255,120,120,0.55)' : 'rgba(255,255,255,0.12)';
+      ctx.setLineDash(isCh ? [3, 3] : []);
+      ctx.beginPath(); ctx.moveTo(xp, gT); ctx.lineTo(xp, gB); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = isCh ? '#ff8a80' : 'rgba(255,255,255,0.6)';
+      ctx.fillText(isCh ? '1.44  M_Ch' : mv.toString(), xp, gB + 3);
+    });
+
+    // Horizontal gridlines
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    [0.5, 1.0, 1.5].forEach(rv => {
+      const yp = gB - (rv / R_MAX) * (gB - gT);
+      ctx.fillText(rv.toString(), gL - 3, yp);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.beginPath(); ctx.moveTo(gL, yp); ctx.lineTo(gR, yp); ctx.stroke();
+    });
+
+    // Axis titles
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('mass  (M☉)', (gL + gR) / 2, gB + 14);
+    ctx.save();
+    ctx.translate(pxL2 + 8, (gT + gB) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textBaseline = 'bottom';
+    ctx.fillText('radius  (R⊕)', 0, 0);
+    ctx.restore();
+
+    // Mass-radius curve
+    ctx.strokeStyle = '#4facfe'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    CURVE.forEach(([M, R], i) => {
+      const xp = gL + (M - M_MIN) / (M_MAX - M_MIN) * (gR - gL);
+      const yp = gB - (R / R_MAX) * (gB - gT);
+      if (i === 0) ctx.moveTo(xp, yp); else ctx.lineTo(xp, yp);
+    });
+    ctx.stroke();
+
+    // Current point
+    const curR = phase === 'collapse' ? collapseR : radius(mass);
+    const xpC = gL + (mass - M_MIN) / (M_MAX - M_MIN) * (gR - gL);
+    const ypC = gB - (curR / R_MAX) * (gB - gT);
+    ctx.fillStyle = phase === 'collapse' ? '#ffb74d' : '#ffffff';
+    ctx.beginPath(); ctx.arc(xpC, ypC, 4, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function draw(now) {
+    last = now;
+    updatePhase(now);
+
+    ctx.fillStyle = '#0a0e1e'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#b9f6ca';
+    ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Chandrasekhar Limit — degeneracy vs. gravity', 8, 8);
+
+    drawVisual();
+    drawPlot();
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
