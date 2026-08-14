@@ -4177,6 +4177,173 @@ SIMS.chandrasekhar = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── GRAVITATIONAL WAVES ─────────────────────
+// A gravitational wave in transverse-traceless gauge has exactly two
+// physical polarisations: "+" and "×". A passing wave deforms a ring of
+// freely-falling test masses without moving their centre of mass.
+//   + polarisation: x → x(1 + h/2),  y → y(1 − h/2)   (stretch/squeeze
+//     along the x/y axes, alternating each half-cycle)
+//   × polarisation: x → x + (h/2)y,  y → y + (h/2)x   (same, rotated 45°)
+// Real LIGO strain is h ≈ 10⁻²¹ — invisible without massive exaggeration.
+// Here h ≈ 0.3 so the shape reads at a glance. The passing waveform under
+// each ring makes the tie between strain and deformation explicit.
+SIMS.grav_waves = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+  const t0 = performance.now();
+
+  const padT = 30, padB = 12, padSide = 12, gapMid = 12;
+  const panelW  = (w - 2 * padSide - gapMid) / 2;
+  const panelH  = h - padT - padB;
+  const cyRing  = padT + panelH * 0.42;
+  const cyWave  = padT + panelH * 0.86;
+  const ringR   = Math.min(panelW * 0.34, panelH * 0.32);
+  const amp     = 0.30;          // exaggerated strain, dimensionless
+  const omega   = 1.9;           // rad / s
+  const N       = 14;            // test masses per ring
+
+  const colPlus  = 'rgba(255, 209, 102, 0.95)';   // warm gold
+  const colCross = 'rgba(120, 220, 240, 0.95)';   // cool cyan
+
+  function drawPanel(cx, kind, colour) {
+    // Original circle (dashed reference).
+    ctx.strokeStyle = 'rgba(200, 210, 230, 0.20)';
+    ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cyRing, ringR, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Polarisation axes (faint).
+    ctx.strokeStyle = 'rgba(200, 210, 230, 0.10)';
+    ctx.beginPath();
+    const axLen = ringR * 1.15;
+    if (kind === 'plus') {
+      ctx.moveTo(cx - axLen, cyRing); ctx.lineTo(cx + axLen, cyRing);
+      ctx.moveTo(cx, cyRing - axLen); ctx.lineTo(cx, cyRing + axLen);
+    } else {
+      const d = axLen * Math.SQRT1_2;
+      ctx.moveTo(cx - d, cyRing - d); ctx.lineTo(cx + d, cyRing + d);
+      ctx.moveTo(cx - d, cyRing + d); ctx.lineTo(cx + d, cyRing - d);
+    }
+    ctx.stroke();
+  }
+
+  function drawRing(cx, kind, colour, hStrain) {
+    // Deformed positions of N test masses.
+    const pts = [];
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      const x0 = ringR * Math.cos(a);
+      const y0 = ringR * Math.sin(a);
+      let dx, dy;
+      if (kind === 'plus') {
+        dx = x0 * (1 + hStrain / 2);
+        dy = y0 * (1 - hStrain / 2);
+      } else {
+        dx = x0 + (hStrain / 2) * y0;
+        dy = y0 + (hStrain / 2) * x0;
+      }
+      pts.push([cx + dx, cyRing + dy]);
+    }
+
+    // Deformed outline — closed smooth stroke.
+    ctx.strokeStyle = colour.replace('0.95', '0.55');
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+    ctx.closePath();
+    ctx.stroke();
+
+    // Test masses.
+    ctx.fillStyle = colour;
+    pts.forEach(([x, y]) => {
+      ctx.beginPath(); ctx.arc(x, y, 2.6, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+
+  function drawWave(cx, colour, hStrain, phase) {
+    // Strain waveform h(t) with a marker at the current phase.
+    const wL = cx - ringR * 1.15;
+    const wR = cx + ringR * 1.15;
+    const yMid = cyWave;
+    const wAmp = 10;
+
+    ctx.strokeStyle = 'rgba(200, 210, 230, 0.22)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(wL, yMid); ctx.lineTo(wR, yMid); ctx.stroke();
+
+    ctx.strokeStyle = colour.replace('0.95', '0.75');
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    const cycles = 2;
+    for (let i = 0; i <= 60; i++) {
+      const f = i / 60;
+      const x = wL + f * (wR - wL);
+      const y = yMid - wAmp * Math.sin(2 * Math.PI * cycles * f - phase);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+
+    // Current-phase marker on the wave.
+    const px = wL + (wR - wL) * 0.5;
+    ctx.fillStyle = colour;
+    ctx.beginPath();
+    ctx.arc(px, yMid - wAmp * Math.sin(2 * Math.PI * cycles * 0.5 - phase),
+            2.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // h strain readout.
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.65)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`h = ${hStrain >= 0 ? '+' : ''}${hStrain.toFixed(2)}`,
+                 wL, yMid + wAmp + 3);
+  }
+
+  function draw(now) {
+    const t = (now - t0) / 1000;
+    const phase = omega * t;
+    const hStrain = amp * Math.sin(phase);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Header.
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('A gravitational wave stretches and squeezes space itself',
+                 10, 8);
+
+    // Two panels side by side.
+    const cxL = padSide + panelW / 2;
+    const cxR = padSide + panelW + gapMid + panelW / 2;
+    drawPanel(cxL, 'plus',  colPlus);
+    drawPanel(cxR, 'cross', colCross);
+    drawRing(cxL, 'plus',  colPlus,  hStrain);
+    drawRing(cxR, 'cross', colCross, hStrain);
+    drawWave(cxL, colPlus,  hStrain, phase);
+    drawWave(cxR, colCross, hStrain, phase);
+
+    // Labels.
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = colPlus;
+    ctx.fillText('+ polarisation', cxL, padT - 20);
+    ctx.fillStyle = colCross;
+    ctx.fillText('× polarisation', cxR, padT - 20);
+
+    // Real-strain footnote — never let the viewer forget the scale trick.
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.55)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText('strain exaggerated 10²⁰× — real h ≈ 10⁻²¹',
+                 w - 8, h - 4);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
