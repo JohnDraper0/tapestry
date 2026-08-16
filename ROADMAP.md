@@ -14,18 +14,15 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 78 (61 known, 17 frontier). Domains: 14. Sims: 35. Analogous
+- Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
   cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-08. Added a **grav_waves ↔ maxwell** cross-link —
-  the deep field-theoretic rhyme between classical electromagnetism and
-  linearised general relativity. Both are gauge theories whose linearised
-  field equations reduce to a wave equation ☐φ = source with waves at c and
-  exactly two physical polarisations; the Lorenz gauge ∂_μA^μ = 0 is the
-  same trick as the harmonic gauge ∂^μh̄_μν = 0. Both discoveries were
-  confirmed decades late by an incredulous physics community — Hertz 22
-  years after Maxwell, LIGO 99 years after Einstein — the second essentially
-  the first done again, one spin higher. `data.js` +1 line in `ANALOGIES`.
+- Last updated: 2026-08-16. Added **Topology** to the math domain
+  (`deps: geometry, sets`) — Euler characteristic χ = V − E + F = 2 − 2g,
+  Königsberg bridges (1735) as the founding document, Perelman refusing the
+  Clay prize, and the hairy-ball theorem as its surprise. First entry in
+  the roadmap's math-gap list; brings math to 11/14 target. Hero: the
+  Wikimedia mug-to-torus morph GIF.
 
 ## The atlas we want (inventory)
 
@@ -35,7 +32,7 @@ points, not quotas.
 
 | Domain          | Today | Target | Gaps worth filling next                                   |
 |-----------------|------:|-------:|-----------------------------------------------------------|
-| math            |  10   |   14   | topology, group theory, Gödel's theorems, graph theory    |
+| math            |  11   |   14   | group theory, Gödel's theorems, graph theory              |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
