@@ -14,18 +14,20 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 78 (61 known, 17 frontier). Domains: 14. Sims: 35. Analogous
+- Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
   cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-08. Added a **grav_waves ↔ maxwell** cross-link —
-  the deep field-theoretic rhyme between classical electromagnetism and
-  linearised general relativity. Both are gauge theories whose linearised
-  field equations reduce to a wave equation ☐φ = source with waves at c and
-  exactly two physical polarisations; the Lorenz gauge ∂_μA^μ = 0 is the
-  same trick as the harmonic gauge ∂^μh̄_μν = 0. Both discoveries were
-  confirmed decades late by an incredulous physics community — Hertz 22
-  years after Maxwell, LIGO 99 years after Einstein — the second essentially
-  the first done again, one spin higher. `data.js` +1 line in `ANALOGIES`.
+- Last updated: 2026-08-17. Added **Le Chatelier's Principle** to the
+  chemistry domain (3 → 4 of 7) — the reflex a chemical system uses to fight
+  back against being poked. eli5/intermediate/expert/surprise/history in
+  Fred's voice; equation aA + bB ⇌ cC + dD, K = [C]^c[D]^d / [A]^a[B]^b;
+  deps [`bonding`, `thermo`]; hero image Henri Le Chatelier's 1850–1936
+  portrait from Wikimedia Commons. The surprise anchors it in Haber–Bosch:
+  185 Mt of ammonia synthesised annually — pressure squeezing 4 gas moles
+  into 2 — feeding roughly half the calories eaten on Earth. Le Chatelier
+  1884, Braun 1887, Haber 1908–1913, Bosch's plant at Oppau 1913, Nobels
+  1918 and 1931. Category B (new node) had gone 0/10 recent runs against a
+  2/10 target; this refills the gap. `data.js` +1 law, +1 IMAGES entry.
 
 ## The atlas we want (inventory)
 
@@ -43,7 +45,7 @@ points, not quotas.
 | relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
 | quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
-| chemistry       |   3   |    7   | catalysis, Le Chatelier, reaction kinetics, acid–base     |
+| chemistry       |   4   |    7   | catalysis, reaction kinetics, acid–base                   |
 | biology         |   6   |    9   | Hodgkin–Huxley, immunity, development                     |
 | info            |   3   |    5   | channel coding, error correction, Landauer bridge         |
 | emergence       |   5   |    7   | Zipf, networks, cellular auto                             |

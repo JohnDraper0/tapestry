@@ -540,6 +540,18 @@ const LAWS = [
     history: `Gilbert Lewis introduced electron-pair covalent bonding in 1916. Pauling's *The Nature of the Chemical Bond* (1939) unified quantum mechanics and chemistry; he won the 1954 Nobel for it. Hoffmann and Fukui (1981 Nobel) used molecular orbital theory to explain reaction pathways.`,
   },
 
+  {
+    id: 'le_chatelier', name: "Le Chatelier's Principle", domain: 'chemistry', symbol: '⇌',
+    tagline: 'Push a system in equilibrium and it pushes back.',
+    equation: 'aA + bB \\;\\rightleftharpoons\\; cC + dD, \\qquad K = \\dfrac{[C]^c[D]^d}{[A]^a[B]^b}',
+    deps: ['bonding', 'thermo'], sim: null,
+    eli5: `Lots of chemical reactions run both ways at once: atoms sticking together while other atoms are falling apart. When the two speeds match, the mixture *looks* still — that stillness is called equilibrium. Le Chatelier's principle is chemistry's reflex against being poked: squeeze the mixture, warm it, add more of an ingredient, and the reaction quietly reshuffles to undo what you did. Push a swing, it swings back. This one instinct is how factories turn air and steam into the fertiliser that feeds half the planet.`,
+    intermediate: `A reversible reaction reaches equilibrium when its forward and reverse rates balance out. The ratio of product concentrations to reactant concentrations at that balance is a fixed number, the equilibrium constant K — set by the reaction and the temperature, and nothing else. Change any condition — add more reactant, remove product, compress the volume, warm the mixture — and the reaction slides in whichever direction restores that ratio. Add reactant: some of it gets consumed. Cool an exothermic reaction: it makes more product to release more heat. Compress a gas mixture: it shifts toward whichever side has fewer molecules. A catalyst speeds forward and reverse equally, so it changes how fast equilibrium is reached but never where it sits. This one reflex is the design manual for every chemical plant on Earth.`,
+    expert: `For a reaction aA + bB ⇌ cC + dD, the reaction quotient Q = [C]^c[D]^d / [A]^a[B]^b is compared against the equilibrium constant K(T). The Gibbs free energy of reaction is ΔG = ΔG° + RT ln Q; at equilibrium ΔG = 0, fixing ΔG° = −RT ln K. Q < K drives the reaction forward, Q > K drives it back — always toward ΔG = 0. Temperature enters through the van 't Hoff equation d(ln K)/dT = ΔH°/RT²: an exothermic reaction (ΔH° < 0) has K falling as T rises, so heating shifts the mixture back toward reactants. For gases, K_p written in partial pressures responds to a volume change only when Δn_gas ≠ 0. A catalyst lowers the activation barrier of the forward and reverse elementary steps by the same factor and so leaves K untouched. The principle is a corollary of the second law: any spontaneous relaxation of a perturbed system must reduce the imposed free-energy penalty. Far from equilibrium — in autocatalytic Belousov–Zhabotinsky reactions, driven flow reactors, or living cells — the "response" can amplify a perturbation instead of damping it, and the principle no longer holds.`,
+    surprise: `Every year humanity fixes about 185 million tonnes of atmospheric nitrogen into ammonia using Le Chatelier's principle as the design manual: 150–300 atm of pressure squeezes the equilibrium 3H₂ + N₂ ⇌ 2NH₃ toward the right (four gas moles collapse to two), while 400–500 °C on an iron catalyst keeps the rate liveable. Roughly half of the nitrogen atoms in your body have passed through a Haber–Bosch reactor. Turn it off and about four billion people would need to find their calories somewhere else.`,
+    history: `Henri Louis Le Chatelier (1850–1936) trained as a mining engineer and spent his career on the industrial problems of cement, ceramics, glass, metallurgy and explosives — the equilibrium principle was almost a footnote. He published it in *Comptes Rendus* on 8 December 1884 (vol. 99, pp. 786–789) under the title *Sur un énoncé général des lois des équilibres chimiques*, a compact three-page note read to the Académie by his mentor Henri Sainte-Claire Deville. Karl Ferdinand Braun, later a Nobel laureate for the cathode-ray tube, restated it independently in 1887 in the language of classical thermodynamics; German textbooks called it the Braun–Le Chatelier principle for decades. Fritz Haber turned the note into industrial reality between 1908 and 1913, forcing 3H₂ + N₂ → 2NH₃ under ~200 atm and 500 °C over a promoted iron catalyst, and Carl Bosch's high-pressure engineering at BASF made the process planetary. Haber won the 1918 Nobel in Chemistry, Bosch the 1931 — for a reaction Le Chatelier's slim 1884 paper had told them exactly how to force.`,
+  },
+
   // ───────────────────────────── BIOLOGY ────────────────────────────────────
 
   {
@@ -1093,6 +1105,8 @@ const IMAGES = {
                    caption: 'Dmitri Mendeleev — predicted elements before they were found' },
   bonding:       { image: WM('Water_molecule_dimensions.svg'),
                    caption: 'Water — two hydrogens sharing with one oxygen' },
+  le_chatelier:  { image: WM('Henry_Louis_Le_Chatelier_%281850%E2%80%941936%29.jpg'),
+                   caption: 'Henri Louis Le Chatelier (1850–1936) — a mining engineer who wrote industry\'s manual for coaxing reactions' },
   atp:           { image: WM('ATP-xtal-3D-balls.png'),
                    caption: 'Adenosine triphosphate — the universal energy currency of every cell on Earth' },
   selfrep:       { image: WM('DNA_Structure%2BKey%2BLabelled.pn_NoBB.png'),
