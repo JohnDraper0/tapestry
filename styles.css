@@ -884,6 +884,16 @@ header * { pointer-events: auto; }
   .intro-body.expanded ~ .intro-controls { display: flex; }
   #introBtn { padding: 14px 36px; font-size: 12px; }
   .intro-footnote { margin-top: 16px; }
+
+  /* Bump panel body copy from 15 → 16 px on phones. 15 px is the desktop
+     minimum-comfortable; on a 6-inch screen held at arm's length it reads
+     as cramped, and 16 px is also the iOS Safari threshold below which
+     inputs auto-zoom. Line-heights stay generous (1.72 for depth, 1.65
+     for callouts) — those give the slow, considered reading feel Tapestry
+     is designed for; we only lift the size, not the rhythm. */
+  .depth-text { font-size: 16px; }
+  .callout { font-size: 15px; }
+  .panel-links, .panel-kindred { font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

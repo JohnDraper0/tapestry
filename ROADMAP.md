@@ -17,17 +17,19 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
   cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-17. Added **Le Chatelier's Principle** to the
-  chemistry domain (3 → 4 of 7) — the reflex a chemical system uses to fight
-  back against being poked. eli5/intermediate/expert/surprise/history in
-  Fred's voice; equation aA + bB ⇌ cC + dD, K = [C]^c[D]^d / [A]^a[B]^b;
-  deps [`bonding`, `thermo`]; hero image Henri Le Chatelier's 1850–1936
-  portrait from Wikimedia Commons. The surprise anchors it in Haber–Bosch:
-  185 Mt of ammonia synthesised annually — pressure squeezing 4 gas moles
-  into 2 — feeding roughly half the calories eaten on Earth. Le Chatelier
-  1884, Braun 1887, Haber 1908–1913, Bosch's plant at Oppau 1913, Nobels
-  1918 and 1931. Category B (new node) had gone 0/10 recent runs against a
-  2/10 target; this refills the gap. `data.js` +1 law, +1 IMAGES entry.
+- Last updated: 2026-08-18. **F10 — mobile type scale bump.** Panel body
+  copy on phones (≤ 640 px) was 15 px, matching desktop; on a 6-inch screen
+  that's cramped, and 15 px sits below iOS Safari's 16 px auto-zoom
+  threshold. Added a small block to the `@media (max-width: 640px)` group:
+  `.depth-text` 15 → 16 px, `.callout` 14 → 15 px, `.panel-links` and
+  `.panel-kindred` 13 → 14 px. Line-heights kept as they were (1.72 for
+  depth-text, 1.65 for callouts, 1.9 for links) — those are deliberately
+  generous to give the slow, considered reading feel Tapestry is designed
+  for; we lift the size, not the rhythm. Desktop unchanged. Category F was
+  1/20 recent runs against a 2/20 target; this refills. Attempted category
+  D (image URL re-verification, overdue since 2026-05-31), but the sandbox
+  proxy blocks `commons.wikimedia.org` — needs a run from an environment
+  with WM egress. `styles.css` +10 lines.
 
 ## The atlas we want (inventory)
 
