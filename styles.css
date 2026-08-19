@@ -542,6 +542,7 @@ header * { pointer-events: auto; }
   line-height: 1.72;
   color: var(--ink);
   font-weight: 300;
+  max-width: 72ch;
 }
 [data-theme="cosmos"] .depth-text,
 [data-theme="blueprint"] .depth-text { color: var(--ink-soft); }
@@ -884,6 +885,16 @@ header * { pointer-events: auto; }
   .intro-body.expanded ~ .intro-controls { display: flex; }
   #introBtn { padding: 14px 36px; font-size: 12px; }
   .intro-footnote { margin-top: 16px; }
+
+  /* Phone body-text bump — 15 px depth-text was thin at arm's length.
+     16 px / 1.55 hits the WCAG-friendly comfort range; secondary
+     text sizes tick up in lockstep so the hierarchy stays intact. */
+  .depth-text { font-size: 16px; line-height: 1.55; }
+  .callout { font-size: 15px; line-height: 1.6; }
+  .panel-links { font-size: 14px; }
+  .panel-kindred { font-size: 14px; }
+  .kindred-note { font-size: 13px; }
+  .panel-tagline { font-size: 15px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

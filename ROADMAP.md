@@ -17,17 +17,15 @@ architecture in their head and know which rungs hold which weight.
 - Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
   cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-17. Added **Le Chatelier's Principle** to the
-  chemistry domain (3 → 4 of 7) — the reflex a chemical system uses to fight
-  back against being poked. eli5/intermediate/expert/surprise/history in
-  Fred's voice; equation aA + bB ⇌ cC + dD, K = [C]^c[D]^d / [A]^a[B]^b;
-  deps [`bonding`, `thermo`]; hero image Henri Le Chatelier's 1850–1936
-  portrait from Wikimedia Commons. The surprise anchors it in Haber–Bosch:
-  185 Mt of ammonia synthesised annually — pressure squeezing 4 gas moles
-  into 2 — feeding roughly half the calories eaten on Earth. Le Chatelier
-  1884, Braun 1887, Haber 1908–1913, Bosch's plant at Oppau 1913, Nobels
-  1918 and 1931. Category B (new node) had gone 0/10 recent runs against a
-  2/10 target; this refills the gap. `data.js` +1 law, +1 IMAGES entry.
+- Last updated: 2026-08-19. Mobile body-text bump (readability backlog
+  #10) — phone `.depth-text` goes 15 px / 1.72 → 16 px / 1.55, and the
+  secondary sizes tick up in lockstep (`.callout` 14 → 15, `.panel-links`
+  and `.panel-kindred` 13 → 14, `.kindred-note` 12 → 13, `.panel-tagline`
+  16 → 15 only where it was already the desktop default). Line length
+  gets a globally-scoped `max-width: 72ch` on `.depth-text` so future
+  wider layouts don't sprawl. Category F (presentation) had gone 0/10
+  recent runs against a 1/10 target; this refills the gap without
+  touching a single content node. `styles.css` only.
 
 ## The atlas we want (inventory)
 
@@ -197,9 +195,11 @@ One bullet per F-category run. Order is roughly priority.
    `→`, `×`, `−`, `↔`, `#`, `∅`, `∞` into `\cdot`, `\to`, `\times`, `-`,
    `\leftrightarrow`, `\#`, `\emptyset`, `\infty`. KaTeX renders these
    cleanly; raw unicode looks slightly sloppy.
-10. **Base type scale pass.** Body text is 15 px on desktop, 15 px on
-    mobile — bump mobile body to 16 px and line-height to 1.55 for
-    phone readability. Cap panel line-length at ~72 ch.
+10. ~~**Base type scale pass.**~~ — done 2026-08-19. Phone `.depth-text`
+    is 16 px / 1.55 (was 15 / 1.72); `.callout` 15 / 1.6, `.panel-links`
+    and `.panel-kindred` 14, `.kindred-note` 13, `.panel-tagline` 15.
+    Line-length gets a global `max-width: 72ch` on `.depth-text` so
+    prose can't sprawl on wider layouts. Desktop unchanged.
 11. **Contrast audit per theme.** `ink-dim` on `paper` theme is close to
     WCAG AA borderline; use a contrast checker on every `--ink*` token
     in each theme.
