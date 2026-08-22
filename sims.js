@@ -4344,6 +4344,184 @@ SIMS.grav_waves = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────── WIEN'S DISPLACEMENT LAW ─────────────────────────
+// A log-wavelength ruler across seven decades (1 nm → 10 mm) with the
+// EM bands coloured in, real thermal objects (CMB, body, filament, Sun,
+// Sirius, O-star) pinned at their Planck peaks λ_max = b/T, and an
+// animated cursor sweeping T from 2.7 K to 30 000 K so the peak slides
+// visibly leftward — the "displacement" the law is named for.
+SIMS.wien = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const b   = 2.897771955e-3;              // Wien constant, m·K
+  const LG_MIN = -9, LG_MAX = -2;          // log10(λ [m]) — 1 nm to 10 mm
+  const T_MIN  = 2.7, T_MAX = 30000;
+
+  const padL = 12, padR = 12, padT = 18;
+  const plotL = padL, plotR = w - padR, plotW = plotR - plotL;
+  const rulerY = Math.round(h * 0.44);
+  const rulerH = 22;
+
+  const VIS_A = Math.log10(380e-9), VIS_B = Math.log10(780e-9);
+  const BANDS = [
+    { a: LG_MIN,       b: -8,      col: '#3a1e6a', name: 'X-ray' },
+    { a: -8,           b: VIS_A,   col: '#5a2fa8', name: 'ultraviolet' },
+    { a: VIS_A,        b: VIS_B,   col: null,      name: 'visible' },
+    { a: VIS_B,        b: -3,      col: '#631818', name: 'infrared' },
+    { a: -3,           b: LG_MAX,  col: '#0f2360', name: 'microwave' },
+  ];
+  const OBJ = [
+    { T: 2.7,   name: 'CMB' },
+    { T: 310,   name: 'you' },
+    { T: 1200,  name: 'ember' },
+    { T: 2800,  name: 'filament' },
+    { T: 5778,  name: 'Sun' },
+    { T: 10000, name: 'Sirius' },
+    { T: 30000, name: 'O-star' },
+  ];
+
+  function logToX(lg) { return plotL + (lg - LG_MIN) / (LG_MAX - LG_MIN) * plotW; }
+  function fmtLam(m) {
+    if (m >= 1e-3) return (m * 1e3).toFixed(2) + ' mm';
+    if (m >= 1e-6) return (m * 1e6).toFixed(2) + ' μm';
+    return (m * 1e9).toFixed(0) + ' nm';
+  }
+  // Tanner Helland blackbody-RGB approximation, K → sRGB.
+  function bbColor(T) {
+    const Th = Math.max(1000, Math.min(40000, T)) / 100;
+    let r, g, bl;
+    r  = Th <= 66 ? 255 : 329.7 * Math.pow(Th - 60, -0.1332);
+    g  = Th <= 66 ? 99.47 * Math.log(Th) - 161.12
+                  : 288.12 * Math.pow(Th - 60, -0.0755);
+    bl = Th >= 66 ? 255
+                  : (Th <= 19 ? 0 : 138.52 * Math.log(Th - 10) - 305.0448);
+    const cl = v => Math.max(0, Math.min(255, v | 0));
+    return `rgb(${cl(r)},${cl(g)},${cl(bl)})`;
+  }
+
+  let raf, t0 = performance.now();
+
+  function draw(now) {
+    // Sweep T in log space so the cursor moves at a uniform visual pace.
+    const phase = ((now - t0) / 10000) % (Math.PI * 2);
+    const u  = (1 - Math.cos(phase)) / 2;
+    const T  = Math.pow(10, Math.log10(T_MIN) + (Math.log10(T_MAX) - Math.log10(T_MIN)) * u);
+    const lamPk = b / T;
+    const lgPk  = Math.log10(lamPk);
+    const cx    = Math.max(plotL, Math.min(plotR, logToX(lgPk)));
+    const col   = bbColor(T);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Title
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'left';
+    ctx.fillText('λ_max · T = 2898 μm·K', plotL, padT);
+
+    // Bands
+    BANDS.forEach(band => {
+      const x1 = Math.max(plotL, logToX(band.a));
+      const x2 = Math.min(plotR, logToX(band.b));
+      if (x2 <= x1) return;
+      if (band.col) {
+        ctx.fillStyle = band.col;
+      } else {
+        const grd = ctx.createLinearGradient(x1, 0, x2, 0);  // short→long
+        grd.addColorStop(0.00, '#8a2be2');
+        grd.addColorStop(0.22, '#2060ff');
+        grd.addColorStop(0.44, '#20c060');
+        grd.addColorStop(0.65, '#f0e020');
+        grd.addColorStop(0.85, '#ff7020');
+        grd.addColorStop(1.00, '#ff2020');
+        ctx.fillStyle = grd;
+      }
+      ctx.fillRect(x1, rulerY, x2 - x1, rulerH);
+    });
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1;
+    ctx.strokeRect(plotL + 0.5, rulerY + 0.5, plotW - 1, rulerH - 1);
+
+    // Band labels above ruler
+    ctx.font = '10px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.70)';
+    ctx.textAlign = 'center';
+    BANDS.forEach(band => {
+      const x1 = Math.max(plotL, logToX(band.a));
+      const x2 = Math.min(plotR, logToX(band.b));
+      if (x2 - x1 < 32) return;
+      ctx.fillText(band.name, (x1 + x2) / 2, rulerY - 6);
+    });
+
+    // Decade ticks below ruler
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.font = '10px system-ui';
+    for (let lg = LG_MIN; lg <= LG_MAX; lg++) {
+      const x = logToX(lg);
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath(); ctx.moveTo(x, rulerY + rulerH);
+      ctx.lineTo(x, rulerY + rulerH + 4); ctx.stroke();
+      const nm = Math.pow(10, lg + 9);
+      let s;
+      if (lg >= -3) s = Math.pow(10, lg + 3).toFixed(0) + ' mm';
+      else if (lg >= -6) s = Math.pow(10, lg + 6).toFixed(0) + ' μm';
+      else s = (nm >= 1 ? nm.toFixed(0) : nm.toFixed(1)) + ' nm';
+      ctx.fillText(s, x, rulerY + rulerH + 14);
+    }
+
+    // Object markers below the ticks — stagger to avoid label collisions
+    OBJ.forEach((o, i) => {
+      const lg = Math.log10(b / o.T);
+      if (lg < LG_MIN || lg > LG_MAX) return;
+      const x = logToX(lg);
+      const y = rulerY + rulerH + 30 + (i % 2) * 24;
+      ctx.strokeStyle = 'rgba(255,255,255,0.30)';
+      ctx.setLineDash([2, 3]);
+      ctx.beginPath(); ctx.moveTo(x, rulerY + rulerH + 4); ctx.lineTo(x, y - 6); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = bbColor(o.T);
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#eee'; ctx.font = 'bold 10px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText(o.name, x, y + 14);
+      ctx.font = '9px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.60)';
+      const Tstr = o.T < 100 ? o.T.toFixed(1) : o.T.toString();
+      ctx.fillText(Tstr + ' K', x, y + 25);
+    });
+
+    // Animated cursor: glowing triangle + shaft above the ruler
+    ctx.save();
+    ctx.shadowBlur = 10; ctx.shadowColor = col;
+    ctx.strokeStyle = col; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx, rulerY - 22); ctx.lineTo(cx, rulerY); ctx.stroke();
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(cx, rulerY - 4);
+    ctx.lineTo(cx - 5, rulerY - 14);
+    ctx.lineTo(cx + 5, rulerY - 14);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    // Readout top-left: T and peak λ
+    ctx.font = 'bold 12px system-ui'; ctx.fillStyle = '#eee'; ctx.textAlign = 'left';
+    const Tlabel = T < 10 ? T.toFixed(2) : T < 100 ? T.toFixed(1) : T.toFixed(0);
+    ctx.fillText('T = ' + Tlabel + ' K', plotL, padT + 18);
+    ctx.font = '11px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.fillText('peak = ' + fmtLam(lamPk), plotL, padT + 34);
+
+    // Apparent-colour swatch top-right (only meaningful for T ≳ 1000 K)
+    const sw = 66, sh = 30, sx = plotR - sw, sy = padT - 6;
+    ctx.fillStyle = col;
+    ctx.fillRect(sx, sy, sw, sh);
+    ctx.strokeStyle = 'rgba(255,255,255,0.30)'; ctx.lineWidth = 1;
+    ctx.strokeRect(sx + 0.5, sy + 0.5, sw - 1, sh - 1);
+    ctx.font = '9px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.60)';
+    ctx.textAlign = 'right';
+    ctx.fillText('apparent colour', sx + sw, sy + sh + 10);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
