@@ -14,18 +14,20 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
+- Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 38. Analogous
   cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-19. Mobile body-text bump (readability backlog
-  #10) — phone `.depth-text` goes 15 px / 1.72 → 16 px / 1.55, and the
-  secondary sizes tick up in lockstep (`.callout` 14 → 15, `.panel-links`
-  and `.panel-kindred` 13 → 14, `.kindred-note` 12 → 13, `.panel-tagline`
-  16 → 15 only where it was already the desktop default). Line length
-  gets a globally-scoped `max-width: 72ch` on `.depth-text` so future
-  wider layouts don't sprawl. Category F (presentation) had gone 0/10
-  recent runs against a 1/10 target; this refills the gap without
-  touching a single content node. `styles.css` only.
+- Last updated: 2026-08-22. Category C (sim) run — `wien` node ships a
+  sim. A seven-decade log-λ ruler (1 nm → 10 mm) painted with the EM
+  bands (X-ray, UV, visible rainbow, IR, microwave), real thermal
+  objects pinned at their Planck peaks λ_max = b/T (CMB 2.7 K, body
+  310 K, ember 1200 K, filament 2800 K, Sun 5778 K, Sirius 10 000 K,
+  O-star 30 000 K), and an animated cursor sweeping T through log
+  space so the peak slides visibly leftward — the "displacement" the
+  law is named for. Cursor colour is the Tanner Helland blackbody-RGB
+  for that T. Distinct from the existing `stefan_boltzmann` sim, which
+  plots Planck curves in linear-λ space; this one is the number-line
+  view. `sims.js` +171 lines, `data.js` one field flip.
 
 ## The atlas we want (inventory)
 
