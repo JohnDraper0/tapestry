@@ -45,7 +45,7 @@
     'mechanics', 'thermo', 'em',
     'relativity', 'quantum', 'forces',
     'chemistry', 'biology',
-    'info', 'emergence', 'cosmos',
+    'info', 'emergence', 'cosmos', 'earth',
   ];
 
   // group by layer; inside a layer sort by domain order

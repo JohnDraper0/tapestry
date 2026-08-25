@@ -14,18 +14,19 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 79 (62 known, 17 frontier). Domains: 14. Sims: 35. Analogous
-  cross-links populated: 28. Images mirrored locally: 0 (all hot-linked hero
+- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 35. Analogous
+  cross-links populated: 29. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-19. Mobile body-text bump (readability backlog
-  #10) — phone `.depth-text` goes 15 px / 1.72 → 16 px / 1.55, and the
-  secondary sizes tick up in lockstep (`.callout` 14 → 15, `.panel-links`
-  and `.panel-kindred` 13 → 14, `.kindred-note` 12 → 13, `.panel-tagline`
-  16 → 15 only where it was already the desktop default). Line length
-  gets a globally-scoped `max-width: 72ch` on `.depth-text` so future
-  wider layouts don't sprawl. Category F (presentation) had gone 0/10
-  recent runs against a 1/10 target; this refills the gap without
-  touching a single content node. `styles.css` only.
+- Last updated: 2026-08-25. Opened the **earth** domain and seeded it
+  with **Plate Tectonics** — a layer-10 node (deps: gravity + statmech)
+  spanning the Rayleigh-number engine of mantle convection, the modern
+  slab-pull picture, and the Wegener → Vine–Matthews–Morley story. An
+  `earth` entry lands in `DOMAINS` (sandstone `#c78e60`) and at the tail
+  of `DOMAIN_ORDER` in `app.js`; a cross-link ties it to `ecosystems`
+  via the Walker–Hays–Kasting silicate-weathering thermostat that has
+  held Earth's climate in the liquid-water window through 30% of solar
+  brightening. The atlas table's `earth` row moves 0/4 → 1/4. Category
+  B (new node) target 2/10 — last B was Le Chatelier three runs ago.
 
 ## The atlas we want (inventory)
 
@@ -49,7 +50,7 @@ points, not quotas.
 | emergence       |   5   |    7   | Zipf, networks, cellular auto                             |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
-| earth (new)     |   0   |    4   | plate tectonics, climate system, biogeochemistry          |
+| earth (new)     |   1   |    4   | climate system, biogeochemistry, hydrologic cycle         |
 | unknown         |  17   |   17   | nature of time, pre-Big-Bang state (target hit)           |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
@@ -98,7 +99,7 @@ equation, and valid `deps`:
 5. ~~**ATP / chemiosmosis** (biology) — life's universal energy currency.~~ — added 2026-04-21.
 6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
 7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
-8. **Plate tectonics** (earth) — the Earth as a slow, convecting engine.
+8. ~~**Plate tectonics** (earth) — the Earth as a slow, convecting engine.~~ — added 2026-08-25.
 9. ~~**Central limit theorem** (math/probability)~~ — added 2026-04-17.
 10. ~~**Kolmogorov complexity** (info)~~ — added 2026-05-16.
 11. ~~**Self-organised criticality** (emergence) — Bak's sandpile universality.~~ — added 2026-06-13.
