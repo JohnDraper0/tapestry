@@ -15,18 +15,21 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 35. Analogous
-  cross-links populated: 29. Images mirrored locally: 0 (all hot-linked hero
+  cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-25. Opened the **earth** domain and seeded it
-  with **Plate Tectonics** — a layer-10 node (deps: gravity + statmech)
-  spanning the Rayleigh-number engine of mantle convection, the modern
-  slab-pull picture, and the Wegener → Vine–Matthews–Morley story. An
-  `earth` entry lands in `DOMAINS` (sandstone `#c78e60`) and at the tail
-  of `DOMAIN_ORDER` in `app.js`; a cross-link ties it to `ecosystems`
-  via the Walker–Hays–Kasting silicate-weathering thermostat that has
-  held Earth's climate in the liquid-water window through 30% of solar
-  brightening. The atlas table's `earth` row moves 0/4 → 1/4. Category
-  B (new node) target 2/10 — last B was Le Chatelier three runs ago.
+- Last updated: 2026-08-26. Added a `symmetry` ↔ `higgs` cross-link
+  spelling out the mirror image of Noether's theorem: Goldstone (1961)
+  proved that a spontaneously broken global symmetry produces one
+  massless boson per broken generator, and Anderson–Englert–Brout–Higgs–
+  Guralnik–Hagen–Kibble (1962–64) showed that promoting the symmetry
+  to a gauge symmetry lets the Goldstones be "eaten" by the gauge
+  bosons, which acquire longitudinal modes and mass. Three eaten
+  Goldstones of SU(2)_L × U(1)_Y → W±, Z⁰ at 80–91 GeV; the unbroken
+  U(1)_em combination keeps the photon massless. Every particle mass
+  in the Standard Model is a Yukawa coupling y·v/√2 written after the
+  vacuum picks a direction. Category E rotation — was 1/10 last window,
+  now 2/10; last cross-link was `plate_tectonics ↔ ecosystems` one
+  run ago.
 
 ## The atlas we want (inventory)
 
