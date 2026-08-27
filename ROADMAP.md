@@ -14,22 +14,17 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 35. Analogous
+- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 36. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-- Last updated: 2026-08-26. Added a `symmetry` ↔ `higgs` cross-link
-  spelling out the mirror image of Noether's theorem: Goldstone (1961)
-  proved that a spontaneously broken global symmetry produces one
-  massless boson per broken generator, and Anderson–Englert–Brout–Higgs–
-  Guralnik–Hagen–Kibble (1962–64) showed that promoting the symmetry
-  to a gauge symmetry lets the Goldstones be "eaten" by the gauge
-  bosons, which acquire longitudinal modes and mass. Three eaten
-  Goldstones of SU(2)_L × U(1)_Y → W±, Z⁰ at 80–91 GeV; the unbroken
-  U(1)_em combination keeps the photon massless. Every particle mass
-  in the Standard Model is a Yukawa coupling y·v/√2 written after the
-  vacuum picks a direction. Category E rotation — was 1/10 last window,
-  now 2/10; last cross-link was `plate_tectonics ↔ ecosystems` one
-  run ago.
+  Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
+- Last updated: 2026-08-27. Added a `hubble_law` sim: a jittered field of
+  galaxies breathes outward under a shared scale factor a(t) = 1 → 1.9 → 1,
+  with recession arrows from the observer whose length is proportional to
+  distance — Hubble's law made visible. Clicking any galaxy re-anchors the
+  view on it; the pattern of v ∝ d is identical from every observer, which
+  is the whole point (no centre). Category C rotation — was 1/10 last
+  window, now 2/10 (target); last sim was `grav_waves` three runs ago.
 
 ## The atlas we want (inventory)
 

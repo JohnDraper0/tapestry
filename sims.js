@@ -4344,6 +4344,181 @@ SIMS.grav_waves = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── HUBBLE–LEMAÎTRE ─────────────────────────
+// The point of the sim isn't just "space expands." It's that the
+// v = H·d relation is observer-independent: click any galaxy, become it,
+// and the pattern of recession is identical. There is no centre.
+//
+// A hex-jittered field of galaxies sits at fixed comoving positions.
+// A shared scale factor a(t) breathes 1 → aMax → 1 sinusoidally, so
+// distances grow linearly in the observer's frame. Recession arrows
+// from the observer to every other galaxy have length ∝ current
+// distance — Hubble's law made visible. Clicking a galaxy re-centres
+// the view on it without changing the underlying dynamics.
+SIMS.hubble_law = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  // Build a jittered hex grid of galaxies in "comoving" coords.
+  const cols = 9, rows = 5;
+  const cellW = Math.min(60, (w - 40) / cols);
+  const cellH = Math.min(48, (h - 60) / rows);
+  const gal = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const jx = (Math.random() - 0.5) * 0.55;
+      const jy = (Math.random() - 0.5) * 0.55;
+      const stagger = (r % 2) * 0.5;
+      gal.push({
+        x: (c - (cols - 1) / 2 + stagger + jx) * cellW,
+        y: (r - (rows - 1) / 2 + jy) * cellH,
+        r: 1.4 + Math.random() * 2.3,
+        hue: 200 + Math.random() * 90,
+      });
+    }
+  }
+
+  // Pick the galaxy closest to (0,0) as the initial observer.
+  let observer = 0;
+  {
+    let best = Infinity;
+    gal.forEach((g, i) => {
+      const d2 = g.x * g.x + g.y * g.y;
+      if (d2 < best) { best = d2; observer = i; }
+    });
+  }
+  const initialObserver = observer;
+
+  const aMin = 1.0, aMax = 1.9;
+  const CYCLE_MS = 8500;
+  const t0 = performance.now();
+
+  // Approximate screen->pixel positions for the current frame; cached
+  // during draw() and reused by the click handler.
+  const screen = new Array(gal.length);
+
+  function draw(now) {
+    const phase = ((now - t0) % CYCLE_MS) / CYCLE_MS;   // 0..1
+    const s = Math.sin(phase * Math.PI);                // 0..1..0
+    const a = aMin + (aMax - aMin) * s;
+
+    ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h / 2;
+    const obs = gal[observer];
+
+    // Compute + cache each galaxy's screen position.
+    for (let i = 0; i < gal.length; i++) {
+      const g = gal[i];
+      const dx = (g.x - obs.x) * a;
+      const dy = (g.y - obs.y) * a;
+      screen[i] = { x: cx + dx, y: cy + dy };
+    }
+
+    // Recession arrows: length ∝ distance from observer (v = H·d).
+    const arrowK = 0.20;
+    ctx.strokeStyle = 'rgba(255, 220, 160, 0.28)';
+    ctx.fillStyle   = 'rgba(255, 220, 160, 0.35)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < gal.length; i++) {
+      if (i === observer) continue;
+      const p = screen[i];
+      const dx = p.x - cx, dy = p.y - cy;
+      const d = Math.hypot(dx, dy);
+      if (d < 6) continue;
+      const ux = dx / d, uy = dy / d;
+      const vL = d * arrowK;
+      const ax = p.x + ux * vL, ay = p.y + uy * vL;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(ax, ay);
+      ctx.stroke();
+      // arrowhead
+      const hLen = 4, hSpr = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(ax - ux * hLen + uy * hSpr, ay - uy * hLen - ux * hSpr);
+      ctx.lineTo(ax - ux * hLen - uy * hSpr, ay - uy * hLen + ux * hSpr);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Galaxies — halo + core, observer marked in warm gold with a ring.
+    for (let i = 0; i < gal.length; i++) {
+      const g = gal[i];
+      const p = screen[i];
+      if (p.x < -30 || p.x > w + 30 || p.y < -30 || p.y > h + 30) continue;
+      const isObs = i === observer;
+      const rad = g.r * (isObs ? 1.4 : 1.0);
+
+      const halo = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad * 4);
+      halo.addColorStop(0, isObs
+        ? 'rgba(255, 209, 102, 0.55)'
+        : `hsla(${g.hue}, 70%, 82%, 0.35)`);
+      halo.addColorStop(1, isObs
+        ? 'rgba(255, 209, 102, 0)'
+        : `hsla(${g.hue}, 70%, 82%, 0)`);
+      ctx.fillStyle = halo;
+      ctx.beginPath(); ctx.arc(p.x, p.y, rad * 4, 0, Math.PI * 2); ctx.fill();
+
+      ctx.fillStyle = isObs ? '#ffd166' : `hsl(${g.hue}, 70%, 82%)`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, rad, 0, Math.PI * 2); ctx.fill();
+
+      if (isObs) {
+        ctx.strokeStyle = 'rgba(255, 209, 102, 0.85)';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, rad + 5, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    // Header + legend.
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('v = H₀ · d', 12, 10);
+
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.75)';
+    ctx.fillText('arrow length ∝ recession velocity', 12, 26);
+
+    ctx.textAlign = 'right';
+    ctx.fillText(`a(t) = ${a.toFixed(2)}`, w - 12, 10);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255, 209, 102, 0.85)';
+    ctx.fillText(observer === initialObserver
+      ? 'click any galaxy — the pattern is identical from every observer'
+      : 'still v ∝ d, still no centre — click again to try another',
+      w / 2, h - 16);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  function onClick(ev) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left;
+    const my = ev.clientY - rect.top;
+    let best = -1, bestD2 = Infinity;
+    for (let i = 0; i < gal.length; i++) {
+      const p = screen[i];
+      if (!p) continue;
+      const d2 = (p.x - mx) * (p.x - mx) + (p.y - my) * (p.y - my);
+      if (d2 < bestD2) { bestD2 = d2; best = i; }
+    }
+    if (best >= 0 && bestD2 < 800) observer = best;
+  }
+  canvas.addEventListener('click', onClick);
+
+  raf = requestAnimationFrame(draw);
+  return {
+    stop() {
+      cancelAnimationFrame(raf);
+      canvas.removeEventListener('click', onClick);
+    }
+  };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
