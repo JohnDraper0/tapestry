@@ -18,13 +18,16 @@ architecture in their head and know which rungs hold which weight.
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-08-27. Added a `hubble_law` sim: a jittered field of
-  galaxies breathes outward under a shared scale factor a(t) = 1 → 1.9 → 1,
-  with recession arrows from the observer whose length is proportional to
-  distance — Hubble's law made visible. Clicking any galaxy re-anchors the
-  view on it; the pattern of v ∝ d is identical from every observer, which
-  is the whole point (no centre). Category C rotation — was 1/10 last
-  window, now 2/10 (target); last sim was `grav_waves` three runs ago.
+- Last updated: 2026-08-28. Deepened Newton's `history` from two lines
+  into a proper story: Stukeley recording the apple anecdote at dinner
+  in April 1726, Halley's August 1684 ride to Cambridge with the
+  Wren–Hooke wager and Newton's instant "an ellipse" (paper lost), the
+  eighteen-month push to publish 5 July 1687, Halley funding the
+  printing after the Royal Society blew its budget on Willughby's
+  *De Historia Piscium* (Halley paid in unsold copies of the fish
+  book), and the Hooke priority feud that ended with every reference
+  to Hooke scrubbed from Book III. Category A — the most foundational
+  law of physics had the thinnest history in the atlas.
 
 ## The atlas we want (inventory)
 
