@@ -4519,6 +4519,179 @@ SIMS.hubble_law = function (canvas) {
   };
 };
 
+// ─────────────────────────── ECOSYSTEMS ──────────────────────────────
+// Lindeman's trophic pyramid: producers at the base, apex at the peak,
+// each level ~10% the energy of the one below. Photons rain in from a
+// sun in the top-right; energy tokens rise from producers through each
+// band and, at every transition, ~90% deflect sideways as heat — which
+// is why apex predators are rare.
+SIMS.ecosystems = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  const LEVELS = [
+    { name: 'Producers · plants & algae',      energy: 20000, color: '#7fc16a' },
+    { name: 'Herbivores · deer, grasshoppers', energy:  2000, color: '#d8c95a' },
+    { name: 'Carnivores · foxes, hawks',       energy:   200, color: '#e08a4d' },
+    { name: 'Apex · wolves, orcas',            energy:    20, color: '#b96068' },
+  ];
+
+  const padTop = 26, padBottom = 22, padSide = 14;
+  const bandH = (h - padTop - padBottom) / LEVELS.length;
+  const bandInner = bandH - 5;
+  const maxW = (w - 2 * padSide) * 0.94;
+  const minW = (w - 2 * padSide) * 0.22;
+  const widths = LEVELS.map((_, i) => {
+    const t = i / (LEVELS.length - 1);
+    return maxW * Math.pow(minW / maxW, t);
+  });
+  const bandTopY = i => padTop + (LEVELS.length - 1 - i) * bandH;
+
+  const photons = [];
+  for (let i = 0; i < 26; i++) {
+    photons.push({
+      x: Math.random() * w,
+      y: -Math.random() * 220,
+      speed: 55 + Math.random() * 45,
+    });
+  }
+  const tokens = [];
+  let tokenTimer = 0;
+  const heats = [];
+  let prev = performance.now();
+
+  function draw(now) {
+    const dt = Math.min(0.05, (now - prev) / 1000);
+    prev = now;
+    ctx.clearRect(0, 0, w, h);
+
+    // Sun
+    const sx = w - 22, sy = 20;
+    const halo = ctx.createRadialGradient(sx, sy, 0, sx, sy, 34);
+    halo.addColorStop(0, 'rgba(255, 225, 110, 0.85)');
+    halo.addColorStop(1, 'rgba(255, 200, 90, 0)');
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(sx, sy, 34, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffd166';
+    ctx.beginPath(); ctx.arc(sx, sy, 7, 0, Math.PI * 2); ctx.fill();
+
+    // Photons streaming down onto the producer band
+    const producerTop = bandTopY(0);
+    ctx.strokeStyle = 'rgba(255, 228, 120, 0.7)';
+    ctx.lineWidth = 1;
+    for (const p of photons) {
+      p.y += p.speed * dt;
+      if (p.y > producerTop + bandInner * 0.55) {
+        p.y = -Math.random() * 80;
+        p.x = Math.random() * w;
+        p.speed = 55 + Math.random() * 45;
+      }
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - 0.9, p.y - 6);
+      ctx.stroke();
+    }
+
+    // Trophic bands (apex on top, producers at bottom)
+    for (let i = 0; i < LEVELS.length; i++) {
+      const L = LEVELS[i];
+      const by = bandTopY(i);
+      const bw = widths[i];
+      const x0 = (w - bw) / 2, x1 = x0 + bw;
+      const r = 6;
+      ctx.fillStyle = L.color;
+      ctx.beginPath();
+      ctx.moveTo(x0 + r, by);
+      ctx.arcTo(x1, by, x1, by + r, r);
+      ctx.arcTo(x1, by + bandInner, x1 - r, by + bandInner, r);
+      ctx.arcTo(x0, by + bandInner, x0, by + bandInner - r, r);
+      ctx.arcTo(x0, by, x0 + r, by, r);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(20, 20, 20, 0.88)';
+      ctx.font = '11px system-ui';
+      ctx.textBaseline = 'middle';
+      const inset = Math.min(10, bw * 0.06);
+      const midY = by + bandInner / 2;
+      ctx.textAlign = 'left';
+      ctx.fillText(L.name, x0 + inset, midY);
+      ctx.textAlign = 'right';
+      ctx.fillText(`${L.energy.toLocaleString()} kcal/m²/yr`, x1 - inset, midY);
+    }
+
+    // Spawn tokens at the producer/herbivore interface
+    tokenTimer += dt;
+    if (tokenTimer > 0.16) {
+      tokenTimer = 0;
+      const bw = widths[1];
+      tokens.push({
+        x: (w - bw) / 2 + Math.random() * bw,
+        y: bandTopY(0),
+        level: 0,
+      });
+    }
+
+    // Rise + convert
+    ctx.fillStyle = '#ffe28a';
+    for (let i = tokens.length - 1; i >= 0; i--) {
+      const t = tokens[i];
+      t.y -= 24 * dt;
+      const nextTop = bandTopY(t.level + 1);
+      if (t.y <= nextTop) {
+        const canAdvance = t.level < LEVELS.length - 2;
+        if (canAdvance && Math.random() < 0.10) {
+          t.level += 1;
+          const bw = widths[t.level + 1];
+          t.x = (w - bw) / 2 + Math.random() * bw;
+        } else {
+          const dir = Math.random() < 0.5 ? 1 : -1;
+          heats.push({
+            x: t.x, y: t.y,
+            vx: dir * (28 + Math.random() * 22),
+            vy: -6 - Math.random() * 8,
+            life: 1.0,
+          });
+          tokens.splice(i, 1);
+        }
+      } else {
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, 2.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Heat leaks
+    for (let i = heats.length - 1; i >= 0; i--) {
+      const H = heats[i];
+      H.x += H.vx * dt;
+      H.y += H.vy * dt;
+      H.life -= dt * 0.75;
+      if (H.life <= 0) { heats.splice(i, 1); continue; }
+      ctx.fillStyle = `rgba(224, 96, 74, ${H.life * 0.8})`;
+      ctx.beginPath();
+      ctx.arc(H.x, H.y, 1.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Header + footer
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText("Lindeman's 10% rule", 12, 8);
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.72)';
+    ctx.textAlign = 'center';
+    ctx.fillText('~90% exits as heat at every step — why apex predators are rare',
+      w / 2, h - 12);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

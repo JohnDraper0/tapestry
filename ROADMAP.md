@@ -14,20 +14,19 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 36. Analogous
+- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 37. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-  Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-08-28. Deepened Newton's `history` from two lines
-  into a proper story: Stukeley recording the apple anecdote at dinner
-  in April 1726, Halley's August 1684 ride to Cambridge with the
-  Wren–Hooke wager and Newton's instant "an ellipse" (paper lost), the
-  eighteen-month push to publish 5 July 1687, Halley funding the
-  printing after the Royal Society blew its budget on Willughby's
-  *De Historia Piscium* (Halley paid in unsold copies of the fish
-  book), and the Hooke priority feud that ended with every reference
-  to Hooke scrubbed from Book III. Category A — the most foundational
-  law of physics had the thinnest history in the atlas.
+  Verification retry attempted 2026-08-27 and again 2026-08-30, both
+  blocked by the sandbox proxy (403 CONNECT to commons.wikimedia.org).
+- Last updated: 2026-08-30. Added the `ecosystems` sim — a
+  four-tier trophic pyramid (producers → herbivores → carnivores →
+  apex) with photons streaming in from a sun in the top-right, energy
+  tokens rising through the bands, and ~90% of every step splashing
+  out sideways as red "heat" arrows. Widths taper geometrically so the
+  10% rule reads visually. Category C — sims were under target after
+  five heavy A / B runs, and `ecosystems` was on the missing-sims list
+  since the roadmap was written.
 
 ## The atlas we want (inventory)
 
@@ -133,7 +132,7 @@ hard problem of consciousness (strengthen) · pre-Big-Bang state ·
 - `standard` — particle zoo with interaction vertices.
 - `periodic` — interactive table colouring by property.
 - `selfrep` / `centraldogma` — transcription-translation micro-machine.
-- `ecosystems` — energy-pyramid or trophic-cascade toy.
+- ~~`ecosystems` — energy-pyramid or trophic-cascade toy.~~ — added 2026-08-30 as `SIMS.ecosystems`: four-tier trophic pyramid, photons streaming into producers, energy tokens rising with ~10% surviving each transition and the rest deflecting sideways as heat (Lindeman's 10% rule).
 
 **Analogous cross-links to populate (using `addAnalogous(a, b, note)`
 pattern at the bottom of `LAWS[]`):**
