@@ -18,16 +18,17 @@ architecture in their head and know which rungs hold which weight.
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-08-28. Deepened Newton's `history` from two lines
-  into a proper story: Stukeley recording the apple anecdote at dinner
-  in April 1726, Halley's August 1684 ride to Cambridge with the
-  Wren–Hooke wager and Newton's instant "an ellipse" (paper lost), the
-  eighteen-month push to publish 5 July 1687, Halley funding the
-  printing after the Royal Society blew its budget on Willughby's
-  *De Historia Piscium* (Halley paid in unsold copies of the fish
-  book), and the Hooke priority feud that ended with every reference
-  to Hooke scrubbed from Book III. Category A — the most foundational
-  law of physics had the thinnest history in the atlas.
+- Last updated: 2026-08-31. Deepened `conservation`'s `history`: the
+  node's `intermediate` block already cited Noether's theorem, but the
+  history skipped her entirely. Now Leibniz's 1686 *vis viva*, Joule's
+  1845 paddle-wheel and Helmholtz's 1847 *Über die Erhaltung der Kraft*
+  land the empirical law; then 1918 Göttingen — Emmy Noether proving
+  that every continuous symmetry yields a conserved quantity, still
+  lecturing under Hilbert's name because the faculty had blocked a
+  woman's Privatdozent ("Gentlemen, the Senate is not a bathhouse,"
+  he had thundered back) — and the 1933 Nazi purge that drove her to
+  Bryn Mawr, dead 18 months later, aged 53. Category A — the deepest
+  principle in physics finally names the woman who proved it.
 
 ## The atlas we want (inventory)
 
