@@ -4,6 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>The Tapestry · Natural Laws from First Principles</title>
+
+  <!-- First-paint theme: honour a saved choice, otherwise defer to the OS.
+       Runs before the stylesheet so no flash of the wrong palette. -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('tapestry-theme');
+        var t = (saved === 'cosmos' || saved === 'paper' || saved === 'blueprint')
+          ? saved
+          : (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches
+              ? 'paper' : 'cosmos');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'cosmos');
+      }
+    })();
+  </script>
+
   <link rel="stylesheet" href="styles.css">
 
   <!-- KaTeX for beautiful equation rendering -->
@@ -11,7 +29,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
-<body data-theme="cosmos">
+<body>
 
   <!-- ── animated cosmic background ────────────────── -->
   <canvas id="bg"></canvas>

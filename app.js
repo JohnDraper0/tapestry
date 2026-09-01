@@ -788,11 +788,16 @@
   }
 
   // ── theme switcher ───────────────────────────────────────────────
+  // Initial theme is settled by an inline script in <head> (see index.html);
+  // this reads it back so app + inline agree. Absent both, cosmos wins.
   const THEMES = ['cosmos', 'paper', 'blueprint'];
-  let currentTheme = localStorage.getItem('tapestry-theme') || 'cosmos';
+  let currentTheme =
+    document.documentElement.getAttribute('data-theme') ||
+    localStorage.getItem('tapestry-theme') ||
+    'cosmos';
   function applyTheme(t) {
     currentTheme = t;
-    document.body.setAttribute('data-theme', t);
+    document.documentElement.setAttribute('data-theme', t);
     localStorage.setItem('tapestry-theme', t);
     document.querySelectorAll('.theme-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.theme === t);

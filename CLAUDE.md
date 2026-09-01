@@ -35,13 +35,16 @@ app.js       layout + zoom/pan + panel + theme + wiring
   existing ids, and nothing should be deeper than the rung it depends on.
 
 ## Themes
-Three themes via `[data-theme]` on `<body>`:
+Three themes via `[data-theme]` on `<html>` (set pre-paint by a tiny
+inline script in `<head>`):
 - `cosmos`    — dark starfield, generative audio feels natural here
 - `paper`     — warm parchment, sepia ink, vintage manuscript
 - `blueprint` — navy grid + compass, engineering drawing
 
-Theme is persisted in `localStorage.tapestry-theme`. The bg canvas hook
-`window.__bgSetTheme(t)` switches renderers.
+Theme is persisted in `localStorage.tapestry-theme`. On the very first
+visit — nothing stored yet — the inline script honours the OS's
+`prefers-color-scheme`: light picks `paper`, otherwise `cosmos`. The
+bg canvas hook `window.__bgSetTheme(t)` switches renderers.
 
 ## Known gotchas
 - Hero images are Wikimedia Commons `Special:FilePath` redirects — stable

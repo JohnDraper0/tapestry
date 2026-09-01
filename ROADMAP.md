@@ -18,17 +18,16 @@ architecture in their head and know which rungs hold which weight.
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-08-31. Deepened `conservation`'s `history`: the
-  node's `intermediate` block already cited Noether's theorem, but the
-  history skipped her entirely. Now Leibniz's 1686 *vis viva*, Joule's
-  1845 paddle-wheel and Helmholtz's 1847 *Über die Erhaltung der Kraft*
-  land the empirical law; then 1918 Göttingen — Emmy Noether proving
-  that every continuous symmetry yields a conserved quantity, still
-  lecturing under Hilbert's name because the faculty had blocked a
-  woman's Privatdozent ("Gentlemen, the Senate is not a bathhouse,"
-  he had thundered back) — and the 1933 Nazi purge that drove her to
-  Bryn Mawr, dead 18 months later, aged 53. Category A — the deepest
-  principle in physics finally names the woman who proved it.
+- Last updated: 2026-09-01. Category F — first-paint theme now honours
+  `prefers-color-scheme`. A tiny inline `<script>` in `<head>` picks
+  the palette *before* the stylesheet loads: a stored choice wins,
+  otherwise a light-preferring OS opens on `paper` and a dark one on
+  `cosmos`. Attribute moved from `<body>` to `<html>` so the inline
+  script can set it pre-paint with no flash. `applyTheme` in
+  `app.js` now writes to `documentElement`; CLAUDE.md's theme note
+  updated to match. Category A dominated recent runs (Noether history,
+  Newton–Halley visit, ecosystems Lindeman, atoms Rutherford, quantum
+  Helgoland) — time to nudge the presentation layer forward.
 
 ## The atlas we want (inventory)
 
@@ -254,8 +253,13 @@ One bullet per F-category run. Order is roughly priority.
     panel is very long (multi-depth content).
 
 ### Theme-system niceties
-26. **Honour `prefers-color-scheme: light`** as the initial theme on
-    first visit (paper), while still persisting a user override.
+26. ~~**Honour `prefers-color-scheme: light`** as the initial theme on
+    first visit (paper), while still persisting a user override.~~
+    — done 2026-09-01. Inline `<head>` script sets `data-theme` on
+    `<html>` pre-paint: stored choice wins, else `matchMedia(
+    '(prefers-color-scheme: light)')` picks `paper`, otherwise
+    `cosmos`. `applyTheme()` now targets `documentElement`, so any
+    later toggle stays consistent with the first-paint attribute.
 27. **Theme transition** — animate CSS variable changes (~250 ms) so
     switching themes feels curated, not jarring.
 
