@@ -14,20 +14,21 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 36. Analogous
+- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 37. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-09-01. Category F — first-paint theme now honours
-  `prefers-color-scheme`. A tiny inline `<script>` in `<head>` picks
-  the palette *before* the stylesheet loads: a stored choice wins,
-  otherwise a light-preferring OS opens on `paper` and a dark one on
-  `cosmos`. Attribute moved from `<body>` to `<html>` so the inline
-  script can set it pre-paint with no flash. `applyTheme` in
-  `app.js` now writes to `documentElement`; CLAUDE.md's theme note
-  updated to match. Category A dominated recent runs (Noether history,
-  Newton–Halley visit, ecosystems Lindeman, atoms Rutherford, quantum
-  Helgoland) — time to nudge the presentation layer forward.
+- Last updated: 2026-09-04. Category C — the `ecosystems` node finally
+  has a sim: Lindeman's 10% rule played as a live trophic pyramid. Sun
+  in the corner drops rays onto the primary-producers band; calorie
+  packets rise, and at each trophic boundary 90% turn into red heat
+  puffs drifting sideways while 10% pass upward. The apex band sees
+  roughly one packet per thousand the plants absorbed — visually
+  reinforcing the rule Lindeman worked out at Cedar Bog Lake before
+  dying at 27. Band widths use sqrt-scaled shares so the top level
+  stays visible; percentages are the true ones. Recent history-run
+  streak (bonding, probability, conservation, Noether, Newton, quantum)
+  broken by a sim.
 
 ## The atlas we want (inventory)
 
@@ -133,7 +134,10 @@ hard problem of consciousness (strengthen) · pre-Big-Bang state ·
 - `standard` — particle zoo with interaction vertices.
 - `periodic` — interactive table colouring by property.
 - `selfrep` / `centraldogma` — transcription-translation micro-machine.
-- `ecosystems` — energy-pyramid or trophic-cascade toy.
+- ~~`ecosystems` — energy-pyramid or trophic-cascade toy.~~ — added
+  2026-09-04 as `SIMS.ecosystems`: sun-fed pyramid where 90% of each
+  band's calories exit sideways as heat and 10% ascend, so the apex
+  sees ~1 packet per 1000 the plants got.
 
 **Analogous cross-links to populate (using `addAnalogous(a, b, note)`
 pattern at the bottom of `LAWS[]`):**
