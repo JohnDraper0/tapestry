@@ -4519,6 +4519,221 @@ SIMS.hubble_law = function (canvas) {
   };
 };
 
+// ─────────────────────────── ECOSYSTEMS ──────────────────────────────
+// Lindeman's 10% rule made visible. Sun pours photons onto the widest
+// band (plants); rising "calorie" packets try to climb the pyramid, but
+// at each trophic boundary 90% turn to red heat puffs that drift away
+// and only 10% pass through — so the apex band gets roughly one packet
+// for every thousand the plants absorbed. Band widths use a sqrt-scaled
+// share so the top level remains visible; the printed % is the true one.
+SIMS.ecosystems = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+  let raf;
+
+  // Order: index 0 = base (plants), climbing up to apex.
+  const levels = [
+    { label: 'Primary producers', short: 'Producers', share: 1,     color: '#8bc34a' },
+    { label: 'Herbivores',        short: 'Herbivores',share: 0.10,  color: '#ffb74d' },
+    { label: 'Small carnivores',  short: 'Carnivores',share: 0.01,  color: '#ff6f61' },
+    { label: 'Apex predators',    short: 'Apex',      share: 0.001, color: '#c471ed' },
+  ];
+
+  const yTop  = 46;
+  const yBase = h - 24;
+  const bandH = Math.max(28, Math.min(56, (yBase - yTop) / levels.length));
+  const totalPyrH = bandH * levels.length;
+  const yFloor = yTop + totalPyrH;
+
+  const wMax = Math.max(120, w - 100);
+  const bandWidths = levels.map(l => Math.max(28, Math.pow(l.share, 0.35) * wMax));
+
+  const bandTop = i => yFloor - bandH * (i + 1);
+  const bandBot = i => yFloor - bandH * i;
+  function bandRect(i) {
+    const bw = bandWidths[i];
+    return { x: (w - bw) / 2, y: bandTop(i), w: bw, h: bandH - 3 };
+  }
+
+  const packets = [];
+  const heatPuffs = [];
+
+  function emit() {
+    const bw = bandWidths[0];
+    packets.push({
+      x: w / 2 + (Math.random() - 0.5) * bw * 0.7,
+      y: bandBot(0) - 2,
+      rank: 0,
+      alive: true,
+    });
+  }
+
+  let last = performance.now();
+  let accum = 0;
+
+  function draw(now) {
+    const dt = Math.min(80, now - last);
+    last = now;
+    accum += dt;
+    while (accum > 45) { accum -= 45; emit(); }
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Header.
+    ctx.fillStyle = '#eee';
+    ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText("Lindeman's 10% rule", 12, 6);
+    ctx.font = '11px system-ui';
+    ctx.fillStyle = 'rgba(220, 230, 245, 0.75)';
+    ctx.fillText('~90% of energy dissipates as heat at each transfer', 12, 22);
+
+    // Sun with soft corona in the top-right.
+    const sunX = w - 32, sunY = 30;
+    const cor = ctx.createRadialGradient(sunX, sunY, 3, sunX, sunY, 36);
+    cor.addColorStop(0, 'rgba(255, 220, 120, 0.55)');
+    cor.addColorStop(1, 'rgba(255, 220, 120, 0)');
+    ctx.fillStyle = cor;
+    ctx.beginPath(); ctx.arc(sunX, sunY, 36, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffd166';
+    ctx.beginPath(); ctx.arc(sunX, sunY, 9, 0, Math.PI * 2); ctx.fill();
+
+    // Sun rays falling onto the plants band.
+    ctx.strokeStyle = 'rgba(255, 220, 120, 0.28)';
+    ctx.lineWidth = 1;
+    const plantsRect = bandRect(0);
+    const rayN = 5;
+    for (let k = 0; k < rayN; k++) {
+      const rx = plantsRect.x + plantsRect.w * (0.55 + 0.42 * (k / (rayN - 1)));
+      ctx.beginPath(); ctx.moveTo(sunX - 4, sunY + 8); ctx.lineTo(rx, plantsRect.y); ctx.stroke();
+    }
+
+    // Bands, bottom to top.
+    for (let i = 0; i < levels.length; i++) {
+      const L = levels[i];
+      const r = bandRect(i);
+      const g = ctx.createLinearGradient(0, r.y, 0, r.y + r.h);
+      g.addColorStop(0, L.color + 'ee');
+      g.addColorStop(1, L.color + '77');
+      ctx.fillStyle = g;
+      const rad = Math.min(6, r.h * 0.4, r.w * 0.4);
+      ctx.beginPath();
+      ctx.moveTo(r.x + rad, r.y);
+      ctx.arcTo(r.x + r.w, r.y,       r.x + r.w, r.y + r.h, rad);
+      ctx.arcTo(r.x + r.w, r.y + r.h, r.x,        r.y + r.h, rad);
+      ctx.arcTo(r.x,        r.y + r.h, r.x,        r.y,       rad);
+      ctx.arcTo(r.x,        r.y,       r.x + r.w, r.y,       rad);
+      ctx.closePath();
+      ctx.fill();
+
+      // Heat arrows leaking out each side (except at the base, which
+      // shows sun-in instead of heat-out).
+      if (i > 0) {
+        ctx.strokeStyle = 'rgba(255, 120, 90, 0.55)';
+        ctx.fillStyle   = 'rgba(255, 120, 90, 0.55)';
+        ctx.lineWidth = 1;
+        for (const dir of [-1, 1]) {
+          const sx = dir < 0 ? r.x : r.x + r.w;
+          const ex = sx + dir * 18;
+          const ey = r.y + r.h * 0.5;
+          ctx.beginPath(); ctx.moveTo(sx, ey); ctx.lineTo(ex, ey); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(ex, ey);
+          ctx.lineTo(ex - dir * 5, ey - 3);
+          ctx.lineTo(ex - dir * 5, ey + 3);
+          ctx.closePath(); ctx.fill();
+        }
+      }
+
+      // Labels — name and % of incoming energy. Narrow bands hang the
+      // text outside on the right, coloured, so nothing overflows.
+      ctx.font = 'bold 11px system-ui';
+      ctx.textBaseline = 'middle';
+      const cy = r.y + r.h * 0.5;
+      const pctStr = L.share >= 0.01
+        ? (L.share * 100).toFixed(0) + '%'
+        : (L.share * 100).toFixed(1) + '%';
+      if (r.w > 160) {
+        ctx.fillStyle = 'rgba(20, 20, 30, 0.92)';
+        ctx.textAlign = 'left';
+        ctx.fillText(L.label, r.x + 8, cy);
+        ctx.textAlign = 'right';
+        ctx.fillText(pctStr, r.x + r.w - 8, cy);
+      } else if (r.w > 90) {
+        ctx.fillStyle = 'rgba(20, 20, 30, 0.92)';
+        ctx.textAlign = 'left';
+        ctx.fillText(L.short, r.x + 8, cy);
+        ctx.textAlign = 'right';
+        ctx.fillText(pctStr, r.x + r.w - 8, cy);
+      } else {
+        ctx.fillStyle = L.color;
+        ctx.textAlign = 'left';
+        ctx.fillText(`${L.short}  ${pctStr}`, r.x + r.w + 8, cy);
+      }
+    }
+
+    // Advance and draw calorie packets.
+    for (const p of packets) {
+      if (!p.alive) continue;
+      p.y -= 0.55 + dt * 0.02;
+      const boundary = bandTop(p.rank);
+      if (p.y <= boundary) {
+        if (p.rank < levels.length - 1) {
+          if (Math.random() < 0.9) {
+            p.alive = false;
+            heatPuffs.push({
+              x: p.x,
+              y: boundary,
+              vx: (Math.random() < 0.5 ? -1 : 1) * (0.4 + Math.random() * 0.7),
+              vy: -0.15 - Math.random() * 0.2,
+              life: 44,
+            });
+          } else {
+            p.rank++;
+            const bw = bandWidths[p.rank];
+            const cx = w / 2;
+            const maxOff = bw * 0.42;
+            if (Math.abs(p.x - cx) > maxOff) {
+              p.x = cx + (p.x > cx ? 1 : -1) * maxOff;
+            }
+          }
+        } else if (p.y < bandTop(levels.length - 1) - 6) {
+          // Escaped through the apex — treat as decomposer/heat.
+          p.alive = false;
+          heatPuffs.push({
+            x: p.x, y: p.y,
+            vx: (Math.random() < 0.5 ? -1 : 1) * 0.6,
+            vy: -0.3, life: 40,
+          });
+        }
+      }
+    }
+    ctx.fillStyle = 'rgba(255, 245, 190, 0.92)';
+    for (const p of packets) {
+      if (!p.alive) continue;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, Math.PI * 2); ctx.fill();
+    }
+    if (packets.length > 500) {
+      for (let i = packets.length - 1; i >= 0; i--) if (!packets[i].alive) packets.splice(i, 1);
+    }
+
+    // Update + draw heat puffs.
+    for (let i = heatPuffs.length - 1; i >= 0; i--) {
+      const q = heatPuffs[i];
+      q.x += q.vx; q.y += q.vy; q.life--;
+      if (q.life <= 0) { heatPuffs.splice(i, 1); continue; }
+      ctx.globalAlpha = (q.life / 44) * 0.7;
+      ctx.fillStyle = 'rgba(255, 120, 90, 0.85)';
+      ctx.beginPath(); ctx.arc(q.x, q.y, 1.6, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
