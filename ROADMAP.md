@@ -14,20 +14,22 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 80 (63 known, 17 frontier). Domains: 15. Sims: 36. Analogous
+- Nodes: 81 (64 known, 17 frontier). Domains: 15. Sims: 36. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-  Verification retry attempted 2026-08-27 blocked by the sandbox proxy.
-- Last updated: 2026-09-01. Category F — first-paint theme now honours
-  `prefers-color-scheme`. A tiny inline `<script>` in `<head>` picks
-  the palette *before* the stylesheet loads: a stored choice wins,
-  otherwise a light-preferring OS opens on `paper` and a dark one on
-  `cosmos`. Attribute moved from `<body>` to `<html>` so the inline
-  script can set it pre-paint with no flash. `applyTheme` in
-  `app.js` now writes to `documentElement`; CLAUDE.md's theme note
-  updated to match. Category A dominated recent runs (Noether history,
-  Newton–Halley visit, ecosystems Lindeman, atoms Rutherford, quantum
-  Helgoland) — time to nudge the presentation layer forward.
+  Verification retry attempted 2026-08-27 blocked by the sandbox proxy;
+  2026-09-06 retry also blocked (commons.wikimedia.org returns 403 at
+  the egress gateway).
+- Last updated: 2026-09-06. Category B — added **Milankovitch Cycles**
+  as the second earth-domain node. Depends on `kepler` and `thermo`;
+  eli5 through expert cover the three orbital parameters (e, ε, ϖ),
+  the 100/41/23-kyr periods, the 65°N summer-insolation trigger, and
+  the still-open 100-kyr problem. History leads with Milanković's
+  Budapest internment as a "prisoner-guest" of the Hungarian Academy
+  and closes with Hays–Imbrie–Shackleton's 1976 spectral confirmation
+  of exactly the three periods he had computed by hand. Sim still to
+  do: an insolation-at-65°N curve driven by the three cycles would
+  make the pacemaker visible.
 
 ## The atlas we want (inventory)
 
@@ -51,7 +53,7 @@ points, not quotas.
 | emergence       |   5   |    7   | Zipf, networks, cellular auto                             |
 | cosmos          |   4   |    8   | CMB, inflation, structure formation, Drake, Roche         |
 | neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
-| earth (new)     |   1   |    4   | climate system, biogeochemistry, hydrologic cycle         |
+| earth (new)     |   2   |    4   | biogeochemistry, hydrologic cycle (Milankovitch added)    |
 | unknown         |  17   |   17   | nature of time, pre-Big-Bang state (target hit)           |
 
 Totals aimed at: ~100 nodes. Getting there is the work of months, not weeks.
