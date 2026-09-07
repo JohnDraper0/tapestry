@@ -14,22 +14,20 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 81 (64 known, 17 frontier). Domains: 15. Sims: 36. Analogous
+- Nodes: 84 (67 known, 17 frontier). Domains: 15. Sims: 39. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27 blocked by the sandbox proxy;
   2026-09-06 retry also blocked (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-06. Category B — added **Milankovitch Cycles**
-  as the second earth-domain node. Depends on `kepler` and `thermo`;
-  eli5 through expert cover the three orbital parameters (e, ε, ϖ),
-  the 100/41/23-kyr periods, the 65°N summer-insolation trigger, and
-  the still-open 100-kyr problem. History leads with Milanković's
-  Budapest internment as a "prisoner-guest" of the Hungarian Academy
-  and closes with Hays–Imbrie–Shackleton's 1976 spectral confirmation
-  of exactly the three periods he had computed by hand. Sim still to
-  do: an insolation-at-65°N curve driven by the three cycles would
-  make the pacemaker visible.
+- Last updated: 2026-09-07. Category C — added `SIMS.milankovitch`, an
+  animated pacemaker showing June-solstice insolation at 65°N over the
+  last 800 kyr while three live dials read out eccentricity, obliquity
+  and climatic precession as they drift. Insolation is computed from
+  Berger's 1978 daily-mean formula against sinusoidal orbital elements
+  at the canonical 100/405/41/23 kyr periods; the cursor auto-sweeps
+  and is draggable. Values check out: today ≈ 501 W/m², LGM ≈ 458,
+  full range 427–568 W/m² over the Pleistocene window.
 
 ## The atlas we want (inventory)
 

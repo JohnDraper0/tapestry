@@ -4519,6 +4519,205 @@ SIMS.hubble_law = function (canvas) {
   };
 };
 
+// ─────────────────────────── MILANKOVITCH ────────────────────────────
+// Pacemaker of the ice ages: June-solstice insolation at 65°N as the three
+// orbital cycles (eccentricity, obliquity, climatic precession) drift.
+// Simplified analytical model — dominant sinusoids at the canonical
+// periods; not Laskar-precise, but the character is right: ~± 15% swings,
+// precession beats when eccentricity is high, obliquity dominates when
+// it isn't. Insolation formula: Berger 1978 (daily mean at solstice).
+SIMS.milankovitch = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const S0  = 1361;                        // W/m², solar constant
+  const phi = 65 * Math.PI / 180;          // latitude of interest
+
+  function orbital(t) {                    // t = kyr before present
+    const e   = 0.028 + 0.020 * Math.sin(2 * Math.PI * t / 100 + 1.2)
+                     + 0.006 * Math.sin(2 * Math.PI * t / 405);
+    const eps = (23.3 + 1.2 * Math.sin(2 * Math.PI * t / 41 + 0.4)) * Math.PI / 180;
+    const varpi = 2 * Math.PI * t / 23.7;  // climatic precession
+    return { e, eps, varpi };
+  }
+  function Q65(t) {                        // Berger 1978, June solstice, daily mean
+    const { e, eps, varpi } = orbital(t);
+    const rho = (1 - e * e) / (1 + e * Math.sin(varpi));  // r/a at NH summer solstice
+    const sinH0 = -Math.tan(phi) * Math.tan(eps);
+    const H0 = sinH0 <= -1 ? Math.PI : sinH0 >= 1 ? 0 : Math.acos(sinH0);
+    return (S0 / Math.PI) / (rho * rho) *
+      (H0 * Math.sin(phi) * Math.sin(eps) +
+       Math.cos(phi) * Math.cos(eps) * Math.sin(H0));
+  }
+
+  const kyrMax = 800, N = 800;
+  const series = new Float32Array(N);
+  let qLo = Infinity, qHi = -Infinity;
+  for (let i = 0; i < N; i++) {
+    const t = kyrMax * i / (N - 1);
+    series[i] = Q65(t);
+    if (series[i] < qLo) qLo = series[i];
+    if (series[i] > qHi) qHi = series[i];
+  }
+  const qMid = (qLo + qHi) / 2;
+  const yLo  = qLo - (qHi - qLo) * 0.08;
+  const yHi  = qHi + (qHi - qLo) * 0.08;
+  const yRange = yHi - yLo;
+
+  const marginL = 44, marginR = 12, marginB = 22, stripH = 78;
+  const chartTop = stripH;
+  const xOf  = (t) => (w - marginR) - (w - marginR - marginL) * (t / kyrMax);
+  const yOfQ = (q) => chartTop + (h - marginB - chartTop) * (1 - (q - yLo) / yRange);
+
+  let cursor = 0, dir = 1, running = true, raf = null, last = 0;
+  const CYCLE_S = 30;                       // seconds to sweep 800 kyr
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    // cool tint below the mid-line (a hint of "glacial-favouring")
+    const yMid = yOfQ(qMid);
+    ctx.fillStyle = 'rgba(120, 180, 255, 0.08)';
+    ctx.fillRect(marginL, yMid, w - marginR - marginL, h - marginB - yMid);
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(marginL, chartTop);
+    ctx.lineTo(marginL, h - marginB);
+    ctx.lineTo(w - marginR, h - marginB);
+    ctx.stroke();
+
+    // insolation curve
+    ctx.strokeStyle = '#ffd166';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const x = xOf(kyrMax * i / (N - 1));
+      const y = yOfQ(series[i]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // tick labels
+    ctx.fillStyle = 'rgba(220,230,245,0.6)';
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let kyr = 0; kyr <= kyrMax; kyr += 200) {
+      ctx.fillText(kyr === 0 ? 'now' : `${kyr} kyr`, xOf(kyr), h - marginB + 3);
+    }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(Math.round(qHi),  marginL - 5, chartTop + 3);
+    ctx.fillText(Math.round(qLo),  marginL - 5, h - marginB - 3);
+    ctx.fillText(Math.round(qMid), marginL - 5, yMid);
+    ctx.save();
+    ctx.translate(12, (chartTop + h - marginB) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(220,230,245,0.55)';
+    ctx.fillText('June 65°N insolation  (W/m²)', 0, 0);
+    ctx.restore();
+
+    // cursor readouts
+    const cq = Q65(cursor);
+    const cx = xOf(cursor), cy = yOfQ(cq);
+    ctx.strokeStyle = 'rgba(233, 30, 99, 0.7)';
+    ctx.beginPath(); ctx.moveTo(cx, chartTop); ctx.lineTo(cx, h - marginB); ctx.stroke();
+    ctx.fillStyle = '#e91e63';
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fill();
+
+    // top strip: three orbital-parameter dials
+    const { e, eps, varpi } = orbital(cursor);
+    const dials = [
+      { key: 'e',  name: 'eccentricity', period: '100 · 405 kyr',
+        val: e,                    vStr: e.toFixed(3),
+        min: 0.002, max: 0.055,    col: '#64ffda' },
+      { key: 'ε',  name: 'obliquity',    period: '41 kyr',
+        val: eps * 180 / Math.PI,  vStr: (eps * 180 / Math.PI).toFixed(2) + '°',
+        min: 22.1, max: 24.5,      col: '#ffb74d' },
+      { key: 'ϖ', name: 'precession',   period: '23 · 19 kyr',
+        val: ((varpi % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI),
+        vStr: ((((varpi * 180 / Math.PI) % 360) + 360) % 360).toFixed(0) + '°',
+        min: 0, max: 2 * Math.PI,  col: '#e91e63' },
+    ];
+    const boxW = (w - 16) / 3;
+    ctx.textBaseline = 'alphabetic';
+    dials.forEach((d, i) => {
+      const x0 = 8 + i * boxW;
+      ctx.fillStyle = d.col;
+      ctx.font = 'italic 22px Georgia, serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(d.key, x0, 24);
+      ctx.fillStyle = 'rgba(220,230,245,0.85)';
+      ctx.font = '11px system-ui';
+      ctx.fillText(d.name, x0 + 24, 16);
+      ctx.fillStyle = 'rgba(220,230,245,0.55)';
+      ctx.font = '10px system-ui';
+      ctx.fillText(d.period, x0 + 24, 30);
+      const bx = x0, bw = boxW - 16, by = 42, bh = 6;
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.strokeRect(bx, by, bw, bh);
+      const frac = Math.max(0, Math.min(1, (d.val - d.min) / (d.max - d.min)));
+      ctx.fillStyle = d.col;
+      ctx.fillRect(bx, by, Math.max(1, bw * frac), bh);
+      ctx.fillStyle = 'rgba(220,230,245,0.9)';
+      ctx.font = '11px system-ui';
+      ctx.fillText(d.vStr, x0, 66);
+    });
+
+    // header
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(220,230,245,0.75)';
+    ctx.font = '11px system-ui';
+    const stamp = cursor < 0.5
+      ? `today  ·  Q = ${cq.toFixed(0)} W/m²`
+      : `${cursor.toFixed(0)} kyr ago  ·  Q = ${cq.toFixed(0)} W/m²`;
+    ctx.fillText(stamp, w - 8, chartTop - 4);
+  }
+
+  function loop(now) {
+    if (last && running) {
+      const dt = (now - last) / 1000;
+      cursor += dir * dt * (kyrMax / CYCLE_S);
+      if (cursor >= kyrMax) { cursor = kyrMax; dir = -1; }
+      if (cursor <= 0)      { cursor = 0;      dir =  1; }
+    }
+    last = now;
+    draw();
+    raf = requestAnimationFrame(loop);
+  }
+  raf = requestAnimationFrame(loop);
+
+  function setFromEvent(ev) {
+    const r = canvas.getBoundingClientRect();
+    const x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+    if (x < marginL || x > w - marginR) return;
+    cursor = kyrMax * (w - marginR - x) / (w - marginR - marginL);
+    cursor = Math.max(0, Math.min(kyrMax, cursor));
+  }
+  let dragging = false;
+  const onDown = (e) => { dragging = true; running = false; setFromEvent(e); e.preventDefault(); };
+  const onMove = (e) => { if (dragging) { setFromEvent(e); e.preventDefault(); } };
+  const onUp   = ()  => { dragging = false; running = true; };
+  canvas.addEventListener('mousedown',  onDown);
+  canvas.addEventListener('mousemove',  onMove);
+  window.addEventListener('mouseup',    onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  canvas.addEventListener('touchmove',  onMove, { passive: false });
+  window.addEventListener('touchend',   onUp);
+
+  return {
+    stop() {
+      cancelAnimationFrame(raf);
+      canvas.removeEventListener('mousedown',  onDown);
+      canvas.removeEventListener('mousemove',  onMove);
+      window.removeEventListener('mouseup',    onUp);
+      canvas.removeEventListener('touchstart', onDown);
+      canvas.removeEventListener('touchmove',  onMove);
+      window.removeEventListener('touchend',   onUp);
+    }
+  };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
