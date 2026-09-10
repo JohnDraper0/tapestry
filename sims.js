@@ -4718,6 +4718,170 @@ SIMS.milankovitch = function (canvas) {
   };
 };
 
+// ─────────────────────────── CMB POWER SPECTRUM ─────────────────────
+// The iconic ΛCDM angular power spectrum: D_ℓ = ℓ(ℓ+1)C_ℓ / (2π) in μK²,
+// with the Sachs–Wolfe plateau, three acoustic peaks, and the Silk
+// damping tail. The values are a synthetic fit shaped to match Planck's
+// TT curve well enough to teach the physics: first peak at ℓ ≈ 220
+// (the sound horizon at last scattering; universe is flat to Ω_k ~ 0),
+// odd peaks compression-enhanced, damping past ℓ ~ 1500.
+SIMS.cmb = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const L_MAX = 2200;
+  const D_MAX = 6400;                                // μK², plot ceiling
+  const padL = 44, padR = 12, padT = 22, padB = 60;  // padB leaves the θ strip
+
+  // Synthetic D_ℓ curve — Sachs–Wolfe piece at low ℓ blending into a broad
+  // acoustic continuum, with four gaussian peak enhancements and Silk
+  // damping. Amplitudes hand-fit to Planck 2018 TT within ~10%: first
+  // peak ~5750 μK² at ℓ ≈ 220 (sound horizon at last scattering, universe
+  // flat to Ω_k ~ 0); odd peaks compression-enhanced; visible damping
+  // past ℓ ~ 1500.
+  const PEAKS = [
+    { l: 220,  h: 4600, w:  75 },   // first acoustic peak
+    { l: 540,  h: 1370, w:  85 },   // second (rarefaction)
+    { l: 810,  h: 2070, w:  95 },   // third
+    { l: 1150, h: 1510, w: 110 },   // fourth, deep in damping
+  ];
+  function Dl(l) {
+    if (l < 1) return 0;
+    const sw    = 950 + 320 * Math.exp(-(l - 2) / 6);
+    const cont  = 1300 * Math.exp(-Math.pow((l - 500) / 900, 2));
+    const alpha = 1 / (1 + Math.exp(-(l - 60) / 15));   // sigmoid SW→cont
+    const lowlLo = (1 - alpha) * sw;
+    const lowlHi = alpha * cont;
+    let peaks = 0;
+    for (const p of PEAKS) {
+      const u = (l - p.l) / p.w;
+      peaks += p.h * Math.exp(-u * u);
+    }
+    const damping = Math.exp(-Math.pow(l / 1400, 2.6));
+    return lowlLo + (lowlHi + peaks) * damping;
+  }
+
+  const plotL = padL, plotR = w - padR;
+  const plotT = padT, plotB = h - padB;
+  const plotW = plotR - plotL, plotH = plotB - plotT;
+  const xOf = (l) => plotL + (l / L_MAX) * plotW;
+  const yOf = (D) => plotB - Math.min(1, D / D_MAX) * plotH;
+
+  // Pre-sample the curve
+  const N = 320;
+  const curve = new Float32Array(N);
+  for (let i = 0; i < N; i++) curve[i] = Dl((i / (N - 1)) * L_MAX);
+
+  const CYCLE_S = 22;
+  let t0 = performance.now(), raf;
+
+  function draw(now) {
+    const phase = ((now - t0) / 1000 / CYCLE_S) % 1;
+    const cursorL = 30 + phase * (L_MAX - 40);
+    const cursorD = Dl(cursorL);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotT); ctx.lineTo(plotL, plotB); ctx.lineTo(plotR, plotB);
+    ctx.stroke();
+
+    // ℓ-axis ticks
+    ctx.fillStyle = 'rgba(220,230,245,0.65)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    [10, 500, 1000, 1500, 2000].forEach(l => {
+      const x = xOf(l);
+      ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+      ctx.beginPath(); ctx.moveTo(x, plotB); ctx.lineTo(x, plotB + 4); ctx.stroke();
+      ctx.fillText(String(l), x, plotB + 6);
+    });
+    ctx.fillText('multipole  ℓ', (plotL + plotR) / 2, plotB + 18);
+
+    // y-axis ticks (μK²)
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    [0, 2000, 4000, 6000].forEach(D => {
+      const y = yOf(D);
+      ctx.strokeStyle = 'rgba(255,255,255,0.10)';
+      ctx.beginPath(); ctx.moveTo(plotL, y); ctx.lineTo(plotR, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(220,230,245,0.65)';
+      ctx.fillText(String(D), plotL - 5, y);
+    });
+    ctx.save();
+    ctx.translate(11, (plotT + plotB) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(220,230,245,0.55)';
+    ctx.fillText('D_ℓ = ℓ(ℓ+1) C_ℓ / 2π   (μK²)', 0, 0);
+    ctx.restore();
+
+    // angular-scale strip along the bottom (θ ≈ 180°/ℓ)
+    ctx.fillStyle = 'rgba(220,230,245,0.55)';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    [['9°', 20], ['1°', 180], ['0.5°', 360], ['0.2°', 900], ['0.1°', 1800]].forEach(
+      ([label, l]) => ctx.fillText(label, xOf(l), plotB + 34)
+    );
+    ctx.fillText('angular scale on the sky', (plotL + plotR) / 2, plotB + 46);
+
+    // filled area under the curve
+    ctx.beginPath();
+    ctx.moveTo(plotL, plotB);
+    for (let i = 0; i < N; i++) {
+      ctx.lineTo(xOf((i / (N - 1)) * L_MAX), yOf(curve[i]));
+    }
+    ctx.lineTo(plotR, plotB); ctx.closePath();
+    const grd = ctx.createLinearGradient(0, plotT, 0, plotB);
+    grd.addColorStop(0, 'rgba(255,209,102,0.28)');
+    grd.addColorStop(1, 'rgba(255,209,102,0.02)');
+    ctx.fillStyle = grd; ctx.fill();
+
+    // the curve
+    ctx.beginPath();
+    for (let i = 0; i < N; i++) {
+      const x = xOf((i / (N - 1)) * L_MAX), y = yOf(curve[i]);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 1.9; ctx.stroke();
+
+    // peak markers with ℓ labels
+    ctx.font = '10px system-ui'; ctx.textBaseline = 'bottom';
+    PEAKS.forEach((p, i) => {
+      const x = xOf(p.l), y = yOf(p.h);
+      ctx.fillStyle = 'rgba(255,255,255,0.65)';
+      ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.textAlign = i === 0 ? 'left' : 'center';
+      ctx.fillStyle = 'rgba(220,230,245,0.85)';
+      ctx.fillText(`ℓ ≈ ${p.l}`, x + (i === 0 ? 4 : 0), y - 4);
+    });
+
+    // scanning cursor + callout
+    const cx = xOf(cursorL), cy = yOf(cursorD);
+    ctx.strokeStyle = 'rgba(233, 30, 99, 0.7)';
+    ctx.beginPath(); ctx.moveTo(cx, plotT); ctx.lineTo(cx, plotB); ctx.stroke();
+    ctx.fillStyle = '#e91e63';
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fill();
+
+    const theta = 180 / Math.max(cursorL, 1);
+    const thetaStr = theta >= 1 ? `${theta.toFixed(1)}°`
+                    : `${(theta * 60).toFixed(1)}′`;
+    ctx.fillStyle = 'rgba(220,230,245,0.9)'; ctx.font = '11px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const boxX = Math.min(cx + 8, plotR - 130);
+    ctx.fillText(`ℓ = ${cursorL.toFixed(0)}   θ ≈ ${thetaStr}`, boxX, plotT + 2);
+    ctx.fillText(`D_ℓ = ${cursorD.toFixed(0)} μK²`, boxX, plotT + 16);
+
+    // header
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('CMB temperature power spectrum', plotL + 4, plotT - 18);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

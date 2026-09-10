@@ -14,21 +14,20 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 85 (68 known, 17 frontier). Domains: 15. Sims: 39. Analogous
+- Nodes: 85 (68 known, 17 frontier). Domains: 15. Sims: 40. Analogous
   cross-links populated: 32. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-09. Category B — added `cmb` (Cosmic Microwave
-  Background), the fifth node in the cosmos domain, spun out from
-  `bigbang` so the leftover-light story can carry its own precision
-  numbers: T = 2.72548 ± 0.00057 K (Fixsen 2009), ΔT/T ~ 10⁻⁵,
-  z ≈ 1089 last scattering, the 220-multipole first acoustic peak,
-  Ω_k = −0.0001 ± 0.0018. Deps: bigbang · planck_law · wien.
-  History: Alpher–Herman's ignored 1948 prediction, Penzias &amp; Wilson's
-  1964 pigeon-throat discovery in Holmdel, Dicke's "boys, we've been
-  scooped," the 1978 Nobel that skipped Alpher, COBE/WMAP/Planck.
+- Last updated: 2026-09-10. Category C — added `SIMS.cmb`, the CMB
+  temperature angular power spectrum D_ℓ = ℓ(ℓ+1)C_ℓ/(2π) in μK² vs
+  multipole ℓ ∈ [1, 2200]. Synthetic ΛCDM fit hand-tuned within ~10%
+  of Planck 2018 TT: Sachs–Wolfe plateau at low ℓ, four gaussian
+  acoustic peaks (220 · 540 · 810 · 1150) on a broad continuum, Silk
+  damping past ℓ ≈ 1500. A slow cursor sweeps the ℓ-axis and reads
+  out D_ℓ and the corresponding angular scale θ ≈ 180°/ℓ; peaks are
+  dot-marked and labeled by their multipole. `cmb` now wires to it.
 
 ## The atlas we want (inventory)
 
