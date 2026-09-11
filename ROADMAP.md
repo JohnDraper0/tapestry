@@ -20,14 +20,18 @@ architecture in their head and know which rungs hold which weight.
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-10. Category C — added `SIMS.cmb`, the CMB
-  temperature angular power spectrum D_ℓ = ℓ(ℓ+1)C_ℓ/(2π) in μK² vs
-  multipole ℓ ∈ [1, 2200]. Synthetic ΛCDM fit hand-tuned within ~10%
-  of Planck 2018 TT: Sachs–Wolfe plateau at low ℓ, four gaussian
-  acoustic peaks (220 · 540 · 810 · 1150) on a broad continuum, Silk
-  damping past ℓ ≈ 1500. A slow cursor sweeps the ℓ-axis and reads
-  out D_ℓ and the corresponding angular scale θ ≈ 180°/ℓ; peaks are
-  dot-marked and labeled by their multipole. `cmb` now wires to it.
+- Last updated: 2026-09-11. Category E — deepened the
+  `statmech ↔ information` cross-link (previously the misleading
+  one-liner "both measure disorder in bits" — Boltzmann's entropy is
+  J/K, not bits) into a full Shannon–Boltzmann bridge: Boltzmann's
+  Zentralfriedhof tombstone, Gibbs's 1902 ensemble form, Shannon at
+  Bell Labs 1948, the von Neumann "call it entropy" quip
+  (Tribus & McIrvine 1971), Jaynes 1957 turning statmech into Shannon
+  inference, the exact 1 bit ↔ k_B ln 2 ≈ 9.57 × 10⁻²⁴ J/K exchange
+  rate, Landauer 1961 dissolving Maxwell's demon, von Neumann's
+  quantum entropy, and modern non-equilibrium (Jarzynski, Crooks,
+  quantum thermodynamics) — the specific analogous-cross-link gap
+  flagged in the concrete gap list as `entropy ↔ information`.
 
 ## The atlas we want (inventory)
 
