@@ -20,18 +20,16 @@ architecture in their head and know which rungs hold which weight.
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-11. Category E — deepened the
-  `statmech ↔ information` cross-link (previously the misleading
-  one-liner "both measure disorder in bits" — Boltzmann's entropy is
-  J/K, not bits) into a full Shannon–Boltzmann bridge: Boltzmann's
-  Zentralfriedhof tombstone, Gibbs's 1902 ensemble form, Shannon at
-  Bell Labs 1948, the von Neumann "call it entropy" quip
-  (Tribus & McIrvine 1971), Jaynes 1957 turning statmech into Shannon
-  inference, the exact 1 bit ↔ k_B ln 2 ≈ 9.57 × 10⁻²⁴ J/K exchange
-  rate, Landauer 1961 dissolving Maxwell's demon, von Neumann's
-  quantum entropy, and modern non-equilibrium (Jarzynski, Crooks,
-  quantum thermodynamics) — the specific analogous-cross-link gap
-  flagged in the concrete gap list as `entropy ↔ information`.
+- Last updated: 2026-09-12. Category A — sharpened the `higgs` history
+  with the two human details it was missing: Higgs's 1964 paper being
+  rejected by CERN's *Physics Letters* (he added the "propaganda"
+  paragraph on the required massive boson before resubmitting to *PRL*,
+  which is why the particle bears his name), and the hour-long delay
+  in the 2013 Nobel announcement — Higgs kept no mobile phone and was
+  quietly eating lunch at The Vintage seafood bar in Edinburgh; he
+  learned of the prize from a neighbour on his walk home. Brought
+  Brout's death date to fourteen months before 4 July 2012 (was "the
+  year before"). Six inventors of the mechanism cleanly ordered.
 
 ## The atlas we want (inventory)
 
