@@ -795,9 +795,23 @@
     document.documentElement.getAttribute('data-theme') ||
     localStorage.getItem('tapestry-theme') ||
     'cosmos';
+  let themeFadeTimer = null;
   function applyTheme(t) {
+    const root = document.documentElement;
+    const prev = root.getAttribute('data-theme');
+    // Only fade on a genuine user-initiated switch. The initial call reads
+    // the value the inline <head> script already stamped, so prev === t and
+    // we skip the fade — no first-paint flash.
+    if (prev && prev !== t) {
+      root.classList.add('theme-transitioning');
+      clearTimeout(themeFadeTimer);
+      themeFadeTimer = setTimeout(
+        () => root.classList.remove('theme-transitioning'),
+        380
+      );
+    }
     currentTheme = t;
-    document.documentElement.setAttribute('data-theme', t);
+    root.setAttribute('data-theme', t);
     localStorage.setItem('tapestry-theme', t);
     document.querySelectorAll('.theme-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.theme === t);

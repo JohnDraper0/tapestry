@@ -1115,6 +1115,39 @@ header * { pointer-events: auto; }
 }
 .print-header { display: none; }
 
+/* ── theme swap fade ──────────────────────────────────
+   Colour-carrying properties on unstyled elements (body text, panel
+   prose, SVG node text) pop when the theme changes because they have
+   no transition of their own. app.js adds `.theme-transitioning` to
+   <html> for ~380 ms whenever the visitor picks a new theme; this
+   scoped rule eases those properties for the duration and then lifts.
+   Buttons and controls that already have `transition: all` are
+   unaffected in practice — the shorthand is a strict superset of the
+   properties they were already animating. Higher specificity than the
+   reduced-motion rule below, so an in-block media query is needed. */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 320ms ease,
+    background 320ms ease,
+    color 320ms ease,
+    border-color 320ms ease,
+    outline-color 320ms ease,
+    fill 320ms ease,
+    stroke 320ms ease
+    !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: none !important;
+  }
+}
+
 /* ── reduced motion ───────────────────────────────────
    Honour the user's OS-level "reduce motion" preference. The CSS half
    silences the breathing-glow / pulse-ring / start-beacon loops and

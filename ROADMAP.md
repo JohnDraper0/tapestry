@@ -20,16 +20,15 @@ architecture in their head and know which rungs hold which weight.
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-12. Category A — sharpened the `higgs` history
-  with the two human details it was missing: Higgs's 1964 paper being
-  rejected by CERN's *Physics Letters* (he added the "propaganda"
-  paragraph on the required massive boson before resubmitting to *PRL*,
-  which is why the particle bears his name), and the hour-long delay
-  in the 2013 Nobel announcement — Higgs kept no mobile phone and was
-  quietly eating lunch at The Vintage seafood bar in Edinburgh; he
-  learned of the prize from a neighbour on his walk home. Brought
-  Brout's death date to fourteen months before 4 July 2012 (was "the
-  year before"). Six inventors of the mechanism cleanly ordered.
+- Last updated: 2026-09-14. Category F — theme swap no longer pops.
+  A new `.theme-transitioning` class flipped on `<html>` for 380 ms
+  whenever the visitor picks a new theme eases the colour-carrying
+  properties (background, color, border, fill, stroke) over 320 ms so
+  cosmos ↔ paper ↔ blueprint feels curated instead of jarring. Guarded
+  by an in-block `prefers-reduced-motion: reduce` override, and the
+  initial paint (where the pre-paint inline script has already stamped
+  `data-theme`) is skipped so there's no first-paint flash. Backlog
+  item 27 down.
 
 ## The atlas we want (inventory)
 
@@ -262,8 +261,12 @@ One bullet per F-category run. Order is roughly priority.
     '(prefers-color-scheme: light)')` picks `paper`, otherwise
     `cosmos`. `applyTheme()` now targets `documentElement`, so any
     later toggle stays consistent with the first-paint attribute.
-27. **Theme transition** — animate CSS variable changes (~250 ms) so
-    switching themes feels curated, not jarring.
+27. ~~**Theme transition** — animate CSS variable changes (~250 ms) so
+    switching themes feels curated, not jarring.~~ — done 2026-09-14.
+    `.theme-transitioning` toggled on `<html>` for 380 ms on a genuine
+    theme switch; scoped rule eases background/color/border/fill/stroke
+    over 320 ms. Reduced-motion override, and initial paint skipped
+    (prev === t) so no first-paint flash.
 
 ## Features to build (when content has room to breathe)
 
