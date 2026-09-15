@@ -20,15 +20,17 @@ architecture in their head and know which rungs hold which weight.
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-14. Category F — theme swap no longer pops.
-  A new `.theme-transitioning` class flipped on `<html>` for 380 ms
-  whenever the visitor picks a new theme eases the colour-carrying
-  properties (background, color, border, fill, stroke) over 320 ms so
-  cosmos ↔ paper ↔ blueprint feels curated instead of jarring. Guarded
-  by an in-block `prefers-reduced-motion: reduce` override, and the
-  initial paint (where the pre-paint inline script has already stamped
-  `data-theme`) is skipped so there's no first-paint flash. Backlog
-  item 27 down.
+- Last updated: 2026-09-15. Category A — `selfrep` history rewritten
+  from three flat sentences into the full arc: Franklin and Gosling's
+  Photo 51 exposed in May 1952, Wilkins showing it to Watson at King's
+  in January 1953 without her permission, the six-week cardboard-and-
+  metal model, the three simultaneous *Nature* papers on 25 April 1953
+  and the Cambridge paper's throwaway "it has not escaped our notice"
+  line, Meselson–Stahl's caesium-chloride density gradients in 1958,
+  Franklin's death of ovarian cancer that same April aged 37, the
+  posthumous exclusion from the 1962 Nobel, Sanger's 1977 chain-
+  termination method, and the Human Genome Project's ~3 Gb sequence
+  posted in April 2003, fifty years almost to the day after Volume 171.
 
 ## The atlas we want (inventory)
 
