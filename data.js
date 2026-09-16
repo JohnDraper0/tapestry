@@ -1263,7 +1263,6 @@ const ANALOGIES = [
   ['information', 'thermo',       'Shannon entropy ≈ physical entropy (Landauer)'],
   ['euler',       'quantum',      'complex exponentials = quantum waves'],
   ['probability', 'quantum',      'Born rule: probabilities from amplitudes'],
-  ['gametheory',  'evolution',    'evolutionarily stable strategies'],
   ['complexity',  'emergence',    'chaos + self-organisation'],
   ['geometry',    'general',      'curved manifolds = gravity'],
   ['sets',        'logic',        'ZFC: set theory and logic entwined'],
