@@ -4882,6 +4882,143 @@ SIMS.cmb = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── SEMI-CONSERVATIVE REPLICATION ───────────────
+// For the `selfrep` node: a replication fork sweeps rightward across a
+// parent double helix, leaving two daughter helices behind. Each daughter
+// carries one parental strand (bright) and one newly-synthesised strand
+// (grey). This is exactly what Meselson–Stahl proved in 1958 with their
+// caesium-chloride density gradient — the picture is the payload.
+SIMS.selfrep = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const padL = 26, padR = 26, padT = 26, padB = 46;
+  const plotL = padL, plotR = w - padR;
+  const plotW = plotR - plotL;
+  const centerY = (padT + (h - padB)) / 2;
+  const parentGap  = 26;   // strand separation within the parent helix
+  const dsplit     = 78;   // final distance between the two daughter helices
+  const daughterGap = 20;  // strand separation within each daughter
+  const rungStep   = 14;
+
+  const OLD_A = '#ffd166';   // parent's original top strand
+  const OLD_B = '#66d9d1';   // parent's original bottom strand
+  const NEW   = 'rgba(210,214,222,0.9)';
+  const RUNG_P = 'rgba(240,232,210,0.62)';
+  const RUNG_D = 'rgba(240,232,210,0.32)';
+
+  const CYCLE_S = 9.5;
+  let t0 = performance.now(), raf;
+
+  function wavyLine(x0, y0, x1, y1, color, phase) {
+    ctx.beginPath();
+    const steps = 46;
+    for (let i = 0; i <= steps; i++) {
+      const u = i / steps;
+      const x = x0 + (x1 - x0) * u;
+      const y = y0 + (y1 - y0) * u + Math.sin(x * 0.13 + phase) * 2.4;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = color; ctx.lineWidth = 2.2; ctx.stroke();
+  }
+
+  function draw(now) {
+    const cyc = ((now - t0) / 1000) % CYCLE_S;
+    // ease-in-out sweep for 80% of the cycle, hold split for the last 20%
+    const u = Math.min(1, cyc / (CYCLE_S * 0.80));
+    const ease = 0.5 - 0.5 * Math.cos(Math.PI * u);
+    const fx = plotL + plotW * (0.08 + 0.86 * ease);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // header
+    ctx.fillStyle = '#eee'; ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Semi-conservative replication', plotL, padT - 20);
+
+    const pTopY = centerY - parentGap / 2;
+    const pBotY = centerY + parentGap / 2;
+
+    // parent (right of the fork) — rungs then strands
+    if (fx < plotR) {
+      ctx.strokeStyle = RUNG_P; ctx.lineWidth = 1.2;
+      for (let x = fx + rungStep; x <= plotR; x += rungStep) {
+        ctx.beginPath(); ctx.moveTo(x, pTopY); ctx.lineTo(x, pBotY); ctx.stroke();
+      }
+      wavyLine(fx, pTopY, plotR, pTopY, OLD_A, 0);
+      wavyLine(fx, pBotY, plotR, pBotY, OLD_B, Math.PI);
+    }
+
+    // daughters (left of the fork) — old strand outward-facing, new strand
+    // facing the split. At fx both strands converge onto the parent y.
+    if (fx > plotL) {
+      const upCY = centerY - dsplit / 2;
+      const loCY = centerY + dsplit / 2;
+      const upOldY1 = upCY - daughterGap / 2;   // gold on top of upper daughter
+      const upNewY1 = upCY + daughterGap / 2;   // grey below it
+      const loOldY1 = loCY + daughterGap / 2;   // teal on bottom of lower
+      const loNewY1 = loCY - daughterGap / 2;   // grey above it
+
+      const interp = (yFx, yEdge, x) => yFx + (yEdge - yFx) * ((fx - x) / (fx - plotL));
+      ctx.lineWidth = 1.1;
+      for (let x = plotL; x < fx; x += rungStep) {
+        ctx.strokeStyle = RUNG_D;
+        // upper daughter rung
+        ctx.beginPath();
+        ctx.moveTo(x, interp(pTopY, upOldY1, x));
+        ctx.lineTo(x, interp(pTopY, upNewY1, x));
+        ctx.stroke();
+        // lower daughter rung
+        ctx.beginPath();
+        ctx.moveTo(x, interp(pBotY, loOldY1, x));
+        ctx.lineTo(x, interp(pBotY, loNewY1, x));
+        ctx.stroke();
+      }
+
+      wavyLine(plotL, upOldY1, fx, pTopY, OLD_A, 0);
+      wavyLine(plotL, upNewY1, fx, pTopY, NEW,   1.0);
+      wavyLine(plotL, loNewY1, fx, pBotY, NEW,   2.0);
+      wavyLine(plotL, loOldY1, fx, pBotY, OLD_B, Math.PI);
+    }
+
+    // fork marker (a small ring where parent splits)
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(fx, centerY, 3.4, 0, Math.PI * 2); ctx.stroke();
+
+    // legend
+    const ly = h - padB + 14;
+    ctx.font = '11px system-ui'; ctx.textBaseline = 'middle';
+    let lx = plotL;
+    const chips = [
+      [OLD_A, 'parent strand'],
+      [OLD_B, ''],
+      [NEW,   'newly synthesised'],
+    ];
+    chips.forEach(([col, label]) => {
+      ctx.strokeStyle = col; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22, ly); ctx.stroke();
+      lx += 26;
+      if (label) {
+        ctx.fillStyle = 'rgba(220,230,245,0.82)';
+        ctx.textAlign = 'left';
+        ctx.fillText(label, lx, ly);
+        lx += ctx.measureText(label).width + 20;
+      }
+    });
+
+    // caption
+    ctx.fillStyle = 'rgba(220,230,245,0.7)'; ctx.font = '11px system-ui';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(
+      'every daughter carries one parental strand — Meselson–Stahl, 1958',
+      (plotL + plotR) / 2, h - 20
+    );
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];

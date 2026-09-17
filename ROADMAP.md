@@ -14,19 +14,16 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 85 (68 known, 17 frontier). Domains: 15. Sims: 40. Analogous
+- Nodes: 85 (68 known, 17 frontier). Domains: 15. Sims: 41. Analogous
   cross-links populated: 31. Images mirrored locally: 0 (all hot-linked hero
   URLs verified loading 2026-05-31; 10 dead ones replaced that run).
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-16. Category E — de-duplicated the
-  `evolution ↔ gametheory` cross-link. The terse "evolutionarily
-  stable strategies" one-liner from 2026-07-18 and the full Maynard
-  Smith / ESS / replicator-equation deep note from 2026-07-27 both
-  survived in `ANALOGIES`, so both `evolution` and `gametheory`
-  panels showed two Kindred rows pointing at the same partner. Kept
-  the deep note, removed the stub.
+- Last updated: 2026-09-17. Category C — added `SIMS.selfrep`: a
+  replication fork sweeping across a parent double helix, leaving two
+  daughter helices behind, each half-old-and-half-new. Meselson–Stahl
+  1958 as a picture. Wired to the `selfrep` node.
 
 ## The atlas we want (inventory)
 
@@ -131,7 +128,9 @@ hard problem of consciousness (strengthen) · pre-Big-Bang state ·
   axonometric z, both sin(kx − ωt) in phase.
 - `standard` — particle zoo with interaction vertices.
 - `periodic` — interactive table colouring by property.
-- `selfrep` / `centraldogma` — transcription-translation micro-machine.
+- ~~`selfrep` — replication fork + semi-conservative daughters.~~ — added
+  2026-09-17 as `SIMS.selfrep`. `centraldogma` still wants its own
+  transcription-translation micro-machine.
 - `ecosystems` — energy-pyramid or trophic-cascade toy.
 
 **Analogous cross-links to populate (using `addAnalogous(a, b, note)`
