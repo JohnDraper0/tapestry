@@ -20,10 +20,13 @@ architecture in their head and know which rungs hold which weight.
   Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
   blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
   the egress gateway).
-- Last updated: 2026-09-17. Category C — added `SIMS.selfrep`: a
-  replication fork sweeping across a parent double helix, leaving two
-  daughter helices behind, each half-old-and-half-new. Meselson–Stahl
-  1958 as a picture. Wired to the `selfrep` node.
+- Last updated: 2026-09-18. Category A — strengthened the `consciousness`
+  history: Nagel 1974 (*What Is It Like to Be a Bat?*), Levine's 1983
+  explanatory gap, Chalmers coining "hard problem" at Tucson I in April
+  1994, Crick editing his claustrum paper on the morning of his death, and
+  the 1998 Bremen wine bet Koch conceded to Chalmers on 23 June 2023 with
+  six bottles of 1978 Madeira after the Cogitate collaboration returned
+  a split IIT-vs-GNWT verdict — then doubled for another 25 years.
 
 ## The atlas we want (inventory)
 
@@ -111,7 +114,8 @@ equation, and valid `deps`:
 ~~turbulence~~ (added 2026-07-20) ·
 ~~strong CP problem~~ (added 2026-07-09) ·
 ~~hierarchy problem~~ (added 2026-07-30) · nature of time ·
-hard problem of consciousness (strengthen) · pre-Big-Bang state ·
+~~hard problem of consciousness (strengthen)~~ (done 2026-09-18) ·
+pre-Big-Bang state ·
 ~~Fermi paradox~~ (added 2026-07-25).
 
 **Sims still missing on existing nodes, ranked by teachability:**
