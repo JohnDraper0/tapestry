@@ -14,19 +14,20 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 85 (68 known, 17 frontier). Domains: 15. Sims: 41. Analogous
-  cross-links populated: 31. Images mirrored locally: 0 (all hot-linked hero
-  URLs verified loading 2026-05-31; 10 dead ones replaced that run).
-  Verification retry attempted 2026-08-27, 2026-09-06 and 2026-09-09 all
-  blocked by the sandbox proxy (commons.wikimedia.org returns 403 at
-  the egress gateway).
-- Last updated: 2026-09-18. Category A — strengthened the `consciousness`
-  history: Nagel 1974 (*What Is It Like to Be a Bat?*), Levine's 1983
-  explanatory gap, Chalmers coining "hard problem" at Tucson I in April
-  1994, Crick editing his claustrum paper on the morning of his death, and
-  the 1998 Bremen wine bet Koch conceded to Chalmers on 23 June 2023 with
-  six bottles of 1978 Madeira after the Cogitate collaboration returned
-  a split IIT-vs-GNWT verdict — then doubled for another 25 years.
+- Nodes: 84 (67 known, 17 frontier — a Hodgkin–Huxley neuro node added this
+  run). Domains: 16 (neuro is new). Sims: 41. Analogous cross-links
+  populated: 31. Images mirrored locally: 0 (all hot-linked hero URLs
+  verified loading 2026-05-31; 10 dead ones replaced that run). Verification
+  retry attempted 2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all
+  blocked by the sandbox proxy (commons.wikimedia.org returns 403 at the
+  egress gateway).
+- Last updated: 2026-09-19. Category B — opened the long-empty `neuro`
+  domain with the Hodgkin–Huxley Model: four coupled ODEs on a squid giant
+  axon, C_m dV/dt = −ḡ_Na m³h(V − E_Na) − ḡ_K n⁴(V − E_K) − ḡ_L(V − E_L) +
+  I_ext; the 1939 Plymouth microelectrode that showed the action potential
+  overshooting zero, the war, Huxley cranking three weeks of Brunsviga
+  arithmetic per simulated millisecond, five Journal-of-Physiology papers
+  in summer 1952, Nobel 1963 shared with Eccles.
 
 ## The atlas we want (inventory)
 
@@ -49,7 +50,7 @@ points, not quotas.
 | info            |   3   |    5   | channel coding, error correction, Landauer bridge         |
 | emergence       |   5   |    7   | Zipf, networks, cellular auto                             |
 | cosmos          |   5   |    8   | inflation, structure formation, Drake, Roche              |
-| neuro (new)     |   0   |    4   | neuron, synapse, action potential, cortex / maps          |
+| neuro (new)     |   1   |    4   | synapse, cortex / maps, sensory coding (HH added)         |
 | earth (new)     |   2   |    4   | biogeochemistry, hydrologic cycle (Milankovitch added)    |
 | unknown         |  17   |   17   | nature of time, pre-Big-Bang state (target hit)           |
 
@@ -95,7 +96,7 @@ equation, and valid `deps`:
 1. ~~**Photoelectric effect** (quantum)~~ — added 2026-04-17.
 2. ~~**Faraday's law of induction** (em)~~ — added 2026-04-17.
 3. ~~**Hardy–Weinberg equilibrium** (biology) — the null model of evolution.~~ — added 2026-04-17.
-4. **Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.
+4. ~~**Hodgkin–Huxley** (neuro) — voltage gives life its thinking tempo.~~ — added 2026-09-19 (opens the neuro domain; deps atoms + thermo).
 5. ~~**ATP / chemiosmosis** (biology) — life's universal energy currency.~~ — added 2026-04-21.
 6. ~~**Navier–Stokes** (mechanics)~~ — added 2026-04-17.
 7. ~~**Wien's displacement law** (thermo)~~ — added 2026-04-17.
