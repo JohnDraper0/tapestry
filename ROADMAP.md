@@ -14,20 +14,18 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 84 (67 known, 17 frontier — a Hodgkin–Huxley neuro node added this
-  run). Domains: 16 (neuro is new). Sims: 41. Analogous cross-links
-  populated: 31. Images mirrored locally: 0 (all hot-linked hero URLs
-  verified loading 2026-05-31; 10 dead ones replaced that run). Verification
-  retry attempted 2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all
-  blocked by the sandbox proxy (commons.wikimedia.org returns 403 at the
-  egress gateway).
-- Last updated: 2026-09-19. Category B — opened the long-empty `neuro`
-  domain with the Hodgkin–Huxley Model: four coupled ODEs on a squid giant
-  axon, C_m dV/dt = −ḡ_Na m³h(V − E_Na) − ḡ_K n⁴(V − E_K) − ḡ_L(V − E_L) +
-  I_ext; the 1939 Plymouth microelectrode that showed the action potential
-  overshooting zero, the war, Huxley cranking three weeks of Brunsviga
-  arithmetic per simulated millisecond, five Journal-of-Physiology papers
-  in summer 1952, Nobel 1963 shared with Eccles.
+- Nodes: 84 (67 known, 17 frontier). Domains: 16. Sims: 42 (a Euler's-
+  identity sim added this run). Analogous cross-links populated: 31.
+  Images mirrored locally: 0 (all hot-linked hero URLs verified loading
+  2026-05-31; 10 dead ones replaced that run). Verification retry attempted
+  2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all blocked by the
+  sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
+- Last updated: 2026-09-21. Category C — gave `euler` its own canvas
+  simulation. A point walks the unit circle at e^{iθ} = cos θ + i sin θ;
+  dashed guides drop the real and imaginary parts onto the axes and read
+  them out live. When θ crosses π the point rests at −1 and the ribbon
+  swaps in `e^{iπ} + 1 = 0` — five constants meeting in one place, once
+  per revolution.
 
 ## The atlas we want (inventory)
 

@@ -5019,6 +5019,127 @@ SIMS.selfrep = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────────── EULER ───────────────────────────────────
+// A single point walks the unit circle in the complex plane. At angle θ
+// it sits at e^{iθ} = cos θ + i sin θ; dropped lines to the axes read off
+// the two real components live. When θ crosses π the point rests briefly
+// at −1 and the identity e^{iπ} + 1 = 0 lights up: five constants meeting
+// in one place, on their own, once per revolution.
+SIMS.euler = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  const cx = w * 0.5, cy = h * 0.5;
+  const R = Math.min(w * 0.28, h * 0.32);
+  const AXR = R * 1.25;   // axis half-length
+
+  const AXIS  = 'rgba(220,230,245,0.28)';
+  const CIRC  = 'rgba(220,230,245,0.55)';
+  const GUIDE = 'rgba(255,209,102,0.55)';   // cos θ (real projection)
+  const IGUIDE = 'rgba(100,255,218,0.55)';  // sin θ (imag projection)
+  const PT    = '#ffd166';
+  const INK   = '#f0f2f6';
+  const IDENT = '#ff5da2';
+
+  const period = 8.5; // seconds per revolution
+  const t0 = performance.now();
+  let raf;
+
+  function draw() {
+    const t = (performance.now() - t0) / 1000;
+    const theta = ((t / period) * Math.PI * 2) % (Math.PI * 2); // 0..2π
+    const c = Math.cos(theta), s = Math.sin(theta);
+    const px = cx + R * c, py = cy - R * s;
+
+    ctx.clearRect(0, 0, w, h);
+
+    // axes
+    ctx.strokeStyle = AXIS; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - AXR, cy); ctx.lineTo(cx + AXR, cy);
+    ctx.moveTo(cx, cy - AXR); ctx.lineTo(cx, cy + AXR);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(220,230,245,0.55)';
+    ctx.font = '11px system-ui';
+    ctx.textAlign = 'left';  ctx.textBaseline = 'middle';
+    ctx.fillText('Re',  cx + AXR + 4, cy);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('Im',  cx, cy - AXR - 3);
+
+    // tick marks at ±1
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(220,230,245,0.5)';
+    ctx.strokeStyle = AXIS;
+    [[R, '1'], [-R, '−1']].forEach(([off, lbl]) => {
+      ctx.beginPath(); ctx.moveTo(cx + off, cy - 4); ctx.lineTo(cx + off, cy + 4); ctx.stroke();
+      ctx.fillText(lbl, cx + off, cy + 6);
+    });
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    [[R, 'i'], [-R, '−i']].forEach(([off, lbl]) => {
+      ctx.beginPath(); ctx.moveTo(cx - 4, cy - off); ctx.lineTo(cx + 4, cy - off); ctx.stroke();
+      ctx.fillText(lbl, cx + 6, cy - off);
+    });
+
+    // unit circle
+    ctx.strokeStyle = CIRC; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+
+    // swept angle wedge near the origin. Our point uses cy − sin θ, so
+    // increasing θ walks CCW on screen; pass anticlockwise=true to arc()
+    // and end at −θ so the wedge tracks the point the short way round.
+    ctx.strokeStyle = 'rgba(255,209,102,0.55)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 0.22, 0, -theta, true);
+    ctx.stroke();
+
+    // real projection (cos θ, along Re)
+    ctx.strokeStyle = GUIDE; ctx.setLineDash([3, 4]); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, cy); ctx.stroke();
+    // imaginary projection (sin θ, along Im)
+    ctx.strokeStyle = IGUIDE;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(cx, py); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // radius to point
+    ctx.strokeStyle = 'rgba(240,242,246,0.55)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
+
+    // near-π celebration: when the point is within ~4° of −1, flash it
+    const near = Math.abs(Math.atan2(Math.sin(theta - Math.PI), Math.cos(theta - Math.PI)));
+    const flash = Math.max(0, 1 - near / 0.07);
+
+    // moving point
+    ctx.fillStyle = flash > 0 ? IDENT : PT;
+    ctx.beginPath(); ctx.arc(px, py, 5.5 + flash * 3, 0, Math.PI * 2); ctx.fill();
+    if (flash > 0) {
+      ctx.strokeStyle = `rgba(255,93,162,${0.6 * flash})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(px, py, 10 + flash * 8, 0, Math.PI * 2); ctx.stroke();
+    }
+
+    // readout
+    ctx.fillStyle = INK; ctx.font = '13px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const rowY = 12;
+    const thetaStr = (theta / Math.PI).toFixed(2);
+    ctx.fillText(`θ = ${thetaStr}π`, 14, rowY);
+    ctx.fillStyle = GUIDE;  ctx.fillText(`cos θ = ${c.toFixed(3)}`,  14, rowY + 18);
+    ctx.fillStyle = IGUIDE; ctx.fillText(`sin θ = ${s.toFixed(3)}`,  14, rowY + 36);
+
+    // formula ribbon at bottom
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.font = '13px system-ui';
+    ctx.fillStyle = flash > 0.3 ? IDENT : 'rgba(220,230,245,0.82)';
+    const label = flash > 0.3
+      ? 'e^{iπ} + 1 = 0'
+      : `e^{iθ} = ${c.toFixed(2)}${s >= 0 ? ' + ' : ' − '}${Math.abs(s).toFixed(2)} i`;
+    ctx.fillText(label, cx, h - 10);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── REGISTRY ────────────────────────────────
 function startSim(name, canvas) {
   const factory = SIMS[name];
