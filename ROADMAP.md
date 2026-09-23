@@ -20,16 +20,14 @@ architecture in their head and know which rungs hold which weight.
   2026-05-31; 10 dead ones replaced that run). Verification retry attempted
   2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-22. Category A — rewrote `kepler` history from
-  a two-sentence stub into a full paragraph: the 1600 arrival in Prague,
-  Tycho's banquet-bladder death at Rosenberg's on 13 Oct 1601 with the
-  *ne frustra vixisse videar* deathbed line, Kepler inheriting Mars,
-  the years-long "war on Mars" and 1605 ellipse, *Astronomia Nova* and
-  *Harmonices Mundi*, his mother Katharina's 1620 witch trial and the
-  128-page defense that won her acquittal, and the *Rudolphine Tables*
-  predicting the 1631 Mercury transit that Gassendi caught in Paris the
-  year after Kepler died — the first celestial event ever predicted
-  and then knowingly observed.
+- Last updated: 2026-09-23. Category F — the iceberg-modal essay was
+  stale: it still said "eleven explicitly-named open problems" and
+  enumerated only 11 of the 17 frontier nodes (strong CP, hierarchy,
+  turbulence, Riemann, Yang–Mills and Fermi were all missing). The
+  count is now a `<span id="ice-frontier-essay">` and the list a
+  `<span id="ice-frontier-list">`, both filled by `syncIcebergCounts()`
+  from `LAWS`. Adding a new frontier node now updates the count, both
+  tiles AND the enumeration — nothing left to hand-edit, per CLAUDE.md.
 
 ## The atlas we want (inventory)
 
