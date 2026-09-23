@@ -980,15 +980,23 @@
   });
 
   // Keep the iceberg tallies honest: derive them from the data itself so the
-  // "known laws" and "frontier gaps" counts can never drift out of sync as
-  // nodes are added or promoted from frontier to known.
+  // "known laws" and "frontier gaps" counts — and the essay's frontier
+  // enumeration — can never drift out of sync as nodes are added or promoted
+  // from frontier to known.
   (function syncIcebergCounts() {
-    const known    = LAWS.filter(l => l.known !== false).length;
-    const frontier = LAWS.filter(l => l.known === false).length;
-    const set = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n; };
+    const frontierNodes = LAWS.filter(l => l.known === false);
+    const known    = LAWS.length - frontierNodes.length;
+    const frontier = frontierNodes.length;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
     set('ice-known', known);
     set('ice-frontier', frontier);
     set('ice-known-essay', known);
+    set('ice-frontier-essay', frontier);
+    const names = frontierNodes.map(l => l.name);
+    const list = names.length > 1
+      ? names.slice(0, -1).join(', ') + ', and ' + names[names.length - 1]
+      : (names[0] || '');
+    set('ice-frontier-list', list);
   })();
 
   // ── PRINT VIEW ───────────────────────────────────────────────────
