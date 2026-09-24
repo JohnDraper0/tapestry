@@ -20,16 +20,17 @@ architecture in their head and know which rungs hold which weight.
   2026-05-31; 10 dead ones replaced that run). Verification retry attempted
   2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-22. Category A — rewrote `kepler` history from
-  a two-sentence stub into a full paragraph: the 1600 arrival in Prague,
-  Tycho's banquet-bladder death at Rosenberg's on 13 Oct 1601 with the
-  *ne frustra vixisse videar* deathbed line, Kepler inheriting Mars,
-  the years-long "war on Mars" and 1605 ellipse, *Astronomia Nova* and
-  *Harmonices Mundi*, his mother Katharina's 1620 witch trial and the
-  128-page defense that won her acquittal, and the *Rudolphine Tables*
-  predicting the 1631 Mercury transit that Gassendi caught in Paris the
-  year after Kepler died — the first celestial event ever predicted
-  and then knowingly observed.
+- Last updated: 2026-09-24. Category A — rewrote `gravity` history
+  from three sentences into a full paragraph: John Michell's torsion
+  balance passed through Wollaston to Cavendish in 1793; Cavendish
+  at 67 in his Clapham Common outbuilding, 350-lb lead balls rolled
+  from outside, telescope through a hole in the wall to keep his body
+  heat out of the air, eight months of readings giving Earth's mean
+  density as 5.48 × water and — silently — G. Then Le Verrier's pen
+  finding Neptune within a degree on 23 Sep 1846, Arago's "au bout de
+  sa plume", and the same paper telescope aimed at Mercury calling
+  up the imaginary planet Vulcan that would wait 69 years for
+  Einstein to explain the 38″ as curved spacetime, not hidden mass.
 
 ## The atlas we want (inventory)
 
