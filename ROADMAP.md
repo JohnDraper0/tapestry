@@ -14,23 +14,21 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 84 (67 known, 17 frontier). Domains: 16. Sims: 42 (a Euler's-
-  identity sim added this run). Analogous cross-links populated: 31.
-  Images mirrored locally: 0 (all hot-linked hero URLs verified loading
-  2026-05-31; 10 dead ones replaced that run). Verification retry attempted
-  2026-08-27, 2026-09-06, 2026-09-09 and 2026-09-19 — all blocked by the
-  sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-24. Category A — rewrote `gravity` history
-  from three sentences into a full paragraph: John Michell's torsion
-  balance passed through Wollaston to Cavendish in 1793; Cavendish
-  at 67 in his Clapham Common outbuilding, 350-lb lead balls rolled
-  from outside, telescope through a hole in the wall to keep his body
-  heat out of the air, eight months of readings giving Earth's mean
-  density as 5.48 × water and — silently — G. Then Le Verrier's pen
-  finding Neptune within a degree on 23 Sep 1846, Arago's "au bout de
-  sa plume", and the same paper telescope aimed at Mercury calling
-  up the imaginary planet Vulcan that would wait 69 years for
-  Einstein to explain the 38″ as curved spacetime, not hidden mass.
+- Nodes: 85 (68 known, 17 frontier). Domains: 16. Sims: 42.
+  Analogous cross-links populated: 31. Images mirrored locally: 0 (all
+  hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
+  that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
+  2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
+  (commons.wikimedia.org returns 403 at the egress gateway).
+- Last updated: 2026-09-25. Category B — added **Topology** to the math
+  domain, at layer 3 alongside geometry and algebra. Deps [sets, numbers],
+  Euler characteristic V − E + F = 2 as the anchoring equation, all five
+  depth levels, and a history that runs from Euler's 1735 Königsberg
+  bridges paper through Poincaré's 1904 *Analysis Situs* supplement to
+  Grigori Perelman's three arXiv preprints in 2002–2003 — the Fields
+  Medal declined in Madrid 2006 and the $1M Clay Prize declined in 2010
+  on the grounds Hamilton's Ricci-flow work deserved equal credit. Hero:
+  the classic *Mug_and_Torus_morph.gif* from Commons.
 
 ## The atlas we want (inventory)
 
@@ -40,7 +38,7 @@ points, not quotas.
 
 | Domain          | Today | Target | Gaps worth filling next                                   |
 |-----------------|------:|-------:|-----------------------------------------------------------|
-| math            |  10   |   14   | topology, group theory, Gödel's theorems, graph theory    |
+| math            |  11   |   14   | group theory, Gödel's theorems, graph theory              |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |

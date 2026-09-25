@@ -95,6 +95,18 @@ const LAWS = [
   },
 
   {
+    id: 'topology', name: 'Topology', domain: 'math', symbol: 'χ',
+    tagline: 'The shape that survives any squeeze.',
+    equation: 'V - E + F = 2',
+    deps: ['sets', 'numbers'], sim: null,
+    eli5: `Imagine a piece of clay you can squish, stretch and bend forever — but never tear a hole in it and never glue two edges together. A ball becomes a cube. A cube becomes a bowl. A pretzel could never become a ball, because it has too many holes. Topology is the maths of what a shape is once you forget size and stiffness and only remember its holes. To a topologist, a coffee mug and a donut are the same thing — one hole each, so you could squish one into the other.`,
+    intermediate: `Two shapes are "topologically the same" if a continuous deformation — no cuts, no glue — turns one into the other. The number of holes (the *genus*) survives every such squishing, so a sphere (0), a torus (1) and a pretzel (2) are provably different objects. The Euler characteristic V − E + F is another invariant, and it obeys a stunning constraint: for any polyhedron that can be squished into a sphere — a cube, a tetrahedron, a geodesic dome, a football with 12 pentagons and 20 hexagons — you always get 2. Topology is geometry with size and stiffness switched off; what's left is a surprisingly rigid grammar that shows up in questions like "is a magnetic monopole allowed?", "can you comb a hairy sphere flat?", and "why does this material's boundary conduct electricity without any friction?"`,
+    expert: `A topology on a set X is a family τ ⊆ 2^X of "open" subsets closed under arbitrary unions and finite intersections; equivalence between spaces is by homeomorphism (continuous bijection with continuous inverse). Fundamental invariants: connectedness, compactness, dimension, Euler characteristic χ, the fundamental group π₁(X, x₀) of loops modulo continuous deformation, higher homotopy groups πₙ, and singular / simplicial / de Rham (co)homology, which count "holes" of each dimension. Poincaré–Hopf: for a smooth vector field with isolated zeroes on a closed orientable manifold M, Σ index = χ(M); on S² this forces at least one zero (χ = 2) — the hairy-ball theorem. Poincaré's 1904 conjecture (every simply connected closed 3-manifold is homeomorphic to S³) resisted for 98 years; Smale settled n ≥ 5 in 1961, Freedman n = 4 in 1982, and Grigori Perelman finished n = 3 with three arXiv preprints in 2002–2003 using Ricci flow with surgery. Topology's fingerprints are everywhere in modern physics: Chern numbers count monopoles and instantons; Berry phases integrate a connection over a closed loop; the integer quantum-Hall plateaux quantise σ_xy to ν·e²/h because ν is a topological invariant of the filled bands, not a material parameter — the same reason topological insulators conduct on their surface and refuse to on the inside.`,
+    surprise: `You cannot comb a hairy tennis ball flat. Somewhere a whorl or crown must stand up, because the Euler characteristic of a sphere is 2 and the indices of a vector field's zeroes must sum to that. The theorem has a meteorological corollary: at every instant there is at least one point on Earth's surface where the horizontal wind is exactly zero — even inside a hurricane, that point exists.`,
+    history: `Leonhard Euler answered the Seven Bridges of Königsberg puzzle in 1735 by observing that only the connections mattered, not the distances — the paper that founded both graph theory and *analysis situs*, the ancestor of topology. Henri Poincaré made the subject modern in *Analysis Situs* (1895) and its five supplements, coining π₁ and much of the vocabulary of algebraic topology; the last supplement (1904) contained the conjecture that would carry his name. It survived a century of failed proofs. On 11 November 2002, Grigori Perelman posted the first of three arXiv preprints sketching a proof by Ricci flow with surgery — the technique Richard Hamilton had spent two decades developing. Perelman gave a brief US lecture tour in April 2003 (MIT, Princeton, Stony Brook) and then went silent. Four years of independent verification followed. He was awarded the Fields Medal in Madrid in 2006 and declined it. When the Clay Mathematics Institute awarded him $1M in 2010 he declined that too, on the grounds that Hamilton's contribution to the proof had been at least equal to his own. He lives in Saint Petersburg with his mother.`,
+  },
+
+  {
     id: 'euler', name: "Euler's Identity", domain: 'math', symbol: 'eⁱᵖ',
     tagline: 'Five constants, one equation.',
     equation: 'e^{i\\pi} + 1 = 0',
@@ -1102,6 +1114,8 @@ const IMAGES = {
                    caption: "Papyrus fragment of Euclid's Elements (P. Oxy. 29)" },
   algebra:       { image: WM('Image-Al-Kit%C4%81b_al-mu%E1%B8%ABta%E1%B9%A3ar_f%C4%AB_%E1%B8%A5is%C4%81b_al-%C4%9Fabr_wa-l-muq%C4%81bala.jpg'),
                    caption: "Al-Khwārizmī's Algebra, c. 820 CE" },
+  topology:      { image: WM('Mug_and_Torus_morph.gif'),
+                   caption: 'A mug morphs into a torus — one hole each, so topologically the same shape' },
   euler:         { image: WM('Leonhard_Euler.jpg'),
                    caption: 'Leonhard Euler — most prolific mathematician in history' },
   calculus:      { image: WM('Gottfried_Wilhelm_Leibniz_c1700.jpg'),
