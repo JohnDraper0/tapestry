@@ -15,20 +15,19 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 85 (68 known, 17 frontier). Domains: 16. Sims: 42.
-  Analogous cross-links populated: 31. Images mirrored locally: 0 (all
+  Analogous cross-links populated: 32. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-25. Category B — added **Topology** to the math
-  domain, at layer 3 alongside geometry and algebra. Deps [sets, numbers],
-  Euler characteristic V − E + F = 2 as the anchoring equation, all five
-  depth levels, and a history that runs from Euler's 1735 Königsberg
-  bridges paper through Poincaré's 1904 *Analysis Situs* supplement to
-  Grigori Perelman's three arXiv preprints in 2002–2003 — the Fields
-  Medal declined in Madrid 2006 and the $1M Clay Prize declined in 2010
-  on the grounds Hamilton's Ricci-flow work deserved equal credit. Hero:
-  the classic *Mug_and_Torus_morph.gif* from Commons.
+- Last updated: 2026-09-26. Category E — added a `kepler ↔ general`
+  cross-link on Mercury's perihelion precession: Le Verrier's 1859
+  *Théorie du mouvement de Mercure* leaving 38″ per century unaccounted
+  for, the 69-year Vulcan hunt, Newcomb's tightened 43″ residual, and
+  Einstein's 18 November 1915 Prussian-Academy paper reproducing the
+  number with no adjustable constant — plus the (v/c)² scaling that
+  gives Earth 3.84″, Venus 8.62″, and PSR B1913+16 4.226° per year, the
+  amplification that won Hulse and Taylor the 1993 Nobel.
 
 ## The atlas we want (inventory)
 
