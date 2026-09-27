@@ -20,14 +20,16 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-26. Category E — added a `kepler ↔ general`
-  cross-link on Mercury's perihelion precession: Le Verrier's 1859
-  *Théorie du mouvement de Mercure* leaving 38″ per century unaccounted
-  for, the 69-year Vulcan hunt, Newcomb's tightened 43″ residual, and
-  Einstein's 18 November 1915 Prussian-Academy paper reproducing the
-  number with no adjustable constant — plus the (v/c)² scaling that
-  gives Earth 3.84″, Venus 8.62″, and PSR B1913+16 4.226° per year, the
-  amplification that won Hulse and Taylor the 1993 Nobel.
+- Last updated: 2026-09-27. Category A3 — deepened the `dark_energy_nature`
+  expert block with the March-2025 DESI DR2 result (w₀ ≈ −0.83, wₐ ≈ −0.7
+  at 2.8–4.2σ preference for dynamical dark energy over ΛCDM), the SUSY-
+  cutoff ~10⁶⁰ mismatch beside the Planck-cutoff ~10¹²⁰ one, Weinberg's
+  1987 anthropic bound (~550× the present matter density, observed value
+  ~250× below the ceiling — the argument that let him predict a non-zero
+  Λ eleven years before it was seen), Sorkin's 1990/1997 causal-set
+  "everpresent Λ" prediction of the right order of magnitude, and the
+  2018 swampland de Sitter conjecture that says meta-stable positive-Λ
+  vacua shouldn't exist at all in any consistent quantum gravity.
 
 ## The atlas we want (inventory)
 
