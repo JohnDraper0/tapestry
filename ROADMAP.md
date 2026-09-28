@@ -14,22 +14,22 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 85 (68 known, 17 frontier). Domains: 16. Sims: 42.
+- Nodes: 85 (68 known, 17 frontier). Domains: 16. Sims: 43.
   Analogous cross-links populated: 32. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-27. Category A3 — deepened the `dark_energy_nature`
-  expert block with the March-2025 DESI DR2 result (w₀ ≈ −0.83, wₐ ≈ −0.7
-  at 2.8–4.2σ preference for dynamical dark energy over ΛCDM), the SUSY-
-  cutoff ~10⁶⁰ mismatch beside the Planck-cutoff ~10¹²⁰ one, Weinberg's
-  1987 anthropic bound (~550× the present matter density, observed value
-  ~250× below the ceiling — the argument that let him predict a non-zero
-  Λ eleven years before it was seen), Sorkin's 1990/1997 causal-set
-  "everpresent Λ" prediction of the right order of magnitude, and the
-  2018 swampland de Sitter conjecture that says meta-stable positive-Λ
-  vacua shouldn't exist at all in any consistent quantum gravity.
+- Last updated: 2026-09-28. Category C — added `SIMS.hodgkin_huxley`, the
+  1952 squid-axon action potential integrated live from the four coupled
+  ODEs (V, m, h, n) with the canonical mS/cm² conductances and mV
+  reversal potentials. A 1 ms 15 μA/cm² pulse every 20 ms triggers regular
+  ~50 Hz firing; the voltage trace peaks near +40 mV and hyperpolarises
+  to −75 mV, and the three gates (m fast/depolarising, h inactivating,
+  n slow/repolarising) draw below the oscilloscope as the choreography
+  behind each spike. Dry-run confirms peaks at t ≈ 1.8, 21.7, 41.7,
+  61.7 ms — steady 20 ms intervals. Node `hodgkin_huxley` now points
+  `sim: 'hodgkin_huxley'`.
 
 ## The atlas we want (inventory)
 

@@ -5019,6 +5019,179 @@ SIMS.selfrep = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── HODGKIN–HUXLEY ──────────────────────────────
+// The 1952 squid giant-axon action potential, integrated live. Four
+// coupled ODEs — one for V, three for the gates m, h, n — driven by a
+// train of 1 ms current pulses. The Na channel opens fast and inactivates,
+// K opens slowly and repolarises: the whole spike is that choreography
+// drawn on a scrolling oscilloscope, with the gates reading out below.
+SIMS.hodgkin_huxley = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // HH constants — squid giant axon, mV / ms / μF·cm⁻² / mS·cm⁻²
+  const C_m = 1.0;
+  const gNa_max = 120, gK_max = 36, gL = 0.3;
+  const ENa = 50, EK = -77, EL = -54.4;
+  const V_rest = -65;
+
+  // Rate constants — Hodgkin & Huxley 1952, transcribed to modern V
+  function alpha_n(V) {
+    const y = V + 55;
+    return Math.abs(y) < 1e-4 ? 0.1 : 0.01 * y / (1 - Math.exp(-y / 10));
+  }
+  const beta_n = V => 0.125 * Math.exp(-(V + 65) / 80);
+  function alpha_m(V) {
+    const y = V + 40;
+    return Math.abs(y) < 1e-4 ? 1.0 : 0.1 * y / (1 - Math.exp(-y / 10));
+  }
+  const beta_m  = V => 4 * Math.exp(-(V + 65) / 18);
+  const alpha_h = V => 0.07 * Math.exp(-(V + 65) / 20);
+  const beta_h  = V => 1 / (1 + Math.exp(-(V + 35) / 10));
+
+  // State — initialised at steady state for V = V_rest
+  let V  = V_rest;
+  let n  = alpha_n(V_rest) / (alpha_n(V_rest) + beta_n(V_rest));
+  let mg = alpha_m(V_rest) / (alpha_m(V_rest) + beta_m(V_rest));
+  let hg = alpha_h(V_rest) / (alpha_h(V_rest) + beta_h(V_rest));
+  let simT = 0;
+
+  const WINDOW_MS = 60;                // sliding oscilloscope span
+  const dt = 0.01;                     // ms — forward Euler is stable here
+  const STEPS_PER_FRAME = 90;          // ~0.9 ms of sim per animation frame
+  const SAMPLE_EVERY = 10;             // record a trace point every 0.1 ms
+  const trace = [];                    // {t, V, mg, hg, n, I}
+
+  // 1 ms 15 μA/cm² pulse every 20 ms — comfortably above threshold
+  const PULSE_PERIOD = 20, PULSE_WIDTH = 1, PULSE_AMP = 15;
+  const I_ext = t => (t % PULSE_PERIOD) < PULSE_WIDTH ? PULSE_AMP : 0;
+
+  // Layout — voltage trace on top, gates below
+  const padL = 42, padR = 12, padT = 16;
+  const vTop = padT, vBot = padT + h * 0.54;
+  const gTop = vBot + 22, gBot = h - 30;
+  const vMin = -90, vMax = 55;
+  const traceX = t => padL + (w - padL - padR) * (1 - (simT - t) / WINDOW_MS);
+  const vY = v => vBot - (v - vMin) / (vMax - vMin) * (vBot - vTop);
+  const gY = x => gBot - x * (gBot - gTop);
+
+  function step() {
+    for (let s = 0; s < STEPS_PER_FRAME; s++) {
+      const iNa = gNa_max * mg * mg * mg * hg * (V - ENa);
+      const iK  = gK_max * n * n * n * n * (V - EK);
+      const iL  = gL * (V - EL);
+      const I   = I_ext(simT);
+      V  += dt * (I - iNa - iK - iL) / C_m;
+      n  += dt * (alpha_n(V) * (1 - n)  - beta_n(V)  * n);
+      mg += dt * (alpha_m(V) * (1 - mg) - beta_m(V)  * mg);
+      hg += dt * (alpha_h(V) * (1 - hg) - beta_h(V)  * hg);
+      simT += dt;
+      if (s % SAMPLE_EVERY === 0) trace.push({ t: simT, V, mg, hg, n, I });
+    }
+    while (trace.length && trace[0].t < simT - WINDOW_MS) trace.shift();
+  }
+
+  let raf;
+  function draw() {
+    step();
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.fillStyle = '#e6ecff'; ctx.font = 'bold 12px system-ui';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Hodgkin–Huxley action potential', padL, 0);
+
+    // Stimulus columns — faint yellow bars where the pulse is on
+    trace.forEach(p => {
+      if (p.I <= 0) return;
+      const x = traceX(p.t);
+      ctx.fillStyle = 'rgba(255, 209, 102, 0.13)';
+      ctx.fillRect(x - 0.9, vTop, 1.8, vBot - vTop);
+    });
+
+    // Reversal / threshold guide lines
+    const guides = [
+      [ENa,   'rgba(255,107,107,0.55)', 'E_Na +50'],
+      [-55,   'rgba(255,209,102,0.55)', 'threshold ≈ −55'],
+      [V_rest,'rgba(200,208,225,0.55)', 'rest −65'],
+      [EK,    'rgba( 79,195,247,0.55)', 'E_K −77'],
+    ];
+    ctx.setLineDash([2, 3]); ctx.lineWidth = 1;
+    guides.forEach(([v, col, lbl]) => {
+      const y = vY(v);
+      if (y < vTop - 1 || y > vBot + 1) return;
+      ctx.strokeStyle = col.replace('0.55', '0.25'); ctx.beginPath();
+      ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+      ctx.fillStyle = col; ctx.font = '10px system-ui';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(lbl, padL + 3, y - 1);
+    });
+    ctx.setLineDash([]);
+
+    // y-axis tick labels for V
+    ctx.fillStyle = 'rgba(220,230,245,0.55)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    [-80, -40, 0, 40].forEach(v => ctx.fillText(v + '', padL - 4, vY(v)));
+
+    // Voltage trace
+    ctx.strokeStyle = '#f9d949'; ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    trace.forEach((p, i) => {
+      const x = traceX(p.t), y = vY(p.V);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Live V readout at the leading edge
+    ctx.fillStyle = '#f9d949'; ctx.font = 'bold 11px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(V.toFixed(0) + ' mV', w - padR - 2, vTop + 2);
+
+    // Gates panel — axis + 0/1 ticks
+    ctx.strokeStyle = 'rgba(220,230,245,0.30)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, gTop); ctx.lineTo(padL, gBot);
+    ctx.moveTo(padL, gBot); ctx.lineTo(w - padR, gBot);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(220,230,245,0.55)'; ctx.font = '10px system-ui';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText('1', padL - 4, gTop);
+    ctx.fillText('0', padL - 4, gBot);
+
+    const gTraces = [
+      { key: 'mg', col: '#ff6b6b', label: 'm (Na open)'    },
+      { key: 'hg', col: '#ff9f43', label: 'h (Na inact.)'  },
+      { key: 'n',  col: '#4fc3f7', label: 'n (K open)'     },
+    ];
+    gTraces.forEach(t => {
+      ctx.strokeStyle = t.col; ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      trace.forEach((p, i) => {
+        const x = traceX(p.t), y = gY(p[t.key]);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    });
+
+    // Legend
+    ctx.font = '11px system-ui'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    let lx = padL + 4;
+    gTraces.forEach(t => {
+      ctx.fillStyle = t.col; ctx.fillRect(lx, gBot + 11, 12, 2);
+      ctx.fillStyle = 'rgba(220,230,245,0.82)';
+      ctx.fillText(t.label, lx + 16, gBot + 12);
+      lx += ctx.measureText(t.label).width + 34;
+    });
+
+    ctx.fillStyle = 'rgba(220,230,245,0.55)';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(WINDOW_MS + ' ms window · 15 μA/cm² pulse every 20 ms',
+                 w - padR, gBot + 6);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── EULER ───────────────────────────────────
 // A single point walks the unit circle in the complex plane. At angle θ
 // it sits at e^{iθ} = cos θ + i sin θ; dropped lines to the axes read off
