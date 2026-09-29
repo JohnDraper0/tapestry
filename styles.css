@@ -59,6 +59,45 @@
 
 * { box-sizing: border-box; }
 
+/* ── skip-to-content link ─────────────────────────────
+   WCAG 2.4.1: a keyboard user hitting Tab as their first key should
+   be able to jump straight into the map, past the intro overlay and
+   the header. Hidden off-screen until it takes focus, then it pins
+   itself to the top-left in the current theme's palette. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  padding: 12px 18px;
+  background: var(--bg-panel);
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  border-radius: 0 0 10px 0;
+  backdrop-filter: blur(14px);
+  transform: translateY(-120%);
+  transition: transform 0.18s ease-out;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
+
+/* Programmatic focus on the map shouldn't paint a browser default ring
+   around the entire viewport — the visitor is already looking at it. */
+#map:focus { outline: none; }
+#map:focus-visible { outline: none; }
+
 html, body {
   margin: 0; padding: 0;
   width: 100%; height: 100%;

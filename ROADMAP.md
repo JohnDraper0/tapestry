@@ -20,16 +20,16 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-28. Category C — added `SIMS.hodgkin_huxley`, the
-  1952 squid-axon action potential integrated live from the four coupled
-  ODEs (V, m, h, n) with the canonical mS/cm² conductances and mV
-  reversal potentials. A 1 ms 15 μA/cm² pulse every 20 ms triggers regular
-  ~50 Hz firing; the voltage trace peaks near +40 mV and hyperpolarises
-  to −75 mV, and the three gates (m fast/depolarising, h inactivating,
-  n slow/repolarising) draw below the oscilloscope as the choreography
-  behind each spike. Dry-run confirms peaks at t ≈ 1.8, 21.7, 41.7,
-  61.7 ms — steady 20 ms intervals. Node `hodgkin_huxley` now points
-  `sim: 'hodgkin_huxley'`.
+- Last updated: 2026-09-29. Category F (a11y) — added a WCAG 2.4.1
+  skip-to-content link. `.skip-link` sits at the top of `<body>` in
+  the current theme's palette, translated off-screen by −120% until
+  it takes focus; on Tab-in it slides down (180 ms ease-out, halted
+  under `prefers-reduced-motion`) and points at `#map`, which now
+  carries `tabindex="-1"` and `role="region"` with an aria-label so
+  a keyboard user lands directly on the actual content past the
+  intro overlay and the seven-button header. `#bg` picks up
+  `aria-hidden="true"` — the animated canvas is decoration, not
+  something a screen reader should announce.
 
 ## The atlas we want (inventory)
 
@@ -244,7 +244,14 @@ One bullet per F-category run. Order is roughly priority.
     `app.js` freezes the edge-particle flow and snaps the camera instead
     of easing it; `three3d.js` now skips the per-node bob and halo pulse
     while keeping drag-spin/wheel-zoom (user controls are not motion).
-21. **Skip-to-content link.** Lets screen-reader users bypass the map.
+21. ~~**Skip-to-content link.**~~ — done 2026-09-29. `.skip-link` at
+    the top of `<body>`, `translateY(-120%)` until focused, slides in
+    over 180 ms in the current theme's palette (border and text in
+    `--accent`); target is `#map` with `tabindex="-1"` +
+    `role="region"` + aria-label, so a keyboard user's first Tab
+    lands them on the actual content, past the intro overlay and the
+    header bar. Reduced-motion silences the slide. `#bg` is now
+    `aria-hidden="true"` — decorative canvas, not screen-reader noise.
 22. **Colour-blind-safe theme variant.** A fourth theme (or a toggle on
     cosmos) that uses shape + pattern in addition to hue for domain
     differentiation.

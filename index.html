@@ -31,8 +31,14 @@
 </head>
 <body>
 
+  <!-- Skip link for keyboard / screen-reader users. Off-screen until
+       focused, then pins to the top-left. Sends focus onto the SVG map
+       (tabindex=-1) so the visitor lands on the actual content, past
+       the intro overlay and the header bar. -->
+  <a class="skip-link" href="#map">Skip to the map</a>
+
   <!-- ── animated cosmic background ────────────────── -->
-  <canvas id="bg"></canvas>
+  <canvas id="bg" aria-hidden="true"></canvas>
 
   <!-- ── intro overlay ─────────────────────────────── -->
   <div id="intro">
@@ -95,7 +101,7 @@
   </header>
 
   <!-- ── the map ──────────────────────────────────── -->
-  <svg id="map">
+  <svg id="map" tabindex="-1" role="region" aria-label="The Tapestry — interactive map of natural laws">
     <defs>
       <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
         <feGaussianBlur stdDeviation="4" result="b1"/>
