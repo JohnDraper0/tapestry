@@ -20,16 +20,18 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-29. Category F (a11y) — added a WCAG 2.4.1
-  skip-to-content link. `.skip-link` sits at the top of `<body>` in
-  the current theme's palette, translated off-screen by −120% until
-  it takes focus; on Tab-in it slides down (180 ms ease-out, halted
-  under `prefers-reduced-motion`) and points at `#map`, which now
-  carries `tabindex="-1"` and `role="region"` with an aria-label so
-  a keyboard user lands directly on the actual content past the
-  intro overlay and the seven-button header. `#bg` picks up
-  `aria-hidden="true"` — the animated canvas is decoration, not
-  something a screen reader should announce.
+- Last updated: 2026-09-30. Category A — deepened the `centraldogma`
+  history from four lines into the real story: Crick's 19 Sept 1957
+  Society for Experimental Biology talk and his rueful misuse of the
+  Latin *dogma*; the 3 a.m. poly-U experiment of 27 May 1961 (38,000
+  cpm of phenylalanine, UUU = Phe read straight off the bench);
+  Nirenberg's fifteen-minute Moscow talk to sparse attendance, Meselson
+  sprinting to Crick, and Crick moving him into a plenary of a thousand
+  two days later; the 1968 codon-table Nobel with Khorana and Holley;
+  Baltimore and Temin's back-to-back *Nature* papers of 27 June 1970;
+  Prusiner's prions; and Doudna–Charpentier's 2020 Chemistry Nobel as
+  the first science Nobel awarded to two women alone. Each amendment
+  left "dogma" — as Crick had suspected — the wrong word.
 
 ## The atlas we want (inventory)
 
