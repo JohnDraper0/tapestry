@@ -14,22 +14,25 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 85 (68 known, 17 frontier). Domains: 16. Sims: 43.
+- Nodes: 86 (69 known, 17 frontier). Domains: 16. Sims: 43.
   Analogous cross-links populated: 32. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
-  2026-09-19 and 2026-09-25 — all blocked by the sandbox proxy
+  2026-09-19, 2026-09-25 and 2026-10-01 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-09-29. Category F (a11y) — added a WCAG 2.4.1
-  skip-to-content link. `.skip-link` sits at the top of `<body>` in
-  the current theme's palette, translated off-screen by −120% until
-  it takes focus; on Tab-in it slides down (180 ms ease-out, halted
-  under `prefers-reduced-motion`) and points at `#map`, which now
-  carries `tabindex="-1"` and `role="region"` with an aria-label so
-  a keyboard user lands directly on the actual content past the
-  intro overlay and the seven-button header. `#bg` picks up
-  `aria-hidden="true"` — the animated canvas is decoration, not
-  something a screen reader should announce.
+- Last updated: 2026-10-01. Category B — added `godel`, Gödel's
+  Incompleteness Theorems, as its own math node at layer 3
+  (deps logic + numbers). All five depth levels, from the "book that
+  can't prove one of its own true sentences" eli5 to the Σ₁ provability
+  predicate, the diagonal lemma, Rosser-weakened ω-consistency, and the
+  Hilbert–Bernays–Löb derivability conditions in expert. The surprise
+  is Hilbert's second problem climbing one storey forever. The history
+  runs from the 7 Sept 1930 Königsberg remark that only von Neumann
+  caught, through Bernays quietly carrying the theorems inside Hilbert's
+  own *Grundlagen* vol. II (1939), the Trans-Siberian flight in 1940,
+  the IAS afternoon walks with Einstein (and the 1949 rotating-universe
+  birthday gift), to the January 1978 death from paranoid starvation at
+  65 pounds. Equation displayed as the self-referential G ⇔ ¬Prov_T(⌜G⌝).
 
 ## The atlas we want (inventory)
 
@@ -39,7 +42,7 @@ points, not quotas.
 
 | Domain          | Today | Target | Gaps worth filling next                                   |
 |-----------------|------:|-------:|-----------------------------------------------------------|
-| math            |  11   |   14   | group theory, Gödel's theorems, graph theory              |
+| math            |  12   |   14   | group theory, graph theory (Gödel added 2026-10-01)       |
 | principle       |   3   |    5   | variational principles, gauge invariance                  |
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
