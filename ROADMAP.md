@@ -20,19 +20,20 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25 and 2026-10-01 — all blocked by the sandbox proxy
   (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-01. Category B — added `godel`, Gödel's
-  Incompleteness Theorems, as its own math node at layer 3
-  (deps logic + numbers). All five depth levels, from the "book that
-  can't prove one of its own true sentences" eli5 to the Σ₁ provability
-  predicate, the diagonal lemma, Rosser-weakened ω-consistency, and the
-  Hilbert–Bernays–Löb derivability conditions in expert. The surprise
-  is Hilbert's second problem climbing one storey forever. The history
-  runs from the 7 Sept 1930 Königsberg remark that only von Neumann
-  caught, through Bernays quietly carrying the theorems inside Hilbert's
-  own *Grundlagen* vol. II (1939), the Trans-Siberian flight in 1940,
-  the IAS afternoon walks with Einstein (and the 1949 rotating-universe
-  birthday gift), to the January 1978 death from paranoid starvation at
-  65 pounds. Equation displayed as the self-referential G ⇔ ¬Prov_T(⌜G⌝).
+- Last updated: 2026-10-02. Category A — deepened `periodic` history
+  from two sentences into a full chemistry drama: the 17 Feb 1869 OS
+  cheese-cooperative train Mendeleev skipped, the card-shuffling at his
+  desk, Menshutkin reading the paper to the Russian Chemical Society on
+  6 March OS; eka-aluminium / -boron / -silicon spelled out in detail;
+  Lecoq de Boisbaudran's 1875 gallium density of 4.7 corrected to 5.904
+  after the famous letter from an unknown chemist in St Petersburg;
+  Nilson's scandium (1879) and Winkler's germanium (1886) hitting the
+  remaining squares to a decimal place; Lothar Meyer sharing the 1882
+  Davy Medal but not the chart; the 1906 Nobel the Royal Swedish Academy
+  packed its committee to swing 5–4 to Moissan with Arrhenius working
+  against Mendeleev; the Volkov Cemetery procession under an enormous
+  rendering of the table; and the 1955 Berkeley synthesis of element 101
+  — mendelevium.
 
 ## The atlas we want (inventory)
 
