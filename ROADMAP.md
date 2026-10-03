@@ -15,25 +15,25 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 86 (69 known, 17 frontier). Domains: 16. Sims: 43.
-  Analogous cross-links populated: 32. Images mirrored locally: 0 (all
+  Analogous cross-links populated: 33. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
-  2026-09-19, 2026-09-25 and 2026-10-01 — all blocked by the sandbox proxy
-  (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-02. Category A — deepened `periodic` history
-  from two sentences into a full chemistry drama: the 17 Feb 1869 OS
-  cheese-cooperative train Mendeleev skipped, the card-shuffling at his
-  desk, Menshutkin reading the paper to the Russian Chemical Society on
-  6 March OS; eka-aluminium / -boron / -silicon spelled out in detail;
-  Lecoq de Boisbaudran's 1875 gallium density of 4.7 corrected to 5.904
-  after the famous letter from an unknown chemist in St Petersburg;
-  Nilson's scandium (1879) and Winkler's germanium (1886) hitting the
-  remaining squares to a decimal place; Lothar Meyer sharing the 1882
-  Davy Medal but not the chart; the 1906 Nobel the Royal Swedish Academy
-  packed its committee to swing 5–4 to Moissan with Arrhenius working
-  against Mendeleev; the Volkov Cemetery procession under an enormous
-  rendering of the table; and the 1955 Berkeley synthesis of element 101
-  — mendelevium.
+  2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
+  sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
+- Last updated: 2026-10-03. Category E — added a `fourier ↔ cmb`
+  cross-link: the CMB sky as spherical-harmonic Fourier analysis handed
+  back to cosmology as a measuring stick. COBE DMR April 1992 and
+  Hawking's 'discovery of the century' line; BOOMERANG's 1998–99
+  balloon flight resolving the first acoustic peak at ℓ ≈ 220 and
+  pinning |Ω_k| ≲ 0.002; WMAP 2003–2010 locking the baryon and
+  dark-matter densities off the second and third peaks; Planck 2018
+  down to ℓ ≈ 2500 with the six-parameter ΛCDM fit; the primordial
+  quantum fluctuations of the inflaton stretched to cosmic scales by
+  ~60 inflationary e-foldings — so the Fourier modes we read in C_ℓ
+  are the Fourier transform of primordial quantum noise. Fourier's
+  1807 heat-flow memoir, dismissed by Lagrange as impossible and
+  withheld by the Paris Academy for fifteen years, as the ruler that
+  measured spacetime itself.
 
 ## The atlas we want (inventory)
 
