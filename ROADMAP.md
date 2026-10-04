@@ -14,26 +14,23 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 86 (69 known, 17 frontier). Domains: 16. Sims: 43.
+- Nodes: 87 (70 known, 17 frontier). Domains: 16. Sims: 43.
   Analogous cross-links populated: 33. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-03. Category E — added a `fourier ↔ cmb`
-  cross-link: the CMB sky as spherical-harmonic Fourier analysis handed
-  back to cosmology as a measuring stick. COBE DMR April 1992 and
-  Hawking's 'discovery of the century' line; BOOMERANG's 1998–99
-  balloon flight resolving the first acoustic peak at ℓ ≈ 220 and
-  pinning |Ω_k| ≲ 0.002; WMAP 2003–2010 locking the baryon and
-  dark-matter densities off the second and third peaks; Planck 2018
-  down to ℓ ≈ 2500 with the six-parameter ΛCDM fit; the primordial
-  quantum fluctuations of the inflaton stretched to cosmic scales by
-  ~60 inflationary e-foldings — so the Fourier modes we read in C_ℓ
-  are the Fourier transform of primordial quantum noise. Fourier's
-  1807 heat-flow memoir, dismissed by Lagrange as impossible and
-  withheld by the Paris Academy for fifteen years, as the ruler that
-  measured spacetime itself.
+- Last updated: 2026-10-04. Category B — added the Schwarzschild Black
+  Hole as a dedicated relativity node (deps: general). r_s = 2GM/c²;
+  2.95 km for the Sun, 8.87 mm for Earth, ~120 AU for M87*. Karl
+  Schwarzschild's 22 December 1915 letter from the Russian front, read
+  by Einstein to the Prussian Academy on 13 January 1916; pemphigus
+  contracted at the front; death in Potsdam 11 May 1916, aged 42.
+  Birkhoff/Jebsen uniqueness; Kruskal–Szekeres regularising the
+  horizon; ISCO at 3 r_s binding 5.72% of rest mass; EHT shadows of
+  M87* (April 2019, 42 ± 3 μas) and Sgr A* (12 May 2022, 51.8 ± 2.3
+  μas); Hawking's 1974 T_H = ℏc³/(8πGM k_B). "Black hole" popularised
+  by Wheeler in a December 1967 New York lecture.
 
 ## The atlas we want (inventory)
 
@@ -48,7 +45,7 @@ points, not quotas.
 | mechanics       |   3   |    6   | Navier–Stokes, rigid-body, continuum elasticity           |
 | thermo          |   5   |    7   | Carnot efficiency, chemical potential                     |
 | em              |   4   |    5   | Poynting vector, plasma                                   |
-| relativity      |   3   |    4   | equivalence principle, Schwarzschild                      |
+| relativity      |   5   |    5   | target hit (equivalence + Schwarzschild both in)          |
 | quantum         |   6   |    7   | decoherence, spin-statistics                              |
 | forces          |   2   |    4   | QCD / confinement, electroweak unification                |
 | chemistry       |   4   |    7   | catalysis, reaction kinetics, acid–base                   |
