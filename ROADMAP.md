@@ -20,17 +20,24 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-04. Category B — added the Schwarzschild Black
-  Hole as a dedicated relativity node (deps: general). r_s = 2GM/c²;
-  2.95 km for the Sun, 8.87 mm for Earth, ~120 AU for M87*. Karl
-  Schwarzschild's 22 December 1915 letter from the Russian front, read
-  by Einstein to the Prussian Academy on 13 January 1916; pemphigus
-  contracted at the front; death in Potsdam 11 May 1916, aged 42.
-  Birkhoff/Jebsen uniqueness; Kruskal–Szekeres regularising the
-  horizon; ISCO at 3 r_s binding 5.72% of rest mass; EHT shadows of
-  M87* (April 2019, 42 ± 3 μas) and Sgr A* (12 May 2022, 51.8 ± 2.3
-  μas); Hawking's 1974 T_H = ℏc³/(8πGM k_B). "Black hole" popularised
-  by Wheeler in a December 1967 New York lecture.
+- Last updated: 2026-10-05. Category A — rewrote the `centraldogma`
+  history from a four-sentence stub into a full fifty-five-year arc:
+  Crick's September 1957 UCL lecture at the SEB symposium with the
+  sequence hypothesis, the central dogma itself ("once (sequential)
+  information has passed into protein it cannot get out again") and
+  the adaptor-molecule prediction landing before Hoagland–Zamecnik
+  had finished isolating tRNA; Crick later admitting *dogma* meant
+  "a consensus I cannot shift." Nirenberg–Matthaei's twenty-tube
+  poly-U experiment at NIH in May 1961 (70-count background, 38,000
+  on phenylalanine); Moscow Congress August 1961, Meselson relaying
+  the news to Crick in the corridor and winning Nirenberg a plenary
+  slot. Khorana's chemically-defined RNAs completing the sixty-four
+  codons by 1966; 1968 Nobel to Nirenberg/Khorana/Holley. Baltimore
+  and Temin's back-to-back *Nature* papers on 27 June 1970 adding
+  reverse transcriptase as an asterisk, not a reversal. Doudna and
+  Charpentier's Puerto Rico handshake in March 2011 and 28 June 2012
+  *Science* paper with Jinek and Chylinski on single-guide Cas9;
+  2020 Nobel.
 
 ## The atlas we want (inventory)
 
