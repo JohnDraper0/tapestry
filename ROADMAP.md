@@ -20,24 +20,14 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-05. Category A — rewrote the `centraldogma`
-  history from a four-sentence stub into a full fifty-five-year arc:
-  Crick's September 1957 UCL lecture at the SEB symposium with the
-  sequence hypothesis, the central dogma itself ("once (sequential)
-  information has passed into protein it cannot get out again") and
-  the adaptor-molecule prediction landing before Hoagland–Zamecnik
-  had finished isolating tRNA; Crick later admitting *dogma* meant
-  "a consensus I cannot shift." Nirenberg–Matthaei's twenty-tube
-  poly-U experiment at NIH in May 1961 (70-count background, 38,000
-  on phenylalanine); Moscow Congress August 1961, Meselson relaying
-  the news to Crick in the corridor and winning Nirenberg a plenary
-  slot. Khorana's chemically-defined RNAs completing the sixty-four
-  codons by 1966; 1968 Nobel to Nirenberg/Khorana/Holley. Baltimore
-  and Temin's back-to-back *Nature* papers on 27 June 1970 adding
-  reverse transcriptase as an asterisk, not a reversal. Doudna and
-  Charpentier's Puerto Rico handshake in March 2011 and 28 June 2012
-  *Science* paper with Jinek and Chylinski on single-guide Cas9;
-  2020 Nobel.
+- Last updated: 2026-10-06. Category F — paper theme contrast fix.
+  `--ink-dim` on the parchment theme was `#8c7555`, which measures
+  **3.66:1** against the `#f3ead8` background — safely under WCAG AA
+  4.5:1 for normal text, and that token drives small type across the
+  panel (kindred notes, intro footnote, stat labels, search placeholder,
+  callout-history border). Dropped lightness ~7 points to `#74614b`
+  while keeping the same warm brown hue (H≈32°); new ratio measures
+  **~4.94:1**, clean AA pass. One-colour change, same palette character.
 
 ## The atlas we want (inventory)
 
@@ -215,9 +205,11 @@ One bullet per F-category run. Order is roughly priority.
     and `.panel-kindred` 14, `.kindred-note` 13, `.panel-tagline` 15.
     Line-length gets a global `max-width: 72ch` on `.depth-text` so
     prose can't sprawl on wider layouts. Desktop unchanged.
-11. **Contrast audit per theme.** `ink-dim` on `paper` theme is close to
-    WCAG AA borderline; use a contrast checker on every `--ink*` token
-    in each theme.
+11. **Contrast audit per theme.** `ink-dim` on `paper` theme fixed
+    2026-10-06 (was `#8c7555` at 3.66:1 against parchment bg, now
+    `#74614b` at 4.94:1 — clean WCAG AA for normal text). Still want a
+    sweep across `--ink*` in all three themes to catch any remaining
+    borderline tokens (e.g. blueprint `--label-dim` on navy).
 12. **Italicise emphasis, not colour alone.** A couple of panel copies
     lean on colour to highlight terms — add italic or weight shift so
     colour-blind readers still see emphasis.

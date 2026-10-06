@@ -28,7 +28,10 @@
   --bg-panel:   rgba(246, 238, 221, 0.96);
   --ink:        #2a1e12;
   --ink-soft:   #5a4530;
-  --ink-dim:    #8c7555;
+  /* ink-dim was #8c7555, which measures 3.66:1 against the parchment bg —
+     under WCAG AA 4.5:1 for normal text. Drop lightness ~7 pts while
+     keeping the warm hue; the new value measures ~4.94:1. */
+  --ink-dim:    #74614b;
   --accent:     #a94a26;
   --accent-2:   #6a4a20;
   --node-bg:    #fdf6e7;
