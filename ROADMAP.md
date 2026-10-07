@@ -14,20 +14,22 @@ architecture in their head and know which rungs hold which weight.
 
 ## Snapshot (refresh this line each run)
 
-- Nodes: 87 (70 known, 17 frontier). Domains: 16. Sims: 43.
+- Nodes: 87 (70 known, 17 frontier). Domains: 16. Sims: 44.
   Analogous cross-links populated: 33. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-06. Category F — paper theme contrast fix.
-  `--ink-dim` on the parchment theme was `#8c7555`, which measures
-  **3.66:1** against the `#f3ead8` background — safely under WCAG AA
-  4.5:1 for normal text, and that token drives small type across the
-  panel (kindred notes, intro footnote, stat labels, search placeholder,
-  callout-history border). Dropped lightness ~7 points to `#74614b`
-  while keeping the same warm brown hue (H≈32°); new ratio measures
-  **~4.94:1**, clean AA pass. One-colour change, same palette character.
+- Last updated: 2026-10-07. Category C — SIMS.schwarzschild. Timelike
+  geodesic in the Schwarzschild metric, integrated in the Binet form
+  d²u/dφ² + u = M/L² + 3M u² (RK4, φ step 0.004 rad, pre-computed as
+  a polyline). Parameters L̃² = 4, apoapsis r = 10 r_s, periapsis
+  settles numerically at r ≈ 4.10 r_s — above the 3 r_s ISCO so the
+  orbit stays bound. Draws the event horizon as a black disc with a
+  faint rim, dashed photon sphere at 1.5 r_s and dashed ISCO at 3 r_s,
+  and a fading blue trail that traces the rosette. The 3M u² term
+  precesses the orbit by close to a right angle per loop — Mercury's
+  43″/century, writ large.
 
 ## The atlas we want (inventory)
 

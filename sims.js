@@ -5192,6 +5192,120 @@ SIMS.hodgkin_huxley = function (canvas) {
   return { stop() { cancelAnimationFrame(raf); } };
 };
 
+// ─────────────────────── SCHWARZSCHILD ────────────────────────────────
+// A timelike geodesic in the Schwarzschild metric, integrated in the Binet
+// form d²u/dφ² + u = M/L² + 3M u² (with M = r_s/2, geometric units). The
+// trailing "3M u²" is the correction general relativity adds to Newton — it
+// drags the orbit's periapsis forward each loop. Mercury's 43″/century is
+// this, with r_s ≈ 3 km buried in the Sun; here r_s is the horizon disk and
+// the precession per orbit is close to a right angle, so one minute of
+// watching shows what Le Verrier spent nineteen years chasing. The dashed
+// circles mark the photon sphere (1.5 r_s, where light can orbit) and the
+// innermost stable circular orbit for massive particles (3 r_s).
+SIMS.schwarzschild = function (canvas) {
+  const { ctx, w, h } = fit(canvas);
+
+  // Natural units: r_s = 1, M = r_s/2 = 0.5. Bound orbit chosen so periapsis
+  // sits comfortably above the ISCO at 3 r_s: with L̃² = 4, apoapsis r = 10,
+  // du/dφ = 0 at the start, numerical periapsis lands at r ≈ 4.08.
+  const M = 0.5;
+  const L2 = 4;
+  const r_a = 10;
+
+  // Pre-integrate the whole rosette so playback is just a comet walking a
+  // polyline — no numerical drift during the animation.
+  const PATH = [];
+  (function integrate() {
+    let u = 1 / r_a, up = 0, phi = 0;
+    const dphi = 0.004;
+    const MAX_PHI = 20 * 2 * Math.PI;   // plenty of orbits — the trail wraps
+    const rhs = (u, up) => ({ du: up, dup: -u + M / L2 + 3 * M * u * u });
+    while (phi < MAX_PHI) {
+      const k1 = rhs(u, up);
+      const k2 = rhs(u + 0.5 * dphi * k1.du, up + 0.5 * dphi * k1.dup);
+      const k3 = rhs(u + 0.5 * dphi * k2.du, up + 0.5 * dphi * k2.dup);
+      const k4 = rhs(u + dphi * k3.du,       up + dphi * k3.dup);
+      u  += (dphi / 6) * (k1.du  + 2 * k2.du  + 2 * k3.du  + k4.du);
+      up += (dphi / 6) * (k1.dup + 2 * k2.dup + 2 * k3.dup + k4.dup);
+      phi += dphi;
+      const r = 1 / u;
+      if (r < 1.02) break;   // crossed the horizon — safeguard, not expected
+      PATH.push({ r, phi });
+    }
+  })();
+
+  const cx = w * 0.5, cy = h * 0.5;
+  const pxPerRs = Math.min(w, h) * 0.42 / r_a;
+  const toPx = (r, ph) => ({
+    x: cx + r * pxPerRs * Math.cos(ph),
+    y: cy + r * pxPerRs * Math.sin(ph),
+  });
+
+  const TRAIL = 1800;
+  const stepPerSec = PATH.length / 32;   // 32 s to walk the integrated path
+  let i = 0, last = performance.now(), raf;
+
+  function draw(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    i += stepPerSec * dt;
+    if (i >= PATH.length - 2) i = 0;
+    const ii = Math.floor(i);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // ISCO (3 r_s) and photon sphere (1.5 r_s) — dashed guide rings
+    ctx.setLineDash([3, 5]);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(220,230,245,0.18)';
+    ctx.beginPath(); ctx.arc(cx, cy, 3 * pxPerRs, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,180,100,0.30)';
+    ctx.beginPath(); ctx.arc(cx, cy, 1.5 * pxPerRs, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Fading trail along the integrated orbit
+    const start = Math.max(0, ii - TRAIL);
+    ctx.lineWidth = 1.4;
+    for (let k = start; k < ii; k++) {
+      const p1 = toPx(PATH[k].r,     PATH[k].phi);
+      const p2 = toPx(PATH[k + 1].r, PATH[k + 1].phi);
+      const a = (k - start) / Math.max(1, ii - start);
+      ctx.strokeStyle = `rgba(130,207,255,${0.06 + a * 0.55})`;
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+    }
+
+    // Event horizon — black disc with a faint reddish rim
+    const g = ctx.createRadialGradient(cx, cy, pxPerRs * 0.9, cx, cy, pxPerRs * 2.2);
+    g.addColorStop(0, 'rgba(0,0,0,1)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(cx, cy, pxPerRs * 2.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(cx, cy, pxPerRs, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,120,110,0.6)';
+    ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.arc(cx, cy, pxPerRs, 0, Math.PI * 2); ctx.stroke();
+
+    // The orbiting particle
+    const cur = toPx(PATH[ii].r, PATH[ii].phi);
+    ctx.shadowBlur = 10; ctx.shadowColor = '#82cfff';
+    ctx.fillStyle = '#82cfff';
+    ctx.beginPath(); ctx.arc(cur.x, cur.y, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Labels
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = 'bold 12px system-ui'; ctx.fillStyle = '#eee';
+    ctx.fillText('Schwarzschild precession', 10, 10);
+    ctx.font = '11px system-ui'; ctx.fillStyle = '#bbb';
+    ctx.fillText('r_s horizon · 1.5 r_s photon sphere · 3 r_s ISCO', 10, 28);
+    ctx.fillText('Each loop rotates — Mercury\'s 43″/century, writ large', 10, 44);
+
+    raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return { stop() { cancelAnimationFrame(raf); } };
+};
+
 // ─────────────────────────── EULER ───────────────────────────────────
 // A single point walks the unit circle in the complex plane. At angle θ
 // it sits at e^{iθ} = cos θ + i sin θ; dropped lines to the axes read off
