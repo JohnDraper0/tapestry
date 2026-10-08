@@ -15,21 +15,23 @@ architecture in their head and know which rungs hold which weight.
 ## Snapshot (refresh this line each run)
 
 - Nodes: 87 (70 known, 17 frontier). Domains: 16. Sims: 44.
-  Analogous cross-links populated: 33. Images mirrored locally: 0 (all
+  Analogous cross-links populated: 34. Images mirrored locally: 0 (all
   hot-linked hero URLs verified loading 2026-05-31; 10 dead ones replaced
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-07. Category C — SIMS.schwarzschild. Timelike
-  geodesic in the Schwarzschild metric, integrated in the Binet form
-  d²u/dφ² + u = M/L² + 3M u² (RK4, φ step 0.004 rad, pre-computed as
-  a polyline). Parameters L̃² = 4, apoapsis r = 10 r_s, periapsis
-  settles numerically at r ≈ 4.10 r_s — above the 3 r_s ISCO so the
-  orbit stays bound. Draws the event horizon as a black disc with a
-  faint rim, dashed photon sphere at 1.5 r_s and dashed ISCO at 3 r_s,
-  and a fading blue trail that traces the rosette. The 3M u² term
-  precesses the orbit by close to a right angle per loop — Mercury's
-  43″/century, writ large.
+- Last updated: 2026-10-08. Category E — new `pauli` ↔ `periodic`
+  analogous cross-link. The periodic table's row lengths (2, 8, 8, 18,
+  18, 32, 32) and s/p/d/f block layout are 2(2ℓ+1) seats per subshell
+  filled in Madelung n+ℓ order with Pauli exclusion capping each
+  orbital at two spins. Mendeleev drew the chart empirically in 1869
+  — electron not discovered until Thomson 1897 — and the quantum
+  machinery arrived in an eighteen-month flurry: Stoner's 2(2ℓ+1)
+  count (Phil. Mag. 1924), Pauli's exclusion rule (Z. Phys. 31, 765;
+  16 Jan 1925), Uhlenbeck–Goudsmit spin (Naturwissenschaften, 20 Nov
+  1925), Heisenberg's matrix mechanics (July 1925) and Schrödinger's
+  wave equation (27 Jan 1926) — by the summer of 1926 the periodic
+  table was a theorem rather than a chart.
 
 ## The atlas we want (inventory)
 
