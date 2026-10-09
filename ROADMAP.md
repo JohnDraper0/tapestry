@@ -20,18 +20,23 @@ architecture in their head and know which rungs hold which weight.
   that run). Verification retry attempted 2026-08-27, 2026-09-06, 2026-09-09,
   2026-09-19, 2026-09-25, 2026-10-01 and 2026-10-03 — all blocked by the
   sandbox proxy (commons.wikimedia.org returns 403 at the egress gateway).
-- Last updated: 2026-10-08. Category E — new `pauli` ↔ `periodic`
-  analogous cross-link. The periodic table's row lengths (2, 8, 8, 18,
-  18, 32, 32) and s/p/d/f block layout are 2(2ℓ+1) seats per subshell
-  filled in Madelung n+ℓ order with Pauli exclusion capping each
-  orbital at two spins. Mendeleev drew the chart empirically in 1869
-  — electron not discovered until Thomson 1897 — and the quantum
-  machinery arrived in an eighteen-month flurry: Stoner's 2(2ℓ+1)
-  count (Phil. Mag. 1924), Pauli's exclusion rule (Z. Phys. 31, 765;
-  16 Jan 1925), Uhlenbeck–Goudsmit spin (Naturwissenschaften, 20 Nov
-  1925), Heisenberg's matrix mechanics (July 1925) and Schrödinger's
-  wave equation (27 Jan 1926) — by the summer of 1926 the periodic
-  table was a theorem rather than a chart.
+- Last updated: 2026-10-09. Category A — deepened `arrow_of_time`
+  history from three thin sentences to a Boltzmann-to-Turok arc:
+  the 1872 H-theorem, Loschmidt's 1876 reversibility paradox,
+  Zermelo's 1896 recurrence objection on Poincaré's 1890 theorem,
+  Boltzmann's 1896–97 fluctuation-universe reply (already
+  prefiguring the past hypothesis and the Boltzmann-brain problem),
+  his 5 September 1906 suicide at the Villa Carlotta in Duino while
+  Henriette and Elsa were swimming at Trieste (tombstone: S = k log
+  W), Eddington coining "time's arrow" in his 1927 Gifford Lectures
+  (*The Nature of the Physical World*, 1928, ch. IV), Penrose's 1979
+  "Singularities and Time-Asymmetry" turning the initial state into
+  one part in 10^(10^123) via the Weyl Curvature Hypothesis,
+  Albrecht–Sorbo (PRD 70, 2004) naming the Boltzmann brain,
+  Carroll–Chen's 2004 spontaneous-inflation descendant of
+  Boltzmann's fluctuation, and Boyle–Finn–Turok's 2018 CPT-symmetric
+  two-sided cosmology — closing on the arrow still being an
+  initial-condition problem, not a dynamical one.
 
 ## The atlas we want (inventory)
 
